@@ -18,10 +18,33 @@ export default function profilepage({ navigation }) {
                     <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} />
                     <ImageBackground source={require('./profileAssets/menubar.png')} style={styles.menu} />
                     <Image source={require('./profileAssets/search.png')} style={styles.searchbar} />
-                    <View style={styles.photoContainer}>
-                        <Text style={styles.photoTxt}>My Photo</Text>
-                    </View>
                     <ImageBackground source={require('./profileAssets/designspikes.png')} style={styles.spike2} />
+                    <View style={styles.photoContainer}>
+                        <Text style={styles.headTxt}>My Photo</Text>
+                    </View>
+                    <View style={styles.aboutMeContainer}>
+                        <Text style={styles.headTxt}>About Me</Text>
+                    </View>
+                    <View style={styles.divider1}/>
+                    <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+
+                    </View>
+                    <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
+
+                    </View>
+                    <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+
+                    </View>
+                    <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
+
+                    </View>
+                    <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+
+                    </View>
+                    <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
+
+                    </View>
+                    <View style={styles.divider2}/>
                     </LinearGradient>
             </View>
     );
@@ -30,14 +53,14 @@ export default function profilepage({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         position:"relative",
-        width: windowWidth,
-        height: windowHeight
+        width: "100%",
+        height: "100%"
 
     },
     background: {
         position:"relative",
-        width: windowWidth,
-        height: windowHeight,
+        width: "100%",
+        height: "100%",
     },
     title:{
         position:"absolute",
@@ -64,14 +87,14 @@ const styles = StyleSheet.create({
     photoContainer:{
         position: "absolute",
         width: 0.32*windowWidth,
-        height: 0.29*windowHeight,
-        top: 0.16*windowHeight,
+        height: 0.39*windowHeight,
+        top: 0.15*windowHeight,
+        alignItems:"center",
         backgroundColor: "rgba(255, 255, 255, 0.25)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
       },
-    photoTxt:{
+    headTxt:{
         position: "absolute",
-        left: 0.11*windowWidth,
         top: 0.02*windowHeight,
         fontFamily: "Roboto",
         fontStyle: "normal",
@@ -81,6 +104,41 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: "#FFFFFF"
       },
+      aboutMeContainer:{
+        position: "absolute",
+        width: 0.32*windowWidth,
+        height: 0.46*windowHeight,
+        top: 0.54*windowHeight,
+        alignItems: "center",
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+      },
+      infoContainer:{
+        position: "absolute",
+        width: 0.68*windowWidth,
+        height: 0.12*windowHeight,
+        left: 0.32*windowWidth,
+        alignItems:"center",
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        transform: "matrix(1, 0, 0, 1, 0, 0)"
+      },
+    divider1:{
+        position:"absolute",
+        height:0.848*windowHeight,
+        left:0.32*windowWidth,
+        top:0.15*windowHeight,
+        borderWidth: 0.00001*windowWidth,
+        borderColor: "rgba(168, 182, 175, 0.5)",
+        borderStyle: "solid"
+    },
+    divider2:{
+        position:"absolute",
+        height:0.848*windowHeight,
+        left:0.5*windowWidth,
+        top:0.15*windowHeight,
+        borderWidth: 0.00001*windowWidth,
+        borderColor: "rgba(168, 182, 175, 0.5)",
+        borderStyle: "solid"
+    },
     spike1:{
         position:"absolute",
         resizeMode:'contain',
