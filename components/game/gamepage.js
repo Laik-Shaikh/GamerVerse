@@ -17,9 +17,18 @@ export default function profilepage({ navigation }) {
                     <ImageBackground source={require('./gameAssets/designspikes1.png')} style={styles.spike1} />
                     <Image source={require('./gameAssets/gamerversetitle.png')} style={styles.title} />
                     <ImageBackground source={require('./gameAssets/menubar.png')} style={styles.menu} />
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <Text style={styles.robototxt}>Profile</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+                    <Text style={styles.robototxt}>My Games</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+                    <Text style={styles.robototxt}>Game Hub</Text>
+                    </TouchableOpacity>
                     <Image source={require('./gameAssets/search.png')} style={styles.searchbar} />
                     <View style={styles.photoContainer}>
-                        <Text style={styles.photoTxt}>My Photo</Text>
+                        <Text style={styles.photoTxt}>Rating</Text>
                     </View>
                     <ImageBackground source={require('./gameAssets/designspikes.png')} style={styles.spike2} />
                     </LinearGradient>
@@ -52,6 +61,33 @@ const styles = StyleSheet.create({
         top:0.10*windowHeight,
         height: 0.05*windowHeight,
         width: 1*windowWidth,
+    },
+    robototxt:{ 
+        "fontStyle": "normal",
+        "fontWeight": "500",
+        "fontSize": 14,
+        "color": "#FFFFFF"
+    },
+    profilebtn:{
+        position:"absolute",
+        top:0.11*windowHeight,
+        left:0.1*windowWidth,
+        height: 0.03*windowHeight,
+        width: 0.025*windowWidth
+    },
+    mygamesbtn:{
+        position:"absolute",
+        top:0.11*windowHeight,
+        left:0.3*windowWidth,
+        height: 0.03*windowHeight,
+        width: 0.04*windowWidth
+    },
+    gamehubbtn:{
+        position:"absolute",
+        top:0.11*windowHeight,
+        left:0.5*windowWidth,
+        height: 0.03*windowHeight,
+        width: 0.04*windowWidth
     },
     searchbar:{
         position:"absolute",
