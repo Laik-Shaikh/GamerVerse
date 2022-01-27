@@ -17,6 +17,9 @@ export default function homepage({ navigation }) {
                     <ImageBackground source={require('./homeAssets/designspikes1.png')} style={styles.spike1} />
                     <Image source={require('./homeAssets/gamerversetitle.png')} style={styles.title} />
                     <ImageBackground source={require('./homeAssets/menubar.png')} style={styles.menu} />
+                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                    <Text style={styles.robototxt}>Home</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
                     <Text style={styles.robototxt}>Profile</Text>
                     </TouchableOpacity>
@@ -83,24 +86,31 @@ const styles = StyleSheet.create({
         top:0.21*windowHeight,
         left:0.3*windowWidth
     },
+    homebtn:{
+        position:"absolute",
+        top:0.11*windowHeight,
+        left:0.05*windowWidth,
+        height: 0.03*windowHeight,
+        width: 0.025*windowWidth
+    },
     profilebtn:{
         position:"absolute",
         top:0.11*windowHeight,
-        left:0.1*windowWidth,
+        left:0.20*windowWidth,
         height: 0.03*windowHeight,
         width: 0.025*windowWidth
     },
     mygamesbtn:{
         position:"absolute",
         top:0.11*windowHeight,
-        left:0.3*windowWidth,
+        left:0.35*windowWidth,
         height: 0.03*windowHeight,
         width: 0.04*windowWidth
     },
     gamehubbtn:{
         position:"absolute",
         top:0.11*windowHeight,
-        left:0.5*windowWidth,
+        left:0.50*windowWidth,
         height: 0.03*windowHeight,
         width: 0.04*windowWidth
     },
