@@ -14,14 +14,14 @@ export default function profilepage({ navigation }) {
                     start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
                     colors={['#013C00', '#000000']}
                     style={styles.background} >
-                    <ImageBackground source={require('./profileAssets/designspikes1.png')} style={styles.spike1} />
-                    <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} />
-                    <ImageBackground source={require('./profileAssets/menubar.png')} style={styles.menu} />
-                    <Image source={require('./profileAssets/search.png')} style={styles.searchbar} />
+                    <ImageBackground source={require('./gameAssets/designspikes1.png')} style={styles.spike1} />
+                    <Image source={require('./gameAssets/gamerversetitle.png')} style={styles.title} />
+                    <ImageBackground source={require('./gameAssets/menubar.png')} style={styles.menu} />
+                    <Image source={require('./gameAssets/search.png')} style={styles.searchbar} />
                     <View style={styles.photoContainer}>
                         <Text style={styles.photoTxt}>My Photo</Text>
                     </View>
-                    <ImageBackground source={require('./profileAssets/designspikes.png')} style={styles.spike2} />
+                    <ImageBackground source={require('./gameAssets/designspikes.png')} style={styles.spike2} />
                     </LinearGradient>
             </View>
     );
