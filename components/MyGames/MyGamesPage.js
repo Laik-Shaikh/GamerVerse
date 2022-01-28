@@ -57,36 +57,58 @@ export default function MyGamesPage ({ navigation }){
 
 
             <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
+                <TouchableOpacity>
                 <Image source={require('./MyGamesAssets/ApexLegend.png')} 
                     style = {styles.apexLegend} />
+                </TouchableOpacity>
+                <TouchableOpacity>
                 <Image source={require('./MyGamesAssets/GTAV.png')} 
                     style = {styles.gta5} />
+                </TouchableOpacity>
+                <TouchableOpacity>
                 <Image source={require('./MyGamesAssets/Valorant.png')} 
                     style = {styles.valorant} />
+                </TouchableOpacity>
+                <TouchableOpacity>
                 <Image source={require('./MyGamesAssets/CODWZ.png')} 
                     style = {styles.cod} />
+                </TouchableOpacity>
             </ScrollView>
 
 
             <ScrollView style = {styles.scrollContainer2} showsVerticalScrollIndicator={false}>
+            <TouchableOpacity>
             <Image source={require('./MyGamesAssets/COC.png')} 
                     style = {styles.coc} />
+            </TouchableOpacity>
+            <TouchableOpacity>
             <Image source={require('./MyGamesAssets/CODM.png')} 
                     style = {styles.codMob} />
+            </TouchableOpacity>
+            <TouchableOpacity>
             <Image source={require('./MyGamesAssets/PokemonGO.png')} 
                     style = {styles.pogo} />
+            </TouchableOpacity>
+            <TouchableOpacity>
             <Image source={require('./MyGamesAssets/FreeFire.png')} 
                     style = {styles.freeFire} />
+            </TouchableOpacity>
             </ScrollView>
 
 
             <ScrollView style = {styles.scrollContainer3} showsVerticalScrollIndicator={false}>
+            <TouchableOpacity>
             <Image source={require('./MyGamesAssets/GodOfWar.png')} 
                     style = {styles.gow} />
+            </TouchableOpacity>
+            <TouchableOpacity>
             <Image source={require('./MyGamesAssets/MortalKombatLogo.png')} 
                     style = {styles.mortalKombat} />
+            </TouchableOpacity>
+            <TouchableOpacity>
             <Image source={require('./MyGamesAssets/SpiderManLogo.png')} 
                     style = {styles.spiderMan} />
+            </TouchableOpacity>
             </ScrollView>
             
         </View>
