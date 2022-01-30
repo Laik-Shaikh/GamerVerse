@@ -3,8 +3,8 @@ import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpaci
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height
+const windowWidth = Dimensions.get('screen').width;
+const windowHeight = Dimensions.get('screen').height
 
 
 export default function profilepage({ navigation }) {
