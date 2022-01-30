@@ -9,7 +9,7 @@ import S1 from './authAssets/slide1.png'
 //<ImageBackground source={S1} resizeMode="cover" style={styles.S1}/>
 //
 
-export default function Login() {
+export default function Login({ navigation }) {
     return(
         <View style={styles.container}>
         <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
@@ -28,7 +28,7 @@ export default function Login() {
                   <TouchableOpacity style={styles.Button} title='Login'>
                   <Text style={styles.ButtonText}>Register</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.SignUpText}>
+                  <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Login")}>
                     <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Have an account already? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14,borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Login</Text></Text>
                   </TouchableOpacity>
                 </View>

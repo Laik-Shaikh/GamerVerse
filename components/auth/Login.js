@@ -9,7 +9,7 @@ import S1 from './authAssets/slide1.png'
 //<ImageBackground source={S1} resizeMode="cover" style={styles.S1}/>
 //
 
-export default function Login() {
+export default function Login({ navigation }) {
     return(
         <View style={styles.container}>
         <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
@@ -29,9 +29,35 @@ export default function Login() {
                   <TouchableOpacity style={styles.Button} title='Login'>
                   <Text style={styles.ButtonText}>Login</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.SignUpText}>
+                  <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Register")}>
                     <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Don't have an account? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14,borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Register</Text></Text>
                   </TouchableOpacity>
+                </View>
+                <View style={{"left": 0/1440 * windowWidth, "top": 560/1024 * windowHeight}}>
+                  <View style={styles.whitebg}/>
+                  <Image source={require('./authAssets/group2.png')} style={styles.img2} />
+                  <Text style={styles.title1}>Find friends with similar game sense nearby</Text>
+                  <Text style={styles.subtext1}>Search for tags related to games to find new friends. Add multiple tags to your profile so other players can find you!</Text>
+                </View>
+                <View style={{"left": 0/1440 * windowWidth, "top": 1120/1024 * windowHeight}}>
+                  <View style={styles.whitebg}/>
+                  <Image source={require('./authAssets/group3.png')} style={styles.img1} />
+                  <Text style={styles.title2}>Create your own gamer profile and add all your favourite games</Text>
+                  <Text style={styles.subtext2}>Add your own profile picture and gaming interests according to your needs to build an entire gaming profile!</Text>
+                </View>
+                <View style={{"left": 0/1440 * windowWidth, "top": 1680/1024 * windowHeight}}>
+                  <View style={styles.whitebg}/>
+                  <Image source={require('./authAssets/group4.png')} style={styles.img2} />
+                  <Text style={styles.title1}>Tags that are inclusive of all gaming platforms</Text>
+                  <Text style={styles.subtext1}>Need new friends for all different platforms? 
+Find all sorts of players over all of platforms with just a few simple steps!</Text>
+                </View>
+                <View style={{"left": 0/1440 * windowWidth, "top": 2240/1024 * windowHeight}}>
+                  <View style={styles.whitebg}/>
+                  <Image source={require('./authAssets/group5.png')} style={styles.img1} />
+                  <Image source={require('./authAssets/group6.png')} style={styles.img2} />
+                  <Text style={styles.title3}>Update your own posts, gameplays and achievements</Text>
+                  <Text style={styles.subtext3}>Share all of your achievements, badges, gameplays, etc with all of your friends on Gamer Verse now!</Text>
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -93,7 +119,7 @@ const styles = StyleSheet.create({
   {
     position: "absolute",
     left: 1083 / 1440 * windowWidth,
-    top: 260 / 1024 * windowHeight,
+    top: 270 / 1024 * windowHeight,
     borderBottomColor: "#54E0FF",
     borderBottomWidth: 0.7,
   },
@@ -102,7 +128,7 @@ const styles = StyleSheet.create({
   {
     position: "absolute",
     left: 877 / 1440 * windowWidth,
-    top: 363 / 1024 * windowHeight,
+    top: 385 / 1024 * windowHeight,
   },
 
   Button:
@@ -111,7 +137,7 @@ const styles = StyleSheet.create({
     width: 305 / 1440 * windowWidth,
     height: 55 / 1024 * windowHeight,
     left: 877 / 1440 * windowWidth,
-    top: 300 / 1024 * windowHeight,
+    top: 322 / 1024 * windowHeight,
     backgroundColor: "#54E0FF",
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
@@ -126,19 +152,45 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginHorizontal: 0,
     top: 0/1024*windowHeight,
-    left: -100/1440*windowWidth,
-    height: 446/1024*windowHeight,
+    left: -85/1440*windowWidth,
+    height: 486/1024*windowHeight,
     width: 615/1440*windowWidth,
     resizeMode:'contain',
+},
+
+img2:{
+  "position": "absolute",
+  marginTop: 0,
+  marginHorizontal: 0,
+  top: 0/1024*windowHeight,
+  right: -105/1440*windowWidth,
+  height: 486/1024*windowHeight,
+  width: 615/1440*windowWidth,
+  resizeMode:'contain',
 },
 
     whitebg:
   {
     position: "absolute",
     width: 1305 / 1440 * windowWidth,
-    height: 410 / 1024 * windowHeight,
+    height: 450 / 1024 * windowHeight,
     left: 28 / 1440 * windowWidth,
     top: 35 / 1024 * windowHeight,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.28)',
+    borderTopLeftRadius: 17,
+    borderTopRightRadius: 17,
+    borderBottomRightRadius: 17,
+    borderBottomLeftRadius: 17
+  },
+
+  whitebg1:
+  {
+    position: "absolute",
+    width: 1305 / 1440 * windowWidth,
+    height: 450 / 1024 * windowHeight,
+    left: 28 / 1440 * windowWidth,
+    top: 485 / 1024 * windowHeight,
     justifyContent: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.28)',
     borderTopLeftRadius: 17,
@@ -160,9 +212,117 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   },
   
+  title1:
+  {
+    "position": "absolute",
+    top: 100/1024*windowHeight,
+    left: 108/1440*windowWidth,
+    height: 106/1024*windowHeight,
+    width: 680/1440*windowWidth,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: "500",
+    fontSize: 45,
+    lineHeight: 53,
+    display: "flex",
+    alignItems: "center",
+    textAlign: "left",
+    color: "#FFFFFF"
+  },
+
+  subtext1:
+  {
+    "position": "absolute",
+    top: 250/1024*windowHeight,
+    left: 108/1440*windowWidth,
+    height: 56/1024*windowHeight,
+    width: 680/1440*windowWidth,
+    fontFamily: "Roboto-thin",
+    fontStyle: "light",
+    fontWeight: "light",
+    fontSize: 24,
+    lineHeight: 28,
+    display: "flex",
+    alignItems: "center",
+    textAlign: "left",
+    color: "#FFFFFF"
+  },
+
+  title2:
+  {
+    "position": "absolute",
+    top: 100/1024*windowHeight,
+    right: 75/1440*windowWidth,
+    height: 106/1024*windowHeight,
+    width: 680/1440*windowWidth,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: "500",
+    fontSize: 45,
+    lineHeight: 53,
+    display: "flex",
+    alignItems: "center",
+    textAlign: "left",
+    color: "#FFFFFF"
+  },
+
+  subtext2:
+  {
+    "position": "absolute",
+    top: 250/1024*windowHeight,
+    right: 75/1440*windowWidth,
+    height: 56/1024*windowHeight,
+    width: 680/1440*windowWidth,
+    fontFamily: "Roboto-thin",
+    fontStyle: "light",
+    fontWeight: "light",
+    fontSize: 24,
+    lineHeight: 28,
+    display: "flex",
+    alignItems: "center",
+    textAlign: "left",
+    color: "#FFFFFF"
+  },
+
+  title3:
+  {
+    "position": "absolute",
+    top: 100/1024*windowHeight,
+    left: 343/1440*windowWidth,
+    height: 106/1024*windowHeight,
+    width: 640/1440*windowWidth,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: "500",
+    fontSize: 45,
+    lineHeight: 53,
+    display: "flex",
+    alignItems: "center",
+    textAlign: "center",
+    color: "#FFFFFF"
+  },
+
+  subtext3:
+  {
+    "position": "absolute",
+    top: 250/1024*windowHeight,
+    left: 343/1440*windowWidth,
+    height: 56/1024*windowHeight,
+    width: 680/1440*windowWidth,
+    fontFamily: "Roboto-thin",
+    fontStyle: "light",
+    fontWeight: "light",
+    fontSize: 24,
+    lineHeight: 28,
+    display: "flex",
+    alignItems: "center",
+    textAlign: "center",
+    color: "#FFFFFF"
+  },
+
     InputStyle1:{
       "position": "absolute",
-      top: 127/1024*windowHeight,
+      top: 140/1024*windowHeight,
       left: 877/1440*windowWidth,
       height: 45/1024*windowHeight,
       width: 305/1440*windowWidth,
@@ -179,7 +339,7 @@ const styles = StyleSheet.create({
 
     InputStyle2:{
       "position": "absolute",
-      top: 202/1024*windowHeight,
+      top: 215/1024*windowHeight,
       left: 877/1440*windowWidth,
       height: 45/1024*windowHeight,
       width: 305/1440*windowWidth,
