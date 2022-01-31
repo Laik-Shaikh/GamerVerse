@@ -3,8 +3,8 @@ import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Te
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height
+const windowWidth = Dimensions.get('screen').width;
+const windowHeight = Dimensions.get('screen').height;
 
 
 export default function homepage({ navigation }) {
@@ -15,10 +15,10 @@ export default function homepage({ navigation }) {
                     colors={['#013C00', '#000000']}
                     style={styles.background} >
                     <ImageBackground source={require('./homeAssets/designspikes1.png')} style={styles.spike1} />
-                    <Image source={require('./homeAssets/gamerversetitle.png')} style={styles.title} />
+                    <Image source={require('./homeAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")}/>
                     <ImageBackground source={require('./homeAssets/menubar.png')} style={styles.menu} />
                     <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
-                    <Text style={styles.robototxt}>Home</Text>
+                    <Text style={styles.highlighttxt}>Home</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
                     <Text style={styles.robototxt}>Profile</Text>
@@ -30,7 +30,7 @@ export default function homepage({ navigation }) {
                     <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     <Image source={require('./homeAssets/searchIcon.png')} style={styles.searchIcon} />
-                    <TextInput style={styles.InputStyle1} placeholder='Search'></TextInput>
+                    <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
                     <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
                     <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
                     <Text style={styles.nametxt}>Danny Devadiga</Text>
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     container: {
         position:"relative",
         width: windowWidth,
-        height: windowHeight
+        height: windowHeight,
 
     },
 
@@ -90,6 +90,15 @@ const styles = StyleSheet.create({
         "color": "#FFFFFF"
     },
 
+    highlighttxt:{ 
+        "fontStyle": "normal",
+        "fontWeight": "500",
+        "fontSize": 15,
+        borderBottomColor: "#FFFFFF",
+        borderBottomWidth: 1,
+        "color": "#FFFFFF"
+    },
+
     nametxt:{ 
         "fontStyle": "normal",
         "fontWeight": "500",
@@ -112,10 +121,9 @@ const styles = StyleSheet.create({
 
     homebtn:{
         position:"absolute",
-        top:0.11*windowHeight,
+        top:0.107*windowHeight,
         left:0.05*windowWidth,
         height: 0.03*windowHeight,
-        width: 0.03*windowWidth
     },
 
     profilebtn:{
