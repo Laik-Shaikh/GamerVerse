@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height
+const windowWidth = Dimensions.get('screen').width;
+const windowHeight = Dimensions.get('screen').height;
 
 import BG from './authAssets/BG.png'
 import S1 from './authAssets/slide1.png'
-//<ImageBackground source={S1} resizeMode="cover" style={styles.S1}/>
-//
 
 export default function Login({ navigation }) {
     return(
@@ -16,7 +14,7 @@ export default function Login({ navigation }) {
             <View style={styles.rectanglebg} />
             
             <Image source={require('./authAssets/logo.png')} style={styles.logo} />
-            <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 1332/1440 * windowWidth, "height": 800/1024 * windowHeight, "left": 40/1440 * windowWidth, "top": 70/1024 * windowHeight}}>
+            <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 1400/1440 * windowWidth, "height": 685/1024 * windowHeight, "left": 40/1440 * windowWidth, "top": 70/1024 * windowHeight}}>
                 <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
                   <View style={styles.whitebg}/>
                   <Image source={require('./authAssets/group1.png')} style={styles.img1} />
@@ -152,7 +150,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginHorizontal: 0,
     top: 0/1024*windowHeight,
-    left: -85/1440*windowWidth,
+    left: -55/1440*windowWidth,
     height: 486/1024*windowHeight,
     width: 615/1440*windowWidth,
     resizeMode:'contain',
@@ -163,7 +161,7 @@ img2:{
   marginTop: 0,
   marginHorizontal: 0,
   top: 0/1024*windowHeight,
-  right: -105/1440*windowWidth,
+  right: -55/1440*windowWidth,
   height: 486/1024*windowHeight,
   width: 615/1440*windowWidth,
   resizeMode:'contain',
