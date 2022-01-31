@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height
+const windowWidth = Dimensions.get('screen').width;
+const windowHeight = Dimensions.get('screen').height
 
 import BG from './authAssets/BG.png'
 import S1 from './authAssets/slide1.png'
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginHorizontal: 0,
     top: 0/1024*windowHeight,
-    left: -75/1440*windowWidth,
+    left: -30/1440*windowWidth,
     height: 486/1024*windowHeight,
     width: 615/1440*windowWidth,
     resizeMode:'contain',
