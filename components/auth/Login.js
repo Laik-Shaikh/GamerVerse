@@ -13,9 +13,7 @@ import S1 from './authAssets/slide1.png'
 export default function Login({ navigation }) {
   const [UName, setUName] = React.useState();
   const [PWord, setPWord] = React.useState();
-  const [key, setKey] = React.useState(0);
   const unamekeeper = React.createRef();
-  const passwordkeeper = React.createRef();
   const auth = getAuth();
 
     return(
