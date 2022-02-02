@@ -24,7 +24,7 @@ export default function Login({ navigation }) {
                   <TextInput style={styles.InputStyle1} placeholder='Email ID'></TextInput>
                   <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true}></TextInput>
                   <TextInput style={styles.InputStyle3} placeholder='Confirm Password' secureTextEntry={true}></TextInput>
-                  <TouchableOpacity style={styles.Button} title='Register' onPress={() => navigation.navigate("Profile")}>
+                  <TouchableOpacity style={styles.Button} title='Register' onPress={() => navigation.navigate("CreateProfile")}>
                   <Text style={styles.ButtonText}>Register</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Login")}>

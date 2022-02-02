@@ -93,7 +93,7 @@ export default function profilepage({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        position:"relative",
+        position: "relative",
         width: "100%",
         height: "100%"
 
@@ -170,13 +170,13 @@ const styles = StyleSheet.create({
         alignItems:"center",
         backgroundColor: "rgba(255, 255, 255, 0.25)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
-      },
-    dpicture:{
+    },
+    dpicture: {
         position: "absolute",
-        top:0.1*windowHeight,
-        width:0.15*windowHeight,
-        height:0.15*windowHeight,
-        borderRadius:0.075*windowHeight,
+        top: 0.1 * windowHeight,
+        width: 0.15 * windowHeight,
+        height: 0.15 * windowHeight,
+        borderRadius: 0.075 * windowHeight,
         backgroundColor: "rgba(120, 225, 100, 0.2)"
     },
 
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
 
     headTxt:{
         position: "absolute",
-        top: 0.02*windowHeight,
+        top: 0.02 * windowHeight,
         fontFamily: "Roboto",
         fontStyle: "normal",
         fontWeight: "500",
@@ -245,16 +245,16 @@ const styles = StyleSheet.create({
         lineHeight: "26px",
         textAlign: "center",
         color: "#FFFFFF"
-      },
-    aboutMeContainer:{
+    },
+    aboutMeContainer: {
         position: "absolute",
         width: 0.32*windowWidth,
         height: 0.547*windowHeight,
         top: 0.45*windowHeight,
         alignItems: "center",
         backgroundColor: "rgba(255, 255, 255, 0.2)",
-      },
-    aboutMeTxt:{
+    },
+    aboutMeTxt: {
         position: "absolute",
         top: 0.09*windowHeight,
         paddingLeft: 15,
@@ -266,64 +266,64 @@ const styles = StyleSheet.create({
         lineHeight: 23,
         textAlign: "justify",
         color: "rgba(255, 255, 255, 0.75)"
-      },
-    infoContainer:{
+    },
+    infoContainer: {
         position: "absolute",
-        width: 0.68*windowWidth,
-        height: 0.12*windowHeight,
-        left: 0.32*windowWidth,
+        width: 0.68 * windowWidth,
+        height: 0.12 * windowHeight,
+        left: 0.32 * windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.2)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
-      },
-    infoHeadTxt:{
+    },
+    infoHeadTxt: {
         position: "absolute",
-        top: 0.045*windowHeight,
-        left: 0.05*windowHeight,
+        top: 0.045 * windowHeight,
+        left: 0.05 * windowHeight,
         fontFamily: "Roboto",
         fontStyle: "normal",
         fontWeight: "500",
         fontSize: "22px",
         lineHeight: "26px",
         color: "#FFFFFF"
-      },
-    gameImage:{
-        position:"absolute",
-        left:0.05*windowWidth,
-        top:0.02*windowHeight,
-        resizeMode:'contain',
-        height: 0.15*windowHeight,
-        width: 0.35*windowWidth,
     },
-    divider1:{
-        position:"absolute",
-        height:0.848*windowHeight,
-        left:0.32*windowWidth,
-        top:0.15*windowHeight,
-        borderWidth: 0.00001*windowWidth,
+    gameImage: {
+        position: "absolute",
+        left: 0.05 * windowWidth,
+        top: 0.02 * windowHeight,
+        resizeMode: 'contain',
+        height: 0.15 * windowHeight,
+        width: 0.35 * windowWidth,
+    },
+    divider1: {
+        position: "absolute",
+        height: 0.848 * windowHeight,
+        left: 0.32 * windowWidth,
+        top: 0.15 * windowHeight,
+        borderWidth: 0.00001 * windowWidth,
         borderColor: "rgba(168, 182, 175, 0.5)",
         borderStyle: "solid"
     },
-    divider2:{
-        position:"absolute",
-        height:0.848*windowHeight,
-        left:0.5*windowWidth,
-        top:0.15*windowHeight,
-        borderWidth: 0.00001*windowWidth,
+    divider2: {
+        position: "absolute",
+        height: 0.848 * windowHeight,
+        left: 0.5 * windowWidth,
+        top: 0.15 * windowHeight,
+        borderWidth: 0.00001 * windowWidth,
         borderColor: "rgba(168, 182, 175, 0.5)",
         borderStyle: "solid"
     },
-    spike1:{
-        position:"absolute",
-        resizeMode:'contain',
-        right:"0px",
-        height: 0.2*windowHeight,
-        width:0.15* windowWidth,
+    spike1: {
+        position: "absolute",
+        resizeMode: 'contain',
+        right: "0px",
+        height: 0.2 * windowHeight,
+        width: 0.15 * windowWidth,
     },
-    spike2:{
-        position:"absolute",
-        bottom:"0px",
-        resizeMode:'contain',
-        height: 0.2*windowHeight,
-        width:0.15* windowWidth,
+    spike2: {
+        position: "absolute",
+        bottom: "0px",
+        resizeMode: 'contain',
+        height: 0.2 * windowHeight,
+        width: 0.15 * windowWidth,
     }
 });

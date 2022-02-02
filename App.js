@@ -6,6 +6,7 @@ import homepage from './components/home/homepage';
 import profilepage from './components/profile/profilepage';
 import login from './components/auth/Login';
 import register from './components/auth/Register';
+import createprofilepage from './components/createprofile/createprofilepage';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ export default function App() {
         <Stack.Screen name='Login' component={login} options={{ headerShown: false }} />
         <Stack.Screen name='Home' component={homepage} options={{ headerShown: false }} />
         <Stack.Screen name='Profile' component={profilepage} options={{ headerShown: false }} />
+        <Stack.Screen name='CreateProfile' component={createprofilepage} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
