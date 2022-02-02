@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
+import fire from '../firebase';
+import 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -8,6 +11,11 @@ import BG from './authAssets/BG.png'
 import S1 from './authAssets/slide1.png'
 
 export default function Login({ navigation }) {
+  const [UName, setUName] = React.useState();
+  const [PWord, setPWord] = React.useState();
+  const unamekeeper = React.createRef();
+  const auth = getAuth();
+
     return(
         <View style={styles.container}>
         <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
@@ -19,12 +27,29 @@ export default function Login({ navigation }) {
                   <View style={styles.whitebg}/>
                   <Image source={require('./authAssets/group1.png')} style={styles.img1} />
                   <Text style={styles.signinText}>Sign In</Text>
-                  <TextInput style={styles.InputStyle1} placeholder='Email ID'></TextInput>
-                  <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true}></TextInput>
+                  <TextInput style={styles.InputStyle1} placeholder='Email ID'  onChangeText={UName => setUName(UName)} ref={unamekeeper}></TextInput>
+                  <TextInput style={styles.InputStyle2} placeholder='Password' onChangeText={PWord => setPWord(PWord)} secureTextEntry={true}></TextInput>
                   <TouchableOpacity style={styles.forgotPasswordText}>
                     <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "rgba(84, 224, 255, 1)" }}>Forgot Password?</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.Button} title='Login' onPress={() => navigation.navigate("Home")}>
+                  <TouchableOpacity style={styles.Button} title='Login'
+                  onPress={
+                    async () => {
+                      try {
+                        console.log(fire.auth);
+                        console.log(UName+" "+PWord);
+                        await signInWithEmailAndPassword(auth,UName,PWord);
+                        console.log("yes")
+                        setPWord(" ");
+                        setUName(" ");
+                        navigation.navigate("Register") 
+                      } catch (error) {
+                        console.log(error);
+                        // alert('Error');
+                      }
+                    }
+                  }
+                    >
                   <Text style={styles.ButtonText}>Login</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Register")}>
