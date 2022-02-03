@@ -42,7 +42,7 @@ export default function Login({ navigation }) {
                         console.log("yes")
                         setPWord(" ");
                         setUName(" ");
-                        navigation.navigate("Register") 
+                        navigation.navigate("Home") 
                       } catch (error) {
                         console.log(error);
                         // alert('Error');

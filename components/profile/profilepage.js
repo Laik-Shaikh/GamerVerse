@@ -2,12 +2,23 @@ import React from 'react';
 import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,Button,TextInput} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import fire from '../firebase';
+import 'firebase/database'
+import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 
 export default function profilepage({ navigation }) {
+    
+    const db = getDatabase();
+    const UserRef = query(ref(db,'users'),orderByChild('uid'),equalTo('AO6qTBhGengOJjmsyKZoNhtvRJ03'))
+    console.log(UserRef)
+    onValue(UserRef,(snapshot)=>{
+        console.log(snapshot.val())
+    })
+
     return (
             <View style={styles.container} >
                 <LinearGradient
