@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
+import firebaseApp from '../firebase';
+import uuid from 'uuid';
+import { getStorage } from "firebase/storage";
+import * as ImagePicker from 'expo-image-picker';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height
@@ -7,6 +12,62 @@ const windowHeight = Dimensions.get('window').height
 import BG from './createProfileAssets/BG.png'
 
 export default function CreateProfile() {
+
+  const [image, setImage] = useState(null);
+
+  const storage = getStorage();
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
+  const getPictureBlob = (uri) => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', imageUri, true);
+      xhr.send(null);
+    });
+  };
+
+  const uploadImage = async () => {
+    let blob;
+    try {
+      setUploading(true);
+      blob = await getPictureBlob(imageUri);
+  
+      const ref = await storage.ref().child(uuid.v4());
+      const snapshot = await ref.put(blob);
+  
+      return await snapshot.ref.getDownloadURL();
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      blob.close();
+      setUploading(false);
+    }
+  };
+
+
   return (
     <View style={styles.container}>
       <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
@@ -16,13 +77,15 @@ export default function CreateProfile() {
 
         <View style={styles.whitebg} >
           <Text style={styles.signinText}>Create Your Profile</Text>
+          <TouchableOpacity onPress={pickImage} >
           <Image source={require('./createProfileAssets/CamIcon.png')} style={styles.CamIcon} />
+          </TouchableOpacity>
           <TextInput style={styles.InputStyle1} placeholder='Name'></TextInput>
           <TextInput style={styles.InputStyle2} placeholder='Phone Number'></TextInput>
           <TextInput style={styles.InputStyle3} placeholder='Location'></TextInput>
           <TextInput style={styles.InputStyle4} placeholder='Discord ID'></TextInput>
 
-          <TouchableOpacity style={styles.Button} title='Continue'>
+          <TouchableOpacity style={styles.Button} title='Continue' onPress={uploadImage} >
             <Text style={styles.ButtonText}>Continue</Text>
           </TouchableOpacity>
 
@@ -97,7 +160,7 @@ const styles = StyleSheet.create({
   CamIcon: {
     "position": "absolute",
     resizeMode:"contain",
-    top: 0.08 * windowHeight,
+    bottom: 0.13 * windowHeight,
     height: 0.11 * windowHeight,
     width: 0.11 * windowWidth,
   },
