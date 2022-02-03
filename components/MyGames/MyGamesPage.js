@@ -58,57 +58,101 @@ export default function MyGamesPage ({ navigation }){
 
             <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
                 <TouchableOpacity>
-                <Image source={require('./MyGamesAssets/ApexLegend.png')} 
+                <Image source={require('./MyGamesAssets/ApexLogo.png')} 
                     style = {styles.apexLegend} />
                 </TouchableOpacity>
+                <View style={styles.apexContainer}>
+                    <Text style={styles.tagText} >Tags: </Text>
+                    <Text style={styles.tagText} >#BattleRoyale</Text>
+                </View>
                 <TouchableOpacity>
-                <Image source={require('./MyGamesAssets/GTAV.png')} 
+                <Image source={require('./MyGamesAssets/GTAVLogo.png')} 
                     style = {styles.gta5} />
                 </TouchableOpacity>
+                <View style={styles.gta5Container}>
+                    <Text style={styles.tagText} >Tags: </Text>
+                    <Text style={styles.tagText} >#BattleRoyale</Text>
+                </View>
                 <TouchableOpacity>
-                <Image source={require('./MyGamesAssets/Valorant.png')} 
+                <Image source={require('./MyGamesAssets/ValoLogo.png')} 
                     style = {styles.valorant} />
                 </TouchableOpacity>
+                <View style={styles.valorantContainer}>
+                    <Text style={styles.tagText} >Tags: </Text>
+                    <Text style={styles.tagText} >#BattleRoyale</Text>
+                </View>
                 <TouchableOpacity>
-                <Image source={require('./MyGamesAssets/CODWZ.png')} 
+                <Image source={require('./MyGamesAssets/CODWZLogo.png')} 
                     style = {styles.cod} />
                 </TouchableOpacity>
+                <View style={styles.codContainer}>
+                    <Text style={styles.tagText} >Tags: </Text>
+                    <Text style={styles.tagText} >#BattleRoyale</Text>
+                </View>
             </ScrollView>
 
 
             <ScrollView style = {styles.scrollContainer2} showsVerticalScrollIndicator={false}>
             <TouchableOpacity>
-            <Image source={require('./MyGamesAssets/COC.png')} 
+            <Image source={require('./MyGamesAssets/cocLogo.png')} 
                     style = {styles.coc} />
             </TouchableOpacity>
+            <View style={styles.cocContainer}>
+                <Text style={styles.tagText} >Tags: </Text>
+                <Text style={styles.tagText} >#BattleRoyale</Text>
+            </View>
             <TouchableOpacity>
-            <Image source={require('./MyGamesAssets/CODM.png')} 
+            <Image source={require('./MyGamesAssets/CODMLogo.png')} 
                     style = {styles.codMob} />
             </TouchableOpacity>
+            <View style={styles.codMobContainer}>
+                <Text style={styles.tagText} >Tags: </Text>
+                <Text style={styles.tagText} >#BattleRoyale</Text>
+            </View>
             <TouchableOpacity>
-            <Image source={require('./MyGamesAssets/PokemonGO.png')} 
+            <Image source={require('./MyGamesAssets/PokeLogo.png')} 
                     style = {styles.pogo} />
             </TouchableOpacity>
+            <View style={styles.pogoContainer}>
+                <Text style={styles.tagText} >Tags: </Text>
+                <Text style={styles.tagText} >#BattleRoyale</Text>
+            </View>
             <TouchableOpacity>
             <Image source={require('./MyGamesAssets/FreeFire.png')} 
                     style = {styles.freeFire} />
             </TouchableOpacity>
+            <View style={styles.freeFireContainer}>
+                <Text style={styles.tagText} >Tags: </Text>
+                <Text style={styles.tagText} >#BattleRoyale</Text>
+            </View>
             </ScrollView>
 
 
             <ScrollView style = {styles.scrollContainer3} showsVerticalScrollIndicator={false}>
             <TouchableOpacity>
-            <Image source={require('./MyGamesAssets/GodOfWar.png')} 
+            <Image source={require('./MyGamesAssets/GOWLogo.png')} 
                     style = {styles.gow} />
             </TouchableOpacity>
+            <View style={styles.gowContainer}>
+                <Text style={styles.tagText} >Tags: </Text>
+                <Text style={styles.tagText} >#BattleRoyale</Text>
+            </View>
             <TouchableOpacity>
-            <Image source={require('./MyGamesAssets/MortalKombatLogo.png')} 
+            <Image source={require('./MyGamesAssets/MortalKombat.png')} 
                     style = {styles.mortalKombat} />
             </TouchableOpacity>
+            <View style={styles.mkContainer}>
+                <Text style={styles.tagText} >Tags: </Text>
+                <Text style={styles.tagText} >#BattleRoyale</Text>
+            </View>
             <TouchableOpacity>
             <Image source={require('./MyGamesAssets/SpiderManLogo.png')} 
                     style = {styles.spiderMan} />
             </TouchableOpacity>
+            <View style={styles.spiderContainer}>
+                <Text style={styles.tagText} >Tags: </Text>
+                <Text style={styles.tagText} >#BattleRoyale</Text>
+            </View>
             </ScrollView>
             
         </View>
@@ -287,100 +331,185 @@ const styles = StyleSheet.create({
     apexLegend:{
         position: 'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '0px',
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        top: 0.02*windowHeight,
+        left: -0.12*windowWidth,
+    },
+
+    apexContainer:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
         top: 0.02*windowHeight
     },
+
+   tagText:{
+    "fontStyle": "normal",
+    "fontWeight": "500",
+    "fontSize": 26,
+    "color": "#FFFFFF"
+   },
 
     gta5:{
         position: 'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '0px',
-        top: 0.24*windowHeight
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: -0.12*windowWidth,
+        top: 0.06*windowHeight
+    },
+
+    gta5Container:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
+        top: 0.06*windowHeight
     },
 
     valorant:{
         position: 'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '0px',
-        top: 0.46*windowHeight
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: -0.12*windowWidth,
+        top: 0.10*windowHeight
+    },
+
+    valorantContainer:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
+        top: 0.10*windowHeight
     },
 
     cod:{
         position: 'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '0px',
-        top: 0.68*windowHeight
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: -0.12*windowWidth,
+        top: 0.14*windowHeight
+    },
+
+    codContainer:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
+        top: 0.14*windowHeight,
     },
 
     coc:{
         position:'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '1px',
-        top: 0.02 *windowHeight
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        top: 0.02*windowHeight,
+        left: -0.14*windowWidth
+    },
+
+    cocContainer:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
+        top: 0.02*windowHeight
     },
 
     codMob:{
         position:'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '1px',
-        top: 0.24 *windowHeight
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        top: 0.06*windowHeight,
+        left: -0.14*windowWidth
+    },
+
+    codMobContainer:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
+        top: 0.06*windowHeight
     },
 
     pogo:{
         position:'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '1px',
-        top: 0.46 *windowHeight
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        top: 0.10*windowHeight,
+        left: -0.14*windowWidth
+    },
+
+    pogoContainer:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
+        top: 0.10*windowHeight
     },
 
     freeFire:{
         position:'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '1px',
-        top: 0.68 *windowHeight
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        top: 0.14*windowHeight,
+        left: -0.14*windowWidth
+    },
+
+    freeFireContainer:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
+        top: 0.14*windowHeight
     },
 
     gow:{
         position:'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '1px',
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        top: 0.02*windowHeight,
+        left: -0.12*windowWidth,
+    },
+
+    gowContainer:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
         top: 0.02*windowHeight
     },
 
     mortalKombat:{
         position:'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '1px',
-        top: 0.24*windowHeight
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        top: 0.06*windowHeight,
+        left: -0.12*windowWidth,
+    },
+
+    mkContainer:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
+        top: 0.06*windowHeight
     },
 
     spiderMan:{
         position:'absolute',
         resizeMode: 'contain',
-        width: 0.3*windowWidth,
-        height: 0.21*windowHeight,
-        left: '1px',
-        top: 0.46*windowHeight
-    }
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        top: 0.10*windowHeight,
+        left: -0.12*windowWidth,
+    },
+
+    spiderContainer:{
+        width: 0.4*windowWidth,
+        height: 0.25*windowHeight,
+        left: 0.15*windowWidth,
+        top: 0.10*windowHeight
+    },
+    
     
 });
