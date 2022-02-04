@@ -26,11 +26,11 @@ export default function profilepage({ navigation }) {
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     },
     title:{
         position:"absolute",
-        left:0.3*windowWidth,
+        left:0.35*windowWidth,
         resizeMode:'contain',
         height: 0.1*windowHeight,
         width: 0.35*windowWidth,
