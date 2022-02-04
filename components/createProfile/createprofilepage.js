@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
-import firebaseApp from '../firebase';
+import fire from '../firebase';
 import uuid from 'uuid';
-import { getStorage } from "firebase/storage";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
 
 
@@ -14,11 +14,16 @@ import BG from './createProfileAssets/BG.png'
 export default function CreateProfile() {
 
   const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(null);
 
   const storage = getStorage();
+  const storageRef = ref(storage, 'Profile/laik3.jpg');
+  const metadata = {
+    contentType: 'image/jpg',
+  };
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+    
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -30,42 +35,56 @@ export default function CreateProfile() {
 
     if (!result.cancelled) {
       setImage(result.uri);
+      
     }
   };
 
-  const getPictureBlob = (uri) => {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', imageUri, true);
-      xhr.send(null);
-    });
-  };
+  
+  
+  // Upload the file and metadata
 
-  const uploadImage = async () => {
-    let blob;
-    try {
-      setUploading(true);
-      blob = await getPictureBlob(imageUri);
+ 
+
+  // const getPictureBlob = (uri) => {
+  //   return new Promise((resolve, reject) => {
+  //     const xhr = new XMLHttpRequest();
+  //     xhr.onload = function () {
+  //       resolve(xhr.response);
+  //     };
+  //     xhr.onerror = function (e) {
+  //       console.log(e);
+  //       reject(new TypeError('Network request failed'));
+  //     };
+  //     xhr.responseType = 'blob';
+  //     xhr.open('GET', image, true);
+  //     xhr.send(null);
+  //   });
+  // };
+
   
-      const ref = await storage.ref().child(uuid.v4());
-      const snapshot = await ref.put(blob);
+
+  // const uploadImage = async () => {
+  //   let blob;
+  //   try {
+  //     setUploading(true);
+  //     blob = await getPictureBlob(image);
   
-      return await snapshot.ref.getDownloadURL();
-    } catch (e) {
-      alert(e.message);
-    } finally {
-      blob.close();
-      setUploading(false);
-    }
-  };
+  //     // const storageRef = await storageref(storage.child(uuid.v4));
+  //     // const ref = await storage.ref().child(uuid.v4());
+  //     const storageRef = ref(storage, image);
+  //     const snapshot = await ref.put(blob);
+  
+  //     return await snapshot.storageRef.getDownloadURL();
+  //   } catch (e) {
+  //     alert(e.message);
+  //   } finally {
+  //     blob.close();
+  //     setUploading(false);
+  //   }
+  // };
+
+  
+  
 
 
   return (
@@ -85,7 +104,16 @@ export default function CreateProfile() {
           <TextInput style={styles.InputStyle3} placeholder='Location'></TextInput>
           <TextInput style={styles.InputStyle4} placeholder='Discord ID'></TextInput>
 
-          <TouchableOpacity style={styles.Button} title='Continue' onPress={uploadImage} >
+          <TouchableOpacity style={styles.Button} title='Continue' 
+          onPress={()=>{
+           
+            console.log(image);
+            uploadBytes(storageRef, 
+            bytes , metadata).then((snapshot) => {
+              
+            console.log('Uploaded a blob or file!');
+  
+  });}} >
             <Text style={styles.ButtonText}>Continue</Text>
           </TouchableOpacity>
 
