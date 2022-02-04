@@ -9,6 +9,7 @@ import register from './components/auth/Register';
 import createprofilepage from './components/createprofile/createprofilepage';
 import MyGamesPage from './components/MyGames/MyGamesPage';
 import GameHubPage from './components//GameHub/GameHubPage';
+import gamepage from './components/game/gamepage';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ export default function App() {
         <Stack.Screen name='CreateProfile' component={createprofilepage} options={{ headerShown: false }} />
         <Stack.Screen name='MyGames' component={MyGamesPage} options={{ headerShown: false }} />
         <Stack.Screen name='GameHub' component={GameHubPage} options={{ headerShown: false }} />
+        <Stack.Screen name='Game' component={gamepage} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
