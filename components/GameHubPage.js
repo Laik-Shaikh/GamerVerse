@@ -30,17 +30,17 @@ export default function MyGamesPage ({ navigation }){
             {/* NavBar Buttons     */}
 
             <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
-                <Text style={styles.robototxt}>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
-                <Text style={styles.robototxt}>Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
-                <Text style={styles.robototxt}>My Games</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
-                <Text style={styles.robototxt}>Game Hub</Text>
-            </TouchableOpacity>
+                    <Text style={styles.robototxt}>Home</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <Text style={styles.robototxt}>Profile</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+                    <Text style={styles.robototxt}>My Games</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+                    <Text style={styles.highlighttxt}>Game Hub</Text>
+                    </TouchableOpacity>
 
             <Image source={require('./GameHubAssets/VerLine.png')} 
                 style = {styles.verLine} />
@@ -187,6 +187,14 @@ const styles = StyleSheet.create({
         "fontStyle": "normal",
         "fontWeight": "500",
         "fontSize": 14,
+        "color": "#FFFFFF"
+    },
+    highlighttxt:{ 
+        "fontStyle": "normal",
+        "fontWeight": "500",
+        "fontSize": 15,
+        borderBottomColor: "#FFFFFF",
+        borderBottomWidth: 1,
         "color": "#FFFFFF"
     },
    
