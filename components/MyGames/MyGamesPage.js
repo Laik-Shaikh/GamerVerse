@@ -3,8 +3,8 @@ import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, 
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('screen').width;
+const windowHeight = Dimensions.get('screen').height;
 
 export default function MyGamesPage ({ navigation }){
     return(
@@ -33,7 +33,7 @@ export default function MyGamesPage ({ navigation }){
                 <Text style={styles.robototxt}>Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
-                <Text style={styles.robototxt}>My Games</Text>
+                <Text style={styles.highlighttxt}>My Games</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
                 <Text style={styles.robototxt}>Game Hub</Text>
@@ -145,7 +145,7 @@ export default function MyGamesPage ({ navigation }){
                 <Text style={styles.tagText} >Tags: </Text>
                 <Text style={styles.tagText} >#BattleRoyale</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("MyGames")}>
             <Image source={require('./MyGamesAssets/SpiderManLogo.png')} 
                     style = {styles.spiderMan} />
             </TouchableOpacity>
@@ -211,6 +211,15 @@ const styles = StyleSheet.create({
         "fontSize": 14,
         "color": "#FFFFFF"
     },
+    
+    highlighttxt:{ 
+        "fontStyle": "normal",
+        "fontWeight": "500",
+        "fontSize": 15,
+        borderBottomColor: "#FFFFFF",
+        borderBottomWidth: 1,
+        "color": "#FFFFFF"
+    },
    
     homebtn:{
         position:"absolute",
@@ -228,10 +237,9 @@ const styles = StyleSheet.create({
     },
     mygamesbtn:{
         position:"absolute",
-        top:0.11*windowHeight,
+        top:0.107*windowHeight,
         left:0.35*windowWidth,
         height: 0.03*windowHeight,
-        width: 0.05*windowWidth
     },
     gamehubbtn:{
         position:"absolute",
