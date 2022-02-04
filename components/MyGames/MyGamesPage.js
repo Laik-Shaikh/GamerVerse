@@ -61,10 +61,16 @@ export default function MyGamesPage ({ navigation }){
                 <Image source={require('./MyGamesAssets/ApexLogo.png')} 
                     style = {styles.apexLegend} />
                 </TouchableOpacity>
-                <View style={styles.apexContainer}>
+                <ScrollView style={styles.apexContainer} showsVerticalScrollIndicator={false}>
                     <Text style={styles.tagText} >Tags: </Text>
                     <Text style={styles.tagText} >#BattleRoyale</Text>
-                </View>
+                    <Text style={styles.tagText} >#BattleRoyale</Text>
+                    <Text style={styles.tagText} >#BattleRoyale</Text>
+                    <Text style={styles.tagText} >#BattleRoyale</Text>
+                    <Text style={styles.tagText} >#BattleRoyale</Text>
+                    <Text style={styles.tagText} >#BattleRoyale</Text>
+                    <Text style={styles.tagText} >#BattleRoyale</Text>
+                </ScrollView>
                 <TouchableOpacity>
                 <Image source={require('./MyGamesAssets/GTAVLogo.png')} 
                     style = {styles.gta5} />
