@@ -13,11 +13,15 @@ const windowHeight = Dimensions.get('screen').height;
 export default function profilepage({ navigation }) {
     
     const db = getDatabase();
-    const UserRef = query(ref(db,'users'),orderByChild('uid'),equalTo('AO6qTBhGengOJjmsyKZoNhtvRJ03'))
+    const UserRef = query(ref(db,'users'),orderByChild('uid'),equalTo('8Fj0TLOOipcWDRw3yrSqyUxdL083'))
     console.log(UserRef)
+    React.useEffect(() => {
     onValue(UserRef,(snapshot)=>{
-        console.log(snapshot.val())
+        const data = Object.values(snapshot.val());
+        const userProfile = data[0]
+        console.log(userProfile.Name)
     })
+},[])
 
     return (
             <View style={styles.container} >
