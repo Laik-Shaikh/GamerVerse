@@ -3,8 +3,8 @@ import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, 
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('screen').width;
+const windowHeight = Dimensions.get('screen').height;
 
 export default function MyGamesPage ({ navigation }){
     return(
@@ -198,6 +198,15 @@ const styles = StyleSheet.create({
         "color": "#FFFFFF"
     },
    
+    highlighttxt:{ 
+        "fontStyle": "normal",
+        "fontWeight": "500",
+        "fontSize": 15,
+        borderBottomColor: "#FFFFFF",
+        borderBottomWidth: 1,
+        "color": "#FFFFFF"
+    },
+
     homebtn:{
         position:"absolute",
         top:0.11*windowHeight,
@@ -221,10 +230,9 @@ const styles = StyleSheet.create({
     },
     gamehubbtn:{
         position:"absolute",
-        top:0.11*windowHeight,
+        top:0.107*windowHeight,
         left:0.50*windowWidth,
         height: 0.03*windowHeight,
-        width: 0.05*windowWidth
     },
 
     searchBar:{
@@ -292,6 +300,7 @@ const styles = StyleSheet.create({
 
     scrollContainer1:{
         position: 'absolute',
+        flex: 1,
         width: 0.8*windowWidth,
         height: 0.28*windowHeight,
         left: 0.19*windowWidth,
@@ -317,6 +326,8 @@ const styles = StyleSheet.create({
     apexLogo:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.0001*windowWidth,
@@ -326,6 +337,8 @@ const styles = StyleSheet.create({
     gta5:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.12*windowWidth,
@@ -335,6 +348,8 @@ const styles = StyleSheet.create({
     valoLogo:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.24*windowWidth,
@@ -344,6 +359,8 @@ const styles = StyleSheet.create({
     codwz:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.36*windowWidth,
@@ -353,6 +370,8 @@ const styles = StyleSheet.create({
     dotaLogo:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.48*windowWidth,
@@ -362,6 +381,8 @@ const styles = StyleSheet.create({
     cocLogo:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.001*windowWidth,
@@ -371,6 +392,8 @@ const styles = StyleSheet.create({
     codMob:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.12*windowWidth,
@@ -380,6 +403,8 @@ const styles = StyleSheet.create({
     freeFire:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.24*windowWidth,
@@ -389,6 +414,8 @@ const styles = StyleSheet.create({
     crLogo:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.36*windowWidth,
@@ -398,6 +425,8 @@ const styles = StyleSheet.create({
     mobileLegend:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.48*windowWidth,
@@ -407,6 +436,8 @@ const styles = StyleSheet.create({
     pokeLogo:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.60*windowWidth,
@@ -416,6 +447,8 @@ const styles = StyleSheet.create({
     bgmi:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.72*windowWidth,
@@ -425,6 +458,8 @@ const styles = StyleSheet.create({
     gow:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.001*windowWidth,
@@ -434,6 +469,8 @@ const styles = StyleSheet.create({
     mortalKombat:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.12*windowWidth,
@@ -443,6 +480,8 @@ const styles = StyleSheet.create({
     spiderMan:{
         position: 'absolute',
         resizeMode: 'contain',
+        paddingLeft: 10,
+        paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
         left: 0.24*windowWidth,
