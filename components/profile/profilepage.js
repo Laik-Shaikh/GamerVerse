@@ -12,17 +12,48 @@ const windowHeight = Dimensions.get('screen').height;
 
 export default function profilepage({ navigation }) {
     
+    const [userProfile,setUserProfile] = React.useState()
     const db = getDatabase();
     const UserRef = query(ref(db,'users'),orderByChild('uid'),equalTo('8Fj0TLOOipcWDRw3yrSqyUxdL083'))
     console.log(UserRef)
     React.useEffect(() => {
     onValue(UserRef,(snapshot)=>{
         const data = Object.values(snapshot.val());
-        const userProfile = data[0]
-        console.log(userProfile.Name)
+        setUserProfile(data[0])
     })
 },[])
-
+    if(!userProfile){
+        return(<View style={styles.container} >
+            <LinearGradient
+                start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                colors={['#013C00', '#000000']}
+                style={styles.background} >
+                <ImageBackground source={require('./profileAssets/designspikes1.png')} style={styles.spike1} />
+                <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")}/>
+                <ImageBackground source={require('./profileAssets/menubar.png')} style={styles.menu} />
+                
+                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                <   Text style={styles.robototxt}>Home</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <Text style={styles.highlighttxt}>Profile</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                    <Text style={styles.robototxt}>My Games</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                    <Text style={styles.robototxt}>Game Hub</Text>
+                </TouchableOpacity>
+                
+                <Image source={require('./profileAssets/searchIcon.png')} style={styles.searchIcon} />
+                <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                <ImageBackground source={require('./profileAssets/designspikes.png')} style={styles.spike2} />)
+                </LinearGradient>
+            </View>)
+    }
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -71,7 +102,7 @@ export default function profilepage({ navigation }) {
                     
                     <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>John Doe</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userProfile.Name}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
