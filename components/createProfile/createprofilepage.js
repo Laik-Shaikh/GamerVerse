@@ -5,7 +5,6 @@ import uuid from 'uuid';
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
 
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height
 
@@ -17,7 +16,7 @@ export default function CreateProfile() {
   const [uploading, setUploading] = useState(null);
 
   const storage = getStorage();
-  const storageRef = ref(storage, 'Profile/laik3.jpg');
+  const storageRef = ref(storage, 'Profile/laik5.jpg');
   const metadata = {
     contentType: 'image/jpg',
   };
@@ -38,55 +37,6 @@ export default function CreateProfile() {
       
     }
   };
-
-  
-  
-  // Upload the file and metadata
-
- 
-
-  // const getPictureBlob = (uri) => {
-  //   return new Promise((resolve, reject) => {
-  //     const xhr = new XMLHttpRequest();
-  //     xhr.onload = function () {
-  //       resolve(xhr.response);
-  //     };
-  //     xhr.onerror = function (e) {
-  //       console.log(e);
-  //       reject(new TypeError('Network request failed'));
-  //     };
-  //     xhr.responseType = 'blob';
-  //     xhr.open('GET', image, true);
-  //     xhr.send(null);
-  //   });
-  // };
-
-  
-
-  // const uploadImage = async () => {
-  //   let blob;
-  //   try {
-  //     setUploading(true);
-  //     blob = await getPictureBlob(image);
-  
-  //     // const storageRef = await storageref(storage.child(uuid.v4));
-  //     // const ref = await storage.ref().child(uuid.v4());
-  //     const storageRef = ref(storage, image);
-  //     const snapshot = await ref.put(blob);
-  
-  //     return await snapshot.storageRef.getDownloadURL();
-  //   } catch (e) {
-  //     alert(e.message);
-  //   } finally {
-  //     blob.close();
-  //     setUploading(false);
-  //   }
-  // };
-
-  
-  
-
-
   const [Name, setName] = React.useState();
   const [PNum, setPNum] = React.useState(0);
   const [Loc, setLoc] = React.useState();
@@ -107,7 +57,6 @@ export default function CreateProfile() {
             }
         }
       }
-      console.log("j and k values"+j+k);
         if(k>=1 && j == 4)
         {
           console.log("disc tag approoved");
@@ -128,6 +77,13 @@ export default function CreateProfile() {
             break;
         }
     }
+}
+async function sendImage(){
+            console.log(image);
+            const response = await fetch(image);
+            const blob = await response.blob();
+            uploadBytes(storageRef, blob, metadata).then((snapshot) => {
+               console.log('Uploaded a blob or file!');})
 }
   return (
     <View style={styles.container}>
@@ -153,28 +109,15 @@ export default function CreateProfile() {
                   console.log(Name+" "+PNum+" "+Loc+" "+Disc);
                   mobileCheck(PNum);
                   discCheck(Disc);
+                  sendImage();
                 } catch (error) {
                   console.log(error);
-                  // alert('Error');
+                  alert('Error');
                 }
               }
             }>
               <Text>Continue</Text>
           </TouchableOpacity>
-
-            {/* uploadImage */}
-
-          {/* <TouchableOpacity style={styles.Button} title='Continue' 
-          onPress={()=>{
-           
-            console.log(image);
-            uploadBytes(storageRef, 
-            bytes , metadata).then((snapshot) => {
-              
-            console.log('Uploaded a blob or file!');
-  
-  });}} >
-        </TouchableOpacity>  */}
 
         </View>
 
