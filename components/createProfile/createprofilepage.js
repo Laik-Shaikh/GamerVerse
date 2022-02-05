@@ -87,6 +87,48 @@ export default function CreateProfile() {
   
 
 
+  const [Name, setName] = React.useState();
+  const [PNum, setPNum] = React.useState(0);
+  const [Loc, setLoc] = React.useState();
+  const [Disc, setDisc] = React.useState();
+  function discCheck(Disc){
+    let numbers = '0123456789';
+    let j=0;
+    let k=0;
+    let hash = '#'
+    for (var i=0; i < Disc.length; i++) {
+      console.log(Disc[i]);
+        if(Disc[i]=='#') {
+            k++;
+            for (var l=1;l<5;l++){
+            if(numbers.indexOf(Disc[i+l]) > -1) {
+              j++;
+              }
+            }
+        }
+      }
+      console.log("j and k values"+j+k);
+        if(k>=1 && j == 4)
+        {
+          console.log("disc tag approoved");
+        }
+        else 
+        {
+          alert("Please enter valid discord ID");
+        }
+}
+  function mobileCheck(PNum){
+    let numbers = '0123456789';
+    for (var i=0; i < PNum.length; i++) {
+        if(numbers.indexOf(PNum[i]) > -1 && PNum.length==10) {
+            console.log("Phone number approoved")
+        }
+        else {
+            alert("Please enter valid phone number");
+            break;
+        }
+    }
+}
   return (
     <View style={styles.container}>
       <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
@@ -99,12 +141,30 @@ export default function CreateProfile() {
           <TouchableOpacity onPress={pickImage} >
           <Image source={require('./createProfileAssets/CamIcon.png')} style={styles.CamIcon} />
           </TouchableOpacity>
-          <TextInput style={styles.InputStyle1} placeholder='Name'></TextInput>
-          <TextInput style={styles.InputStyle2} placeholder='Phone Number'></TextInput>
-          <TextInput style={styles.InputStyle3} placeholder='Location'></TextInput>
-          <TextInput style={styles.InputStyle4} placeholder='Discord ID'></TextInput>
+          <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={Name => setName(Name)}></TextInput>
+          <TextInput style={styles.InputStyle2} placeholder='Phone Number' onChangeText={PNum => setPNum(PNum)}></TextInput>
+          <TextInput style={styles.InputStyle3} placeholder='Location'  onChangeText={Loc => setLoc(Loc)}></TextInput>
+          <TextInput style={styles.InputStyle4} placeholder='Discord ID' onChangeText={Disc => setDisc(Disc)}></TextInput>
 
           <TouchableOpacity style={styles.Button} title='Continue' 
+            onPress={
+              async () => {
+                try {
+                  console.log(Name+" "+PNum+" "+Loc+" "+Disc);
+                  mobileCheck(PNum);
+                  discCheck(Disc);
+                } catch (error) {
+                  console.log(error);
+                  // alert('Error');
+                }
+              }
+            }>
+              <Text>Continue</Text>
+          </TouchableOpacity>
+
+            {/* uploadImage */}
+
+          {/* <TouchableOpacity style={styles.Button} title='Continue' 
           onPress={()=>{
            
             console.log(image);
@@ -114,8 +174,7 @@ export default function CreateProfile() {
             console.log('Uploaded a blob or file!');
   
   });}} >
-            <Text style={styles.ButtonText}>Continue</Text>
-          </TouchableOpacity>
+        </TouchableOpacity>  */}
 
         </View>
 
