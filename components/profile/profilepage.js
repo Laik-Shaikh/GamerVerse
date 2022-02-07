@@ -48,7 +48,7 @@ export default function profilepage({ navigation }) {
                         <Text style={styles.aboutMeTxt}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at condimentum velit. Etiam pretium justo ac tellus blandit, eget maximus metus maximus. Phasellus dictum dignissim nulla, sit amet porttitor lacus consequat sed. Sed a risus imperdiet, iaculis metus ac, condimentum ex. Cras vestibulum vestibulum orci, sit amet rhoncus risus placerat quis. Donec nulla velit, fringilla eget tellus sit amet, malesuada vulputate sapien. Nullam eget sem finibus neque interdum commodo vel non sapien. Ut a nulla in augue bibendum aliquam.</Text>
                     </View>
                     
-                    <TouchableOpacity style={styles.Button} title='Login'>
+                    <TouchableOpacity style={styles.Button} title='Edit'>
                         <Text style={styles.ButtonText}>Edit</Text>
                     </TouchableOpacity>
                     
@@ -253,6 +253,13 @@ const styles = StyleSheet.create({
         top: 0.45*windowHeight,
         alignItems: "center",
         backgroundColor: "rgba(255, 255, 255, 0.2)",
+      },
+    spike1:{
+        position:"absolute",
+        resizeMode:'contain',
+        right:"0px",
+        height: 0.2*windowHeight,
+        width:0.15* windowWidth,
     },
     aboutMeTxt: {
         position: "absolute",

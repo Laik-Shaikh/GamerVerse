@@ -1,30 +1,29 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView} from 'react-native';
+import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
-export default function MyGamesPage ({ navigation }){
+export default function GameHubPage ({ navigation }){
     return(
         <View style={styles.container}>
             <LinearGradient
-                start = {{x:0, y:0}}
+                start = {{x:0, y:1}}
                 end = {{x:0, y:-1}}
                 colors={['#013C00', '#000000']}
-                style = {styles.background}
-            />
+                style = {styles.background}>
 
-            <Image source={require('./MyGamesAssets/designspikes1.png')} 
+            <ImageBackground source={require('./GameHubAssets/designspikes1.png')} 
                 style={styles.spikes1} />
-            <Image source={require('./MyGamesAssets/designspikes2.png')} 
+            <ImageBackground source={require('./GameHubAssets/designspikes2.png')} 
                 style={styles.spikes2} />
-            <Image source={require('./MyGamesAssets/GamerVerseTitle.png')} 
+            <Image source={require('./GameHubAssets/GamerVerseTitle.png')} 
                 style = {styles.GamerVerseTitle} /> 
-            <Image source={require('./MyGamesAssets/SearchBar.png')}
-                style = {styles.searchBar} /> 
-            <ImageBackground source={require('./MyGamesAssets/MenuBar.png')}
+            <Image source={require('./GameHubAssets/searchIcon.png')} style={styles.searchIcon} />
+            <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+            <ImageBackground source={require('./GameHubAssets/MenuBar.png')}
                 style = {styles.menuBar} />
 
             {/* NavBar Buttons     */}
@@ -41,7 +40,6 @@ export default function MyGamesPage ({ navigation }){
             <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
                 <Text style={styles.highlighttxt}>Game Hub</Text>
             </TouchableOpacity>
-
             <Image source={require('./GameHubAssets/VerLine.png')} 
                 style = {styles.verLine} />
             <Image source={require('./GameHubAssets/HoriDivider.png')} 
@@ -49,66 +47,64 @@ export default function MyGamesPage ({ navigation }){
             <Image source={require('./GameHubAssets/HoriDivider2.png')} 
                 style = {styles.horiLine2} />  
 
-            <Image source={require('./MyGamesAssets/PCLogo.png')}
+            <Image source={require('./GameHubAssets/PCLogo.png')}
                 style = {styles.pcLogo} />
-            <Image source={require('./MyGamesAssets/MobileLogo.png')} 
+            <Image source={require('./GameHubAssets/MobileLogo.png')} 
                 style = {styles.mobileLogo} />
-            <Image source={require('./MyGamesAssets/ConsoleLogo.png')} 
+            <Image source={require('./GameHubAssets/ConsoleLogo.png')} 
                 style = {styles.consoleLogo} /> 
 
 
-            <ScrollView style = {styles.scrollContainer1} horizontal={true} 
-                showsHorizontalScrollIndicator={false} >
-                <TouchableOpacity>
+            <ScrollView style = {styles.scrollContainer1} horizontal={true}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/ApexLogo.png')} 
                         style = {styles.apexLogo} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/GTAVLogo.png')} 
                         style = {styles.gta5} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/ValoLogo.png')} 
                         style = {styles.valoLogo} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/CODWZLogo.png')} 
                         style = {styles.codwz} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/DotaLogo.png')} 
                         style = {styles.dotaLogo} />
                 </TouchableOpacity>
             </ScrollView>
 
 
-            <ScrollView style = {styles.scrollContainer2} horizontal={true} 
-                showsHorizontalScrollIndicator={false} >
-                <TouchableOpacity>
+            <ScrollView style = {styles.scrollContainer2} horizontal={true}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/cocLogo.png')} 
                         style = {styles.cocLogo} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/CODMLogo.png')} 
                         style = {styles.codMob} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/FreeFire.png')} 
                         style = {styles.freeFire} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/CRLogo.png')} 
                         style = {styles.crLogo} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/MobileLegend.png')} 
                         style = {styles.mobileLegend} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/PokeLogo.png')} 
                         style = {styles.pokeLogo} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
                     <Image source={require('./GameHubAssets/bgmiLogo.png')} 
                         style = {styles.bgmi} />
                 </TouchableOpacity>
@@ -130,7 +126,7 @@ export default function MyGamesPage ({ navigation }){
                         style = {styles.spiderMan} />
                 </TouchableOpacity>
             </ScrollView>
-
+            </LinearGradient>
         </View>   
     )
 
@@ -141,8 +137,8 @@ const styles = StyleSheet.create({
 
     container : {
         position: 'relative',
-        width : windowWidth,
-        height : windowHeight,
+        width: "100%",
+        height: "100%"
     },
 
     background: {
@@ -152,16 +148,16 @@ const styles = StyleSheet.create({
     },
 
     spikes1:{
+        position:"absolute",
         resizeMode:'contain',
-        position:'absolute',
-        right: '0px',
+        right:"0px",
         height: 0.2*windowHeight,
         width:0.15* windowWidth,
     },
 
     spikes2:{
-        position:'absolute',
-        bottom: '0px', 
+        position:"absolute",
+        bottom:"0px",
         resizeMode:'contain',
         height: 0.2*windowHeight,
         width:0.15* windowWidth,
@@ -173,6 +169,32 @@ const styles = StyleSheet.create({
         resizeMode:'contain',
         height: 0.1*windowHeight,
         width: 0.35*windowWidth,
+    },
+
+    searchIcon:{
+        position:"absolute",
+        resizeMode:'contain',
+        top:0.11*windowHeight,
+        left:0.7*windowWidth,
+        height: 0.03*windowHeight,
+        width: 0.03*windowWidth,
+    },
+
+    InputStyle1:{
+        "position": "absolute",
+        top: 107/1024*windowHeight,
+        right: 85/1440*windowWidth,
+        height: 42/1024*windowHeight,
+        width: 305/1440*windowWidth,
+        color: 'white',
+        fontSize: 17,
+        paddingLeft: 10,
+        paddingBottom: 2,
+        paddingTop: 3,    
+        borderBottomColor: "#FFFFFF",
+        borderBottomWidth: 1,
+        placeholderTextColor: "#FFFFFF",
+        backgroundColor: "#e5e5e500"
     },
 
     menuBar:{
@@ -333,7 +355,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
-        left: 0.12*windowWidth,
+        left: 0.13*windowWidth,
         top: 0.05*windowHeight,
     },
 
@@ -344,7 +366,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
-        left: 0.24*windowWidth,
+        left: 0.26*windowWidth,
         top: 0.05*windowHeight,
     },
 
@@ -355,7 +377,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
-        left: 0.36*windowWidth,
+        left: 0.39*windowWidth,
         top: 0.05*windowHeight,
     },
 
@@ -366,7 +388,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         width: 0.13*windowWidth,
         height: 0.24*windowHeight,
-        left: 0.48*windowWidth,
+        left: 0.52*windowWidth,
         top: 0.05*windowHeight,
     },
 

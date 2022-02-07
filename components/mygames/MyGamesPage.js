@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView} from 'react-native';
+import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 
@@ -10,15 +10,14 @@ export default function MyGamesPage ({ navigation }){
     return(
         <View style={styles.container}>
             <LinearGradient
-                start = {{x:0, y:0}}
+                start = {{x:0, y:1}}
                 end = {{x:0, y:-1}}
                 colors={['#013C00', '#000000']}
-                style = {styles.background}
-            />
+                style = {styles.background}>
             
-            <Image source={require('./MyGamesAssets/designspikes1.png')} 
+            <ImageBackground source={require('./MyGamesAssets/designspikes1.png')} 
                 style={styles.spikes1} />
-            <Image source={require('./MyGamesAssets/designspikes2.png')} 
+            <ImageBackground source={require('./MyGamesAssets/designspikes2.png')} 
                 style={styles.spikes2} />
             <Image source={require('./MyGamesAssets/GamerVerseTitle.png')} 
                 style = {styles.GamerVerseTitle} />   
@@ -39,8 +38,8 @@ export default function MyGamesPage ({ navigation }){
                 <Text style={styles.robototxt}>Game Hub</Text>
             </TouchableOpacity>
 
-            <Image source={require('./MyGamesAssets/SearchBar.png')}
-                style = {styles.searchBar} />
+            <Image source={require('./MyGamesAssets/searchIcon.png')} style={styles.searchIcon} />
+            <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
             <ImageBackground source={require('./MyGamesAssets/HoriDivider.png')}
                 style = {styles.horiLine} />
             <Image source={require('./MyGamesAssets/VerLine.png')} 
@@ -88,7 +87,7 @@ export default function MyGamesPage ({ navigation }){
             <Image source={require('./MyGamesAssets/SpiderManLogo.png')} 
                     style = {styles.spiderMan} />
             </ScrollView>
-            
+            </LinearGradient>
         </View>
     )
 }
@@ -97,8 +96,8 @@ export default function MyGamesPage ({ navigation }){
 const styles = StyleSheet.create({
     container : {
         position: 'relative',
-        width : windowWidth,
-        height : windowHeight,
+        width: "100%",
+        height: "100%"
     },
 
     background: {
@@ -129,6 +128,32 @@ const styles = StyleSheet.create({
         resizeMode:'contain',
         height: 0.1*windowHeight,
         width: 0.35*windowWidth,
+    },
+
+    searchIcon:{
+        position:"absolute",
+        resizeMode:'contain',
+        top:0.11*windowHeight,
+        left:0.7*windowWidth,
+        height: 0.03*windowHeight,
+        width: 0.03*windowWidth,
+    },
+
+    InputStyle1:{
+        "position": "absolute",
+        top: 107/1024*windowHeight,
+        right: 85/1440*windowWidth,
+        height: 42/1024*windowHeight,
+        width: 305/1440*windowWidth,
+        color: 'white',
+        fontSize: 17,
+        paddingLeft: 10,
+        paddingBottom: 2,
+        paddingTop: 3,    
+        borderBottomColor: "#FFFFFF",
+        borderBottomWidth: 1,
+        placeholderTextColor: "#FFFFFF",
+        backgroundColor: "#e5e5e500"
     },
 
     menuBar:{
