@@ -86,12 +86,12 @@ export default function profilepage({ navigation }) {
                     
                     <View style={styles.photoContainer}>
                         <Text style={styles.headTxt}>My Photo</Text>
-                        <View style={styles.dpicture}></View>
+                        <Image source={userProfile.DisplayPicture} style={styles.dpicture}></Image>
                     </View>
                     
                     <View style={styles.aboutMeContainer}>
                         <Text style={styles.headTxt}>About Me</Text>
-                        <Text style={styles.aboutMeTxt}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at condimentum velit. Etiam pretium justo ac tellus blandit, eget maximus metus maximus. Phasellus dictum dignissim nulla, sit amet porttitor lacus consequat sed. Sed a risus imperdiet, iaculis metus ac, condimentum ex. Cras vestibulum vestibulum orci, sit amet rhoncus risus placerat quis. Donec nulla velit, fringilla eget tellus sit amet, malesuada vulputate sapien. Nullam eget sem finibus neque interdum commodo vel non sapien. Ut a nulla in augue bibendum aliquam.</Text>
+                        <Text style={styles.aboutMeTxt}>{userProfile.AboutMe}</Text>
                     </View>
                     
                     <TouchableOpacity style={styles.Button} title='Login'>
@@ -107,22 +107,22 @@ export default function profilepage({ navigation }) {
                     
                     <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
                         <Text style={styles.infoHeadTxt}>Location</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>John Doe</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userProfile.Location}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Phone Number</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 9999999999</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userProfile.PhoneNumber}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
                         <Text style={styles.infoHeadTxt}>Email</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>JohnDoe@gmail.com</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userProfile.Email}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Discord Id</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>JohnnyDoe#2320</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userProfile.DiscordId}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
