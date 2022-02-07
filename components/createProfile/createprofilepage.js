@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
+
 import fire from '../firebase';
 import uuid from 'uuid';
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref as strRef, uploadBytes } from "firebase/storage";
+import {getAuth} from "firebase/auth";
+import {getDatabase,ref,set} from "firebase/database"
+
 import * as ImagePicker from 'expo-image-picker';
 
 const windowWidth = Dimensions.get('window').width;
@@ -10,16 +14,22 @@ const windowHeight = Dimensions.get('window').height
 
 import BG from './createProfileAssets/BG.png'
 
-export default function CreateProfile() {
+export default function CreateProfile({navigation}) {
 
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(null);
 
   const storage = getStorage();
-  const storageRef = ref(storage, 'Profile/laik5.jpg');
   const metadata = {
     contentType: 'image/jpg',
   };
+
+  const auth = getAuth()
+  const db = getDatabase()
+  
+  const storageRef = strRef(storage, 'Profile/' + auth.currentUser.uid + '.jpg');
+  const dbRef = ref(db,'users/' + auth.currentUser.uid)
+  console.log(auth.currentUser)
 
   const pickImage = async () => {
     
@@ -37,7 +47,7 @@ export default function CreateProfile() {
       
     }
   };
-  const [Name, setName] = React.useState();
+  const [UName, setName] = React.useState();
   const [PNum, setPNum] = React.useState(0);
   const [Loc, setLoc] = React.useState();
   const [Disc, setDisc] = React.useState();
@@ -60,10 +70,12 @@ export default function CreateProfile() {
         if(k>=1 && j == 4)
         {
           console.log("disc tag approoved");
+          return true
         }
         else 
         {
           alert("Please enter valid discord ID");
+          return false
         }
 }
   function mobileCheck(PNum){
@@ -74,9 +86,11 @@ export default function CreateProfile() {
         }
         else {
             alert("Please enter valid phone number");
-            break;
+            return false
         }
     }
+    
+    return true
 }
 async function sendImage(){
             console.log(image);
@@ -84,6 +98,17 @@ async function sendImage(){
             const blob = await response.blob();
             uploadBytes(storageRef, blob, metadata).then((snapshot) => {
                console.log('Uploaded a blob or file!');})
+}
+
+async function sendFireData(){
+  set(dbRef,{
+    Email: auth.currentUser.email,
+    PhoneNumber: PNum,
+    Location: Loc,
+    DiscordId: Disc,
+    uid: auth.currentUser.uid,
+    Name: UName
+  })
 }
   return (
     <View style={styles.container}>
@@ -98,7 +123,7 @@ async function sendImage(){
           <Image source={require('./createProfileAssets/CamIcon.png')} style={styles.CamIcon} />
           {image && <Image source={{ uri:image }} style={styles.ProfileImage} />}
           </TouchableOpacity>
-          <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={Name => setName(Name)}></TextInput>
+          <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={UName => setName(UName)}></TextInput>
           <TextInput style={styles.InputStyle2} placeholder='Phone Number' onChangeText={PNum => setPNum(PNum)}></TextInput>
           <TextInput style={styles.InputStyle3} placeholder='Location'  onChangeText={Loc => setLoc(Loc)}></TextInput>
           <TextInput style={styles.InputStyle4} placeholder='Discord ID' onChangeText={Disc => setDisc(Disc)}></TextInput>
@@ -107,10 +132,14 @@ async function sendImage(){
             onPress={
               async () => {
                 try {
-                  console.log(Name+" "+PNum+" "+Loc+" "+Disc);
+                  console.log(UName+" "+PNum+" "+Loc+" "+Disc);
                   mobileCheck(PNum);
                   discCheck(Disc);
-                  sendImage();
+                  if(mobileCheck(PNum) && discCheck(Disc)){
+                    sendImage();
+                    sendFireData();
+                    navigation.navigate('Home')
+                  }
                 } catch (error) {
                   console.log(error);
                   alert('Error');

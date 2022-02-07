@@ -38,9 +38,9 @@ export default function Login({ navigation }) {
                         console.log(fire.auth);
                         console.log(UName+" "+PWord+" "+ConfirmPWord);
                         if(PWord==ConfirmPWord){ 
-                          await signInWithEmailAndPassword(auth,UName,PWord);
+                          await createUserWithEmailAndPassword(auth,UName,PWord);
                           console.log("yes")
-                          navigation.navigate("Login")
+                          navigation.navigate("CreateProfile")
                         }
                         else
                         {
