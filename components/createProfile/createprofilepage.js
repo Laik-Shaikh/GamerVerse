@@ -96,6 +96,7 @@ async function sendImage(){
           <Text style={styles.signinText}>Create Your Profile</Text>
           <TouchableOpacity onPress={pickImage} >
           <Image source={require('./createProfileAssets/CamIcon.png')} style={styles.CamIcon} />
+          {image && <Image source={{ uri:image }} style={styles.ProfileImage} />}
           </TouchableOpacity>
           <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={Name => setName(Name)}></TextInput>
           <TextInput style={styles.InputStyle2} placeholder='Phone Number' onChangeText={PNum => setPNum(PNum)}></TextInput>
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
 
   signinText: {
     position: "absolute",
-    top: 0.02*windowHeight,
+    top: 0.001*windowHeight,
     height: 32/1024*windowHeight,
     width: 305/1440*windowWidth,
     color: 'white',
@@ -188,11 +189,23 @@ const styles = StyleSheet.create({
   },
 
   CamIcon: {
-    "position": "absolute",
+    position: "absolute",
     resizeMode:"contain",
-    bottom: 0.13 * windowHeight,
-    height: 0.11 * windowHeight,
-    width: 0.11 * windowWidth,
+    width: 0.12*windowWidth,
+    height: 0.12*windowHeight,
+    top: -0.28*windowHeight,
+    left: -0.06*windowWidth
+  },
+
+  ProfileImage: {
+    position: "absolute",
+    // resizeMode:"contain",
+    width: 0.07*windowWidth,
+    height: 0.13*windowHeight,
+    top: -0.28*windowHeight,
+    left: -0.035*windowWidth,
+    overflow:'hidden',
+    borderRadius: '45%'
   },
 
   InputStyle1: {
