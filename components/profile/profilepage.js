@@ -14,7 +14,7 @@ export default function profilepage({ navigation }) {
     
     const [userProfile,setUserProfile] = React.useState()
     const db = getDatabase();
-    const UserRef = query(ref(db,'users'),orderByChild('uid'),equalTo('8Fj0TLOOipcWDRw3yrSqyUxdL083'))
+    const UserRef = query(ref(db,'users'),orderByChild('uid'),equalTo('4ZdmjNrzBKNVHpoX1fvTNaWfTZa2'))
     console.log(UserRef)
     React.useEffect(() => {
     onValue(UserRef,(snapshot)=>{

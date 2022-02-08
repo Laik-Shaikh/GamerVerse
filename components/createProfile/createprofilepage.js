@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity,
 
 import fire from '../firebase';
 import uuid from 'uuid';
-import { getStorage, ref as strRef, uploadBytes } from "firebase/storage";
+import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import {getAuth} from "firebase/auth";
 import {getDatabase,ref,set} from "firebase/database"
 
@@ -17,7 +17,6 @@ import BG from './createProfileAssets/BG.png'
 export default function CreateProfile({navigation}) {
 
   const [image, setImage] = useState(null);
-  const [uploading, setUploading] = useState(null);
 
   const storage = getStorage();
   const metadata = {
@@ -92,24 +91,25 @@ export default function CreateProfile({navigation}) {
     
     return true
 }
-async function sendImage(){
+async function sendFirebaseData(){
             console.log(image);
             const response = await fetch(image);
             const blob = await response.blob();
             uploadBytes(storageRef, blob, metadata).then((snapshot) => {
-               console.log('Uploaded a blob or file!');})
+              getDownloadURL(storageRef).then((url)=>{
+                set(dbRef,{
+                    Email: auth.currentUser.email,
+                    PhoneNumber: PNum,
+                    Location: Loc,
+                    DiscordId: Disc,
+                    uid: auth.currentUser.uid,
+                    Name: UName,
+                    DisplayPicture: url
+                  })
+                  })
+              })
 }
 
-async function sendFireData(){
-  set(dbRef,{
-    Email: auth.currentUser.email,
-    PhoneNumber: PNum,
-    Location: Loc,
-    DiscordId: Disc,
-    uid: auth.currentUser.uid,
-    Name: UName
-  })
-}
   return (
     <View style={styles.container}>
       <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
@@ -136,8 +136,7 @@ async function sendFireData(){
                   mobileCheck(PNum);
                   discCheck(Disc);
                   if(mobileCheck(PNum) && discCheck(Disc)){
-                    sendImage();
-                    sendFireData();
+                    sendFirebaseData();
                     navigation.navigate('Home')
                   }
                 } catch (error) {
