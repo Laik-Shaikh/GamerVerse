@@ -7,9 +7,9 @@ import profilepage from './components/profile/profilepage';
 import login from './components/auth/Login';
 import register from './components/auth/Register';
 import createprofilepage from './components/createprofile/createprofilepage';
-import MyGamesPage from './components/MyGamesPage';
+import MyGamesPage from './components/myGamesPage/MyGamesPage';
 import gamepage from './components/game/gamepage';
-import GameHubPage from './components/GameHubPage';
+import GameHubPage from './components/gameHub/GameHubPage';
 
 const Stack = createStackNavigator();
 
