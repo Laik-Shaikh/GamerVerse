@@ -2,11 +2,14 @@ import React from 'react';
 import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
-export default function searchpagelocation ({ navigation }){
+import fire from '../firebase';
+import 'firebase/database'
+import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
+
+export default function searchpagename ({ navigation }){
     return(
         <View style={styles.container}>
             <LinearGradient
@@ -40,14 +43,8 @@ export default function searchpagelocation ({ navigation }){
             </TouchableOpacity>
             <Image source={require('./searchAssets/searchIcon.png')} style={styles.searchIcon} />
             <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or location'></TextInput>
-            <Image source={require('./searchAssets/VerLine.png')} 
-                style = {styles.verLine} />
-            <Image source={require('./searchAssets/VerLine2.png')} style = {styles.verLine2} />
 
-            <Text style={styles.locationText} >Location Search Result:</Text>
-            <Text style={styles.mostfamousText} >Most Famous Players</Text>
-            <Text style={styles.gamesplayedText} >Games Played Here</Text>
-            <Text style={styles.samegameText} >Players playing your games</Text>
+            <Text style={styles.playersearchText} >Player Search Result:</Text>
 
             <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
                 <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
@@ -56,61 +53,16 @@ export default function searchpagelocation ({ navigation }){
                         <Text style={styles.profilename} >ValorantX01</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
-
-            <ScrollView style = {styles.scrollContainer2} showsVerticalScrollIndicator={false}>
-            <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
+                <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
                 <View style={styles.whitebg}/>
                 <TouchableOpacity onPress={() => navigation.navigate("Game")}>
-                <Image source={require('./searchAssets/cocLogo.png')} style = {styles.coc} />
+                <Image source={require('./searchAssets/ValoLogo.png')} style = {styles.valo} />
                 </TouchableOpacity>
-                <View style={styles.cocContainer}>
+                <View style={styles.valoContainer}>
                     <Text style={styles.tagText} >Tags: </Text>
                     <Text style={styles.subtagText} >#BattleRoyale</Text>
                     <Text style={styles.subtagText} >#BattleRoyale1test</Text>
                 </View>
-            </View>
-            <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
-                <View style={styles.whitebg}/>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
-                <Image source={require('./searchAssets/CODMLogo.png')} 
-                        style = {styles.codMob} />
-                </TouchableOpacity>
-                <View style={styles.codMobContainer}>
-                    <Text style={styles.tagText} >Tags: </Text>
-                    <Text style={styles.subtagText} >#BattleRoyale</Text>
-                </View>
-            </View>
-            <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
-                <View style={styles.whitebg}/>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
-                <Image source={require('./searchAssets/PokeLogo.png')} 
-                        style = {styles.pogo} />
-                </TouchableOpacity>
-                <View style={styles.pogoContainer}>
-                    <Text style={styles.tagText} >Tags: </Text>
-                    <Text style={styles.subtagText} >#BattleRoyale</Text>
-                </View>
-            </View>
-            <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
-                <View style={styles.whitebg}/>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
-                <Image source={require('./searchAssets/FreeFire.png')} 
-                        style = {styles.freeFire} />
-                </TouchableOpacity>
-                <View style={styles.freeFireContainer}>
-                    <Text style={styles.tagText} >Tags: </Text>
-                    <Text style={styles.subtagText} >#BattleRoyale</Text>
-                </View>
-            </View>
-            </ScrollView>
-
-            <ScrollView style = {styles.scrollContainer3} showsVerticalScrollIndicator={false}>
-                <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
-                    <TouchableOpacity onPress={() => navigation.navigate("")}>
-                        <Image source={require('./searchAssets/profile2.png')} style = {styles.profile} />
-                        <Text style={styles.profilename} >JettValorant</Text>
-                    </TouchableOpacity>
                 </View>
             </ScrollView>
 
@@ -128,8 +80,9 @@ const styles = StyleSheet.create({
 
     background: {
         position: 'relative',
-        width: windowWidth,
-        height: windowHeight,
+        width: "100%",
+        height: "100%",
+        justifyContent: 'center',
     },
 
     spikes1:{
@@ -252,29 +205,12 @@ const styles = StyleSheet.create({
         width: 0.25*windowWidth,
     },
 
-    verLine:{
-        position: 'absolute',
-        resizeMode: 'contain',
-        width : 0.1 * windowWidth,
-        height : 0.83 * windowHeight,
-        left : 0.265*windowWidth,
-        top : 0.16*windowHeight
-    },
-
-    verLine2:{
-       position: 'absolute',
-       resizeMode: 'contain',
-       width : 0.1 * windowWidth,
-       height : 0.83 * windowHeight,
-       right: 0.265*windowWidth,
-       top: 0.16*windowHeight
-    },
-
     scrollContainer1:{
         position: 'absolute',
+        flexGrow: 0.75,
         width: 0.3*windowWidth,
-        height : 0.67*windowHeight,
-        top : 0.3*windowHeight,
+        height : 0.7*windowHeight,
+        top : 0.25*windowHeight,
         left : 0.016*windowWidth
     },
     
@@ -283,8 +219,8 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: 55 / 1440 * windowWidth,
         height: 55 / 1024 * windowHeight,
-        top: 0*windowHeight,
-        left: 0.05*windowWidth
+        top: 0.25*windowHeight,
+        left: 0.02*windowWidth
     },
 
     profilename:{
@@ -292,28 +228,12 @@ const styles = StyleSheet.create({
         "fontStyle": "normal",
         "fontWeight": "400",
         "fontSize": 25,
-        top: 0.005*windowHeight,
-        left: 0.1*windowWidth,
+        top: 0.255*windowHeight,
+        left: 0.07*windowWidth,
         "color": "#FFFFFF"
        },
 
-    scrollContainer2:{
-        position:'absolute',
-        width: 0.3*windowWidth,
-        height : 0.67*windowHeight,
-        top : 0.3*windowHeight,
-        left: 0.35*windowWidth
-    },
-
-    scrollContainer3:{
-        position:'absolute',
-        width: 0.3*windowWidth,
-        height : 0.67*windowHeight,
-        top : 0.32*windowHeight,
-        left: 0.68*windowWidth
-    },
-
-    locationText:{
+    playersearchText:{
         position:'absolute',
         "fontStyle": "normal",
         "fontWeight": "500",
@@ -369,7 +289,7 @@ const styles = StyleSheet.create({
     "color": "#FFFFFF"
    },
    
-    coc:{
+    valo:{
         position:'absolute',
         resizeMode: 'contain',
         width: 0.35*windowWidth,
@@ -378,59 +298,10 @@ const styles = StyleSheet.create({
         left: -0.12*windowWidth
     },
 
-    cocContainer:{
+    valoContainer:{
         width: 0.4*windowWidth,
         height: 0.25*windowHeight,
         left: 0.13*windowWidth,
         top: 0.01*windowHeight
     },
-
-    codMob:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.35*windowWidth,
-        height: 0.21*windowHeight,
-        top: 0*windowHeight,
-        left: -0.12*windowWidth
-    },
-
-    codMobContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.13*windowWidth,
-        top: 0.01*windowHeight
-    },
-
-    pogo:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.35*windowWidth,
-        height: 0.21*windowHeight,
-        top: 0*windowHeight,
-        left: -0.12*windowWidth
-    },
-
-    pogoContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.13*windowWidth,
-        top: 0.01*windowHeight
-    },
-
-    freeFire:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.35*windowWidth,
-        height: 0.21*windowHeight,
-        top: 0*windowHeight,
-        left: -0.12*windowWidth
-    },
-
-    freeFireContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.13*windowWidth,
-        top: 0.01*windowHeight
-    },
-
 });

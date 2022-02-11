@@ -11,13 +11,14 @@ import MyGamesPage from './components/mygames/MyGamesPage';
 import GameHubPage from './components/gamehub/GameHubPage';
 import gamepage from './components/game/gamepage';
 import searchpagelocation from './components/search/searchpagelocation';
+import searchpagename from './components/search/searchpagename';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='SearchLocation'>
+      <Stack.Navigator initialRouteName='SearchName'>
         <Stack.Screen name='Register' component={register} options={{ headerShown: false }} />
         <Stack.Screen name='Login' component={login} options={{ headerShown: false }} />
         <Stack.Screen name='Home' component={homepage} options={{ headerShown: false }} />
@@ -27,6 +28,7 @@ export default function App() {
         <Stack.Screen name='GameHub' component={GameHubPage} options={{ headerShown: false }} />
         <Stack.Screen name='Game' component={gamepage} options={{ headerShown: false }} />
         <Stack.Screen name='SearchLocation' component={searchpagelocation} options={{ headerShown: false }} />
+        <Stack.Screen name='SearchName' component={searchpagename} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
