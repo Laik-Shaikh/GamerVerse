@@ -10,10 +10,12 @@ const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height
 
 
-export default function profilepage({ navigation, route }) {
+export default function gamepage({ navigation, route }) {
     const {GameCode} = route.params
     console.log(GameCode)
     const [gameInfo,setGameInfo] = React.useState()
+    var gameTags=[];
+    var tagArray=[];
     const db = getDatabase();
     const GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
     console.log(GameRef)
@@ -24,6 +26,13 @@ export default function profilepage({ navigation, route }) {
     })
 },[])
 console.log(gameInfo)
+// code for displaying tags
+if(gameInfo){
+gameTags = gameInfo.Tags;
+console.log(gameTags);
+tagArray = Object.entries(gameTags);
+console.log(tagArray)
+}
 if(!gameInfo)
 {
     return (
@@ -75,6 +84,7 @@ if(!gameInfo)
         </View>
 );
     }
+    if (gameInfo){
     return (
         <View style={styles.container} >
             <LinearGradient
@@ -119,11 +129,15 @@ if(!gameInfo)
                     <Text style={styles.descriptionTxt}>{gameInfo.Description}</Text>
                 </View>
                 <View style={styles.tagContainer}>
-                    <Text style={styles.descriptionTxt}>#yashisapro #laikisshakin #mawrahisbawrah #metraa</Text>
+                    {tagArray.forEach(([key, value]) => {
+                        console.log(key);
+                    })
+                    }        
                 </View>
                 </LinearGradient>
         </View>
 );
+}
 }
 
 const styles = StyleSheet.create({
