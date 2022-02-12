@@ -129,10 +129,31 @@ if(!gameInfo)
                     <Text style={styles.descriptionTxt}>{gameInfo.Description}</Text>
                 </View>
                 <View style={styles.tagContainer}>
-                    {tagArray.forEach(([key, value]) => {
+                    {tagArray.map(([key, value]) => {
                         console.log(key);
+                        return (
+                            <View
+                            key={key}
+                             style={{
+                  flex: 1,
+                  flexDirection:"row",
+                  width: (414 / 414) * windowWidth,
+                  Height: (896 / 896) * windowHeight,
+                  top: (0 / 896) * windowHeight,
+                  marginVertical: 2,
+                  justifyContent: 'space-between',
+                }}>
+                                <TouchableOpacity
+                  style={styles.tagButton}
+                //   onPress={() =>}
+                ><Text style={{ color: "white" }}>
+                {key}
+              </Text></TouchableOpacity>
+                                </View>
+                        )
                     })
-                    }        
+                    }
+                    {/* <Text>{tagArray}</Text>         */}
                 </View>
                 </LinearGradient>
         </View>
@@ -391,4 +412,19 @@ const styles = StyleSheet.create({
         height:0.20*windowHeight,
         backgroundColor: "rgba(120, 225, 100, 0.2)"
     },
+    tagButton: {
+        position: "absolute",
+        width: 0.08 * windowWidth,
+        height: 0.02 * windowHeight,
+        backgroundColor: "rgba(0,0, 0, 0.5)",
+        color: "white",
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: 10,
+        paddingBottom: 10,
+      },
 });
