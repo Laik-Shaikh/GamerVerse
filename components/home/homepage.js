@@ -1,6 +1,13 @@
-import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, Modal, Alert} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as ImagePicker from 'expo-image-picker';
+import fire from '../firebase';
+import uuid from 'uuid';
+import { getStorage, ref as strRef, uploadBytes} from "firebase/storage";
+// import {Picker} from '@react-native-picker/picker';
+// import { PickerItem } from 'react-native/Libraries/Components/Picker/Picker';
+// import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 
 
 const windowWidth = Dimensions.get('screen').width;
@@ -8,6 +15,52 @@ const windowHeight = Dimensions.get('screen').height;
 
 
 export default function homepage({ navigation }) {
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [image, setImage] = useState(null);
+    // const [platform, setPlatform] = useState(null);
+
+    // const pickerRef = useRef();
+
+    const storage = getStorage();
+    const metadata = {
+      contentType: 'image/jpg',
+    };
+
+    const storageRef = strRef(storage, 'Post/'+'Something'+'.jpg');
+
+    // const dropDown = () => {
+    //     let arr;  
+    //     arr:{
+    //         value: 'apple';
+    //         value: 'banana';
+    //         value : 'pineapple'
+    //     }  
+    // }
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.cancelled) {
+          setImage(result.uri);
+        }
+      };
+
+    async function uploadPost(){
+        const response = await fetch(image);
+        const blob = await response.blob();
+        uploadBytes(storageRef, blob, metadata).then((snapshot) => {
+            console.log('Uploaded a blob or file!');
+          });
+    }
+
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -39,6 +92,86 @@ export default function homepage({ navigation }) {
                     <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} />
                     <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
                     <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
+
+                    <TouchableOpacity style={styles.upload} onPress={()=>setModalVisible(true)}>
+                        <Text style={styles.uploadText}>Upload a Post</Text>
+                    </TouchableOpacity>
+
+                    <Modal
+                        animationType='slide'
+                        visible={modalVisible}  
+                        transparent={true}
+                        onRequestClose={()=>{
+                            Alert.alert("Post Uploaded Successfully.");
+                            setModalVisible(!modalVisible);
+                        }}                  
+                    >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            {/* <View> */}
+                                <TextInput placeholder='Enter the Discription' 
+                                    style={styles.textInput}
+                                />
+                            {/* </View> */}
+                            <TouchableOpacity style={styles.button, styles.buttonClose}
+                                onPress={() => {
+                                    setModalVisible(!modalVisible)
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+
+                          {/* Upload to FireBase       */}
+
+                            <TouchableOpacity style={styles.button, styles.uploadButton}
+                                onPress={
+                                    async () => {
+                                        try {
+                                            uploadPost();
+                                            alert("Uploaded Successfully");
+                                            setModalVisible(!modalVisible);
+                                            
+                                        } catch (error) {
+                                            console.log('error');
+                                            alert('Error')
+                                        }
+                                    }
+                                }
+                                 >
+                                <Text style={styles.textStyle}>Upload</Text>
+                            </TouchableOpacity>
+
+                            {/* Choose Image */}
+
+                            <TouchableOpacity style={styles.button, styles.chooseButton}
+                                onPress={pickImage}
+                            >
+                                <Text style={styles.textStyle}>Choose Image</Text>
+                                {image && <Image source={{ uri:image }} style={styles.selectedImage} />}
+                            </TouchableOpacity>
+
+                            {/* <Picker
+                                ref={pickerRef}
+                                selectedValue={platform}
+                                onValueChange={(itemValue, itemIndex) => {
+                                    setPlatform(itemValue)
+                                }}
+                                >
+                                <Picker.Item label='Computer' value="Comp" />
+                                <Picker.Item label='Mobile' value="Mob" />
+                                <Picker.Item label='Console' value="CG" />
+                            </Picker> */}
+
+                            {/* <Dropdown
+                                icon='chevron-down'
+                                iconColor='#E1E1E1'
+                                label='Favorite Fruit'
+                                data={dropDown}
+                            /> */}
+                           
+                        </View>
+                    </View>
+                    </Modal>
                     </LinearGradient>
             </View>
     );
@@ -224,5 +357,114 @@ const styles = StyleSheet.create({
         resizeMode:'contain',
         height: 0.2*windowHeight,
         width:0.15* windowWidth,
+    },
+
+    upload:{
+        position: 'absolute',
+        width: 0.09*windowWidth,
+        height: 0.03*windowHeight,
+        top: 0.17*windowHeight,
+        left: 0.7*windowWidth,
+        backgroundColor: 'green',
+        textAlign: 'center'
+    },
+
+    uploadText:{
+        "fontStyle" : 'normal',
+        "fontSize": 16,
+        "fontWeight": 'bold',
+        "color": '#ffffff'
+    },
+
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+      },
+
+      modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        width: 0.5*windowWidth,
+        height: 0.5*windowHeight,
+        // width: '50%',
+        // height: '70%',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
+
+      modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+      },
+
+      button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+      },
+
+      buttonClose: {
+        backgroundColor: 'red',
+        // height: '80px',
+        // width: '100px',
+        height: 0.05*windowHeight,
+        width: 0.08*windowWidth,
+        left: 0.18*windowWidth,
+        top: 0.38*windowHeight
+      },
+
+      uploadButton:{
+        backgroundColor: 'green',
+        height: 0.05*windowHeight,
+        width: 0.08*windowWidth,
+        left: -0.18*windowWidth,
+        top: 0.33*windowHeight
+      },
+
+      chooseButton:{
+        backgroundColor: '#0000cd',
+        height: 0.05*windowHeight,
+        width: 0.08*windowWidth,
+        // left: 0.05*windowWidth,
+        top: 0.28*windowHeight,
+        alignContent: 'center',
+        alignItems: 'center'
+      },
+
+      textStyle: {
+        marginTop: '10px',
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+
+    selectedImage:{
+        position: 'absolute',
+        resizeMode: 'contain',
+        width: 0.4*windowWidth,
+        height: 0.27*windowHeight,
+        bottom: 0.07*windowHeight,
+        left: -0.1*windowWidth,
+    },
+
+    textInput:{
+        position: 'absolute',
+        width: 0.45*windowWidth,
+        height: 0.08*windowHeight,
+        paddingLeft: '15px',
+        top: '20px',
+        backgroundColor: 'cyan'
     }
+
 });
