@@ -1,132 +1,144 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput} from 'react-native';
+import { View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import fire from '../firebase';
+import 'firebase/database'
+import { getDatabase, onValue, ref, query, orderByChild, equalTo } from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
-export default function GameHubPage ({ navigation, route}){
-    const [GameCode,setGameCode] = React.useState(null);
-    return(
+export default function GameHubPage({ navigation, route }) {
+
+    const [games, setGames] = React.useState(null);
+    const db = getDatabase();
+    const GameRef = query(ref(db, 'games'))
+    React.useEffect(() => {
+        onValue(GameRef, (snapshot) => {
+            const data = Object.values(snapshot.val());
+            setGames(data)
+        })
+    }, [])
+    if (!games) {
+        return (<Text>Rukavat ke liye khed hai</Text>)
+    }
+    return (
         <View style={styles.container}>
             <LinearGradient
-                start = {{x:0, y:1}}
-                end = {{x:0, y:-1}}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 0, y: -1 }}
                 colors={['#013C00', '#000000']}
-                style = {styles.background}>
+                style={styles.background}>
 
-            <ImageBackground source={require('./GameHubAssets/designspikes1.png')} 
-                style={styles.spikes1} />
-            <ImageBackground source={require('./GameHubAssets/designspikes2.png')} 
-                style={styles.spikes2} />
-            <Image source={require('./GameHubAssets/GamerVerseTitle.png')} 
-                style = {styles.GamerVerseTitle} /> 
-            <Image source={require('./GameHubAssets/searchIcon.png')} style={styles.searchIcon} />
-            <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
-            <ImageBackground source={require('./GameHubAssets/MenuBar.png')}
-                style = {styles.menuBar} />
+                <ImageBackground source={require('./GameHubAssets/designspikes1.png')}
+                    style={styles.spikes1} />
+                <ImageBackground source={require('./GameHubAssets/designspikes2.png')}
+                    style={styles.spikes2} />
+                <Image source={require('./GameHubAssets/GamerVerseTitle.png')}
+                    style={styles.GamerVerseTitle} />
+                <Image source={require('./GameHubAssets/searchIcon.png')} style={styles.searchIcon} />
+                <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                <ImageBackground source={require('./GameHubAssets/MenuBar.png')}
+                    style={styles.menuBar} />
 
-            {/* NavBar Buttons     */}
+                {/* NavBar Buttons     */}
 
-            <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
-                <Text style={styles.robototxt}>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
-                <Text style={styles.robototxt}>Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
-                <Text style={styles.robototxt}>My Games</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
-                <Text style={styles.highlighttxt}>Game Hub</Text>
-            </TouchableOpacity>
-            <Image source={require('./GameHubAssets/VerLine.png')} 
-                style = {styles.verLine} />
-            <Image source={require('./GameHubAssets/HoriDivider.png')} 
-                style = {styles.horiLine} /> 
-            <Image source={require('./GameHubAssets/HoriDivider2.png')} 
-                style = {styles.horiLine2} />  
+                <TouchableOpacity style={styles.homebtn} onPress={() => navigation.navigate("Home")}>
+                    <Text style={styles.robototxt}>Home</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.navigate("Profile")}>
+                    <Text style={styles.robototxt}>Profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.navigate("MyGames")}>
+                    <Text style={styles.robototxt}>My Games</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.navigate("GameHub")}>
+                    <Text style={styles.highlighttxt}>Game Hub</Text>
+                </TouchableOpacity>
+                <Image source={require('./GameHubAssets/VerLine.png')}
+                    style={styles.verLine} />
+                <Image source={require('./GameHubAssets/HoriDivider.png')}
+                    style={styles.horiLine} />
+                <Image source={require('./GameHubAssets/HoriDivider2.png')}
+                    style={styles.horiLine2} />
 
-            <Image source={require('./GameHubAssets/PCLogo.png')}
-                style = {styles.pcLogo} />
-            <Image source={require('./GameHubAssets/MobileLogo.png')} 
-                style = {styles.mobileLogo} />
-            <Image source={require('./GameHubAssets/ConsoleLogo.png')} 
-                style = {styles.consoleLogo} /> 
-
-            <ScrollView style = {styles.scrollContainer1} horizontal={true}>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P0'})}>
-                    <Image source={require('./GameHubAssets/ApexLogo.png')} 
-                        style = {styles.apexLogo} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-                    <Image source={require('./GameHubAssets/GTAVLogo.png')} 
-                        style = {styles.gta5} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P4'})}>
-                    <Image source={require('./GameHubAssets/ValoLogo.png')} 
-                        style = {styles.valoLogo} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P3'})}>
-                    <Image source={require('./GameHubAssets/CODWZLogo.png')} 
-                        style = {styles.codwz} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P2'})}>
-                    <Image source={require('./GameHubAssets/DotaLogo.png')} 
-                        style = {styles.dotaLogo} />
-                </TouchableOpacity>
-            </ScrollView>
-
-            <ScrollView style = {styles.scrollContainer2} horizontal={true}>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M0'})}>
-                    <Image source={require('./GameHubAssets/cocLogo.png')} 
-                        style = {styles.cocLogo} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M4'})}>
-                    <Image source={require('./GameHubAssets/CODMLogo.png')} 
-                        style = {styles.codMob} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M3'})}>
-                    <Image source={require('./GameHubAssets/FreeFire.png')} 
-                        style = {styles.freeFire} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M5'})}>
-                    <Image source={require('./GameHubAssets/CRLogo.png')} 
-                        style = {styles.crLogo} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M6'})}>
-                    <Image source={require('./GameHubAssets/MobileLegend.png')} 
-                        style = {styles.mobileLegend} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M2'})}>
-                    <Image source={require('./GameHubAssets/PokeLogo.png')} 
-                        style = {styles.pokeLogo} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M1'})}>
-                    <Image source={require('./GameHubAssets/bgmiLogo.png')} 
-                        style = {styles.bgmi} />
-                </TouchableOpacity>
-            </ScrollView>
+                <Image source={require('./GameHubAssets/PCLogo.png')}
+                    style={styles.pcLogo} />
+                <Image source={require('./GameHubAssets/MobileLogo.png')}
+                    style={styles.mobileLogo} />
+                <Image source={require('./GameHubAssets/ConsoleLogo.png')}
+                    style={styles.consoleLogo} />
+                
+                
+                <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={styles.scrollContainer1} horizontal={true}>
+                    {games.map((item, index) => {
+                        return (
+                            <View key={index} >   
+                                
+                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
+                                <Image source={item.Image}
+                                    style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                </TouchableOpacity>
+                           
+                            </View>
 
 
-            <ScrollView style = {styles.scrollContainer3} horizontal={true} 
-                showsHorizontalScrollIndicator={false} >
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'C0'})}>
-                    <Image source={require('./GameHubAssets/GOWLogo.png')} 
-                        style = {styles.gow} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'C2'})}>
-                    <Image source={require('./GameHubAssets/MortalKombat.png')} 
-                        style = {styles.mortalKombat} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'C1'})}>
-                    <Image source={require('./GameHubAssets/SpidermanLogo.png')} 
-                        style = {styles.spiderMan} />
-                </TouchableOpacity>
-            </ScrollView>
+                        )
+                    })}
+                </ScrollView>
+
+
+
+                <ScrollView style={styles.scrollContainer2} horizontal={true}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M0' })}>
+                        <Image source={require('./GameHubAssets/cocLogo.png')}
+                            style={styles.cocLogo} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M4' })}>
+                        <Image source={require('./GameHubAssets/CODMLogo.png')}
+                            style={styles.codMob} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M3' })}>
+                        <Image source={require('./GameHubAssets/FreeFire.png')}
+                            style={styles.freeFire} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M5' })}>
+                        <Image source={require('./GameHubAssets/CRLogo.png')}
+                            style={styles.crLogo} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M6' })}>
+                        <Image source={require('./GameHubAssets/MobileLegend.png')}
+                            style={styles.mobileLegend} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M2' })}>
+                        <Image source={require('./GameHubAssets/PokeLogo.png')}
+                            style={styles.pokeLogo} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M1' })}>
+                        <Image source={require('./GameHubAssets/bgmiLogo.png')}
+                            style={styles.bgmi} />
+                    </TouchableOpacity>
+                </ScrollView>
+
+
+                <ScrollView style={styles.scrollContainer3} horizontal={true}
+                    showsHorizontalScrollIndicator={false} >
+                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'C0' })}>
+                        <Image source={require('./GameHubAssets/GOWLogo.png')}
+                            style={styles.gow} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'C2' })}>
+                        <Image source={require('./GameHubAssets/MortalKombat.png')}
+                            style={styles.mortalKombat} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'C1' })}>
+                        <Image source={require('./GameHubAssets/SpidermanLogo.png')}
+                            style={styles.spiderMan} />
+                    </TouchableOpacity>
+                </ScrollView>
             </LinearGradient>
-        </View>   
+        </View>
     )
 
 }
@@ -134,7 +146,7 @@ export default function GameHubPage ({ navigation, route}){
 
 const styles = StyleSheet.create({
 
-    container : {
+    container: {
         position: 'relative',
         width: "100%",
         height: "100%"
@@ -146,72 +158,72 @@ const styles = StyleSheet.create({
         height: windowHeight,
     },
 
-    spikes1:{
-        position:"absolute",
-        resizeMode:'contain',
-        right:"0px",
-        height: 0.2*windowHeight,
-        width:0.15* windowWidth,
+    spikes1: {
+        position: "absolute",
+        resizeMode: 'contain',
+        right: "0px",
+        height: 0.2 * windowHeight,
+        width: 0.15 * windowWidth,
     },
 
-    spikes2:{
-        position:"absolute",
-        bottom:"0px",
-        resizeMode:'contain',
-        height: 0.2*windowHeight,
-        width:0.15* windowWidth,
+    spikes2: {
+        position: "absolute",
+        bottom: "0px",
+        resizeMode: 'contain',
+        height: 0.2 * windowHeight,
+        width: 0.15 * windowWidth,
     },
 
-    GamerVerseTitle:{
-        position:"absolute",
-        left:0.35*windowWidth,
-        resizeMode:'contain',
-        height: 0.1*windowHeight,
-        width: 0.35*windowWidth,
+    GamerVerseTitle: {
+        position: "absolute",
+        left: 0.35 * windowWidth,
+        resizeMode: 'contain',
+        height: 0.1 * windowHeight,
+        width: 0.35 * windowWidth,
     },
 
-    searchIcon:{
-        position:"absolute",
-        resizeMode:'contain',
-        top:0.11*windowHeight,
-        left:0.7*windowWidth,
-        height: 0.03*windowHeight,
-        width: 0.03*windowWidth,
+    searchIcon: {
+        position: "absolute",
+        resizeMode: 'contain',
+        top: 0.11 * windowHeight,
+        left: 0.7 * windowWidth,
+        height: 0.03 * windowHeight,
+        width: 0.03 * windowWidth,
     },
 
-    InputStyle1:{
+    InputStyle1: {
         "position": "absolute",
-        top: 107/1024*windowHeight,
-        right: 85/1440*windowWidth,
-        height: 42/1024*windowHeight,
-        width: 305/1440*windowWidth,
+        top: 107 / 1024 * windowHeight,
+        right: 85 / 1440 * windowWidth,
+        height: 42 / 1024 * windowHeight,
+        width: 305 / 1440 * windowWidth,
         color: 'white',
         fontSize: 17,
         paddingLeft: 10,
         paddingBottom: 2,
-        paddingTop: 3,    
+        paddingTop: 3,
         borderBottomColor: "#FFFFFF",
         borderBottomWidth: 1,
         placeholderTextColor: "#FFFFFF",
         backgroundColor: "#e5e5e500"
     },
 
-    menuBar:{
-        position:"absolute",
-        resizeMode:'contain',
-        top:0.1*windowHeight,
-        height: 0.05*windowHeight,
-        width: 1*windowWidth,
+    menuBar: {
+        position: "absolute",
+        resizeMode: 'contain',
+        top: 0.1 * windowHeight,
+        height: 0.05 * windowHeight,
+        width: 1 * windowWidth,
     },
 
-    robototxt:{ 
+    robototxt: {
         "fontStyle": "normal",
         "fontWeight": "500",
         "fontSize": 14,
         "color": "#FFFFFF"
     },
-   
-    highlighttxt:{ 
+
+    highlighttxt: {
         "fontStyle": "normal",
         "fontWeight": "500",
         "fontSize": 15,
@@ -220,284 +232,280 @@ const styles = StyleSheet.create({
         "color": "#FFFFFF"
     },
 
-    homebtn:{
-        position:"absolute",
-        top:0.11*windowHeight,
-        left:0.05*windowWidth,
-        height: 0.03*windowHeight,
-        width: 0.03*windowWidth
+    homebtn: {
+        position: "absolute",
+        top: 0.11 * windowHeight,
+        left: 0.05 * windowWidth,
+        height: 0.03 * windowHeight,
+        width: 0.03 * windowWidth
     },
-    profilebtn:{
-        position:"absolute",
-        top:0.11*windowHeight,
-        left:0.20*windowWidth,
-        height: 0.03*windowHeight,
-        width: 0.03*windowWidth
+    profilebtn: {
+        position: "absolute",
+        top: 0.11 * windowHeight,
+        left: 0.20 * windowWidth,
+        height: 0.03 * windowHeight,
+        width: 0.03 * windowWidth
     },
-    mygamesbtn:{
-        position:"absolute",
-        top:0.11*windowHeight,
-        left:0.35*windowWidth,
-        height: 0.03*windowHeight,
-        width: 0.05*windowWidth
+    mygamesbtn: {
+        position: "absolute",
+        top: 0.11 * windowHeight,
+        left: 0.35 * windowWidth,
+        height: 0.03 * windowHeight,
+        width: 0.05 * windowWidth
     },
-    gamehubbtn:{
-        position:"absolute",
-        top:0.107*windowHeight,
-        left:0.50*windowWidth,
-        height: 0.03*windowHeight,
+    gamehubbtn: {
+        position: "absolute",
+        top: 0.107 * windowHeight,
+        left: 0.50 * windowWidth,
+        height: 0.03 * windowHeight,
     },
-    searchBar:{
-        position:"absolute",
-        resizeMode:'contain',
-        top:0.10*windowHeight,
-        left:0.7*windowWidth,
-        height: 0.05*windowHeight,
-        width: 0.25*windowWidth,
+    searchBar: {
+        position: "absolute",
+        resizeMode: 'contain',
+        top: 0.10 * windowHeight,
+        left: 0.7 * windowWidth,
+        height: 0.05 * windowHeight,
+        width: 0.25 * windowWidth,
     },
 
-    verLine:{
+    verLine: {
         position: 'absolute',
         resizeMode: 'contain',
-        height: 0.83*windowHeight,
-        width: 0.1*windowWidth,
-        left: 0.13*windowWidth,
-        top: 0.16*windowHeight,
+        height: 0.83 * windowHeight,
+        width: 0.1 * windowWidth,
+        left: 0.13 * windowWidth,
+        top: 0.16 * windowHeight,
     },
 
-    horiLine:{
+    horiLine: {
         position: 'absolute',
         resizeMode: 'contain',
-        width: 1*windowWidth,
-        height : 0.01*windowHeight,
-        top : 0.42* windowHeight,
-        left: '0px' 
-    },
-
-    horiLine2:{
-        position: 'absolute',
-        resizeMode: 'contain',
-        width: 1*windowWidth,
-        height : 0.01*windowHeight,
-        top : 0.73* windowHeight,
+        width: 1 * windowWidth,
+        height: 0.01 * windowHeight,
+        top: 0.42 * windowHeight,
         left: '0px'
     },
 
-    pcLogo:{
+    horiLine2: {
         position: 'absolute',
         resizeMode: 'contain',
-        width: 0.15*windowWidth,
-        height: 0.2*windowHeight,
-        left: 0.01*windowWidth,
-        top: 0.18*windowHeight,
+        width: 1 * windowWidth,
+        height: 0.01 * windowHeight,
+        top: 0.73 * windowHeight,
+        left: '0px'
     },
 
-    mobileLogo:{
+    pcLogo: {
         position: 'absolute',
         resizeMode: 'contain',
-        width: 0.18*windowWidth,
-        height: 0.23*windowHeight,
-        left: 0.001*windowWidth,
-        top: 0.46*windowHeight,
+        width: 0.15 * windowWidth,
+        height: 0.2 * windowHeight,
+        left: 0.01 * windowWidth,
+        top: 0.18 * windowHeight,
     },
 
-    consoleLogo:{
+    mobileLogo: {
         position: 'absolute',
         resizeMode: 'contain',
-        width: 0.147*windowWidth,
-        height: 0.184*windowHeight,
-        left: 0.015*windowWidth,
-        top: 0.78*windowHeight,
+        width: 0.18 * windowWidth,
+        height: 0.23 * windowHeight,
+        left: 0.001 * windowWidth,
+        top: 0.46 * windowHeight,
     },
 
-    scrollContainer1:{
+    consoleLogo: {
         position: 'absolute',
-        flex: 1,
-        width: 0.8*windowWidth,
-        height: 0.28*windowHeight,
-        left: 0.19*windowWidth,
-        top: 0.13*windowHeight
+        resizeMode: 'contain',
+        width: 0.147 * windowWidth,
+        height: 0.184 * windowHeight,
+        left: 0.015 * windowWidth,
+        top: 0.78 * windowHeight,
     },
 
-    scrollContainer2:{
+    scrollContainer1: {
         position: 'absolute',
-        width: 0.8*windowWidth,
-        height: 0.34*windowHeight,
-        left: 0.19*windowWidth,
-        top: 0.38*windowHeight
+        width: 0.8 * windowWidth,
+        height: 0.28 * windowHeight,
+        left: 0.19 * windowWidth,
+        top: 0.13 * windowHeight,
+        flexGrow: 0.1
     },
 
-    scrollContainer3:{
+    scrollContainer2: {
         position: 'absolute',
-        width: 0.8*windowWidth,
-        height: 0.36*windowHeight,
-        left: 0.19*windowWidth,
-        top: 0.63*windowHeight
+        width: 0.8 * windowWidth,
+        height: 0.34 * windowHeight,
+        left: 0.19 * windowWidth,
+        top: 0.38 * windowHeight
     },
 
-    apexLogo:{
+    scrollContainer3: {
+        position: 'absolute',
+        width: 0.8 * windowWidth,
+        height: 0.36 * windowHeight,
+        left: 0.19 * windowWidth,
+        top: 0.63 * windowHeight
+    },
+
+    apexLogo: {
+        paddingLeft: 10,
+        paddingRight: 10,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+    },
+
+    gta5: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.0001*windowWidth,
-        top: 0.05*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.13 * windowWidth,
+        top: 0.05 * windowHeight,
     },
 
-    gta5:{
+    valoLogo: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.13*windowWidth,
-        top: 0.05*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.26 * windowWidth,
+        top: 0.05 * windowHeight,
     },
 
-    valoLogo:{
+    codwz: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.26*windowWidth,
-        top: 0.05*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.39 * windowWidth,
+        top: 0.05 * windowHeight,
     },
 
-    codwz:{
+    dotaLogo: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.39*windowWidth,
-        top: 0.05*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.52 * windowWidth,
+        top: 0.05 * windowHeight,
     },
 
-    dotaLogo:{
+    cocLogo: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.52*windowWidth,
-        top: 0.05*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.001 * windowWidth,
+        top: 0.08 * windowHeight,
     },
 
-    cocLogo:{
+    codMob: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.001*windowWidth,
-        top: 0.08*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.12 * windowWidth,
+        top: 0.08 * windowHeight,
     },
 
-    codMob:{
+    freeFire: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.12*windowWidth,
-        top: 0.08*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.24 * windowWidth,
+        top: 0.08 * windowHeight,
     },
 
-    freeFire:{
+    crLogo: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.24*windowWidth,
-        top: 0.08*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.36 * windowWidth,
+        top: 0.08 * windowHeight,
     },
 
-    crLogo:{
+    mobileLegend: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.36*windowWidth,
-        top: 0.08*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.48 * windowWidth,
+        top: 0.08 * windowHeight,
     },
 
-    mobileLegend:{
+    pokeLogo: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.48*windowWidth,
-        top: 0.08*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.60 * windowWidth,
+        top: 0.08 * windowHeight,
     },
 
-    pokeLogo:{
+    bgmi: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.60*windowWidth,
-        top: 0.08*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.72 * windowWidth,
+        top: 0.08 * windowHeight,
     },
 
-    bgmi:{
+    gow: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.72*windowWidth,
-        top: 0.08*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.001 * windowWidth,
+        top: 0.12 * windowHeight,
     },
 
-    gow:{
+    mortalKombat: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.001*windowWidth,
-        top: 0.12*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.12 * windowWidth,
+        top: 0.12 * windowHeight,
     },
 
-    mortalKombat:{
+    spiderMan: {
         position: 'absolute',
         resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.12*windowWidth,
-        top: 0.12*windowHeight,
-    },
-
-    spiderMan:{
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13*windowWidth,
-        height: 0.24*windowHeight,
-        left: 0.24*windowWidth,
-        top: 0.12*windowHeight,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
+        left: 0.24 * windowWidth,
+        top: 0.12 * windowHeight,
     },
 
 
