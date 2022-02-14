@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput} from 'react-native';
+import { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const windowWidth = Dimensions.get('screen').width;
@@ -9,7 +10,26 @@ import fire from '../firebase';
 import 'firebase/database'
 import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
 
-export default function searchpagename ({ navigation }){
+export default function searchpagename ({ navigation, route }){
+
+    const [state, setState] = useState({
+        search: '',
+      })
+      const {GameCode} = route.params
+      console.log(GameCode)
+      const [gameInfo,setGameInfo] = React.useState()
+      var gameTags=[];
+      var tagArray=[];
+      const db = getDatabase();
+      const GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
+      console.log(GameRef)
+      React.useEffect(() => {
+      onValue(GameRef,(snapshot)=>{
+          const data = Object.values(snapshot.val());
+          setGameInfo(data[0])
+      })
+  },[])
+
     return(
         <View style={styles.container}>
             <LinearGradient

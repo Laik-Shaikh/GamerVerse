@@ -6,7 +6,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
-export default function GameHubPage ({ navigation }){
+export default function GameHubPage ({ navigation, route }){
+    const [GameCode,setGameCode] = React.useState(null);
     return(
         <View style={styles.container}>
             <LinearGradient
@@ -56,23 +57,23 @@ export default function GameHubPage ({ navigation }){
 
 
             <ScrollView style = {styles.scrollContainer1} horizontal={true}>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P0'})}>
                     <Image source={require('./GameHubAssets/ApexLogo.png')} 
                         style = {styles.apexLogo} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
                     <Image source={require('./GameHubAssets/GTAVLogo.png')} 
                         style = {styles.gta5} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P4'})}>
                     <Image source={require('./GameHubAssets/ValoLogo.png')} 
                         style = {styles.valoLogo} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P3'})}>
                     <Image source={require('./GameHubAssets/CODWZLogo.png')} 
                         style = {styles.codwz} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P2'})}>
                     <Image source={require('./GameHubAssets/DotaLogo.png')} 
                         style = {styles.dotaLogo} />
                 </TouchableOpacity>
@@ -80,31 +81,31 @@ export default function GameHubPage ({ navigation }){
 
 
             <ScrollView style = {styles.scrollContainer2} horizontal={true}>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M0'})}>
                     <Image source={require('./GameHubAssets/cocLogo.png')} 
                         style = {styles.cocLogo} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M4'})}>
                     <Image source={require('./GameHubAssets/CODMLogo.png')} 
                         style = {styles.codMob} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M3'})}>
                     <Image source={require('./GameHubAssets/FreeFire.png')} 
                         style = {styles.freeFire} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M5'})}>
                     <Image source={require('./GameHubAssets/CRLogo.png')} 
                         style = {styles.crLogo} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M6'})}>
                     <Image source={require('./GameHubAssets/MobileLegend.png')} 
                         style = {styles.mobileLegend} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M2'})}>
                     <Image source={require('./GameHubAssets/PokeLogo.png')} 
                         style = {styles.pokeLogo} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'M1'})}>
                     <Image source={require('./GameHubAssets/bgmiLogo.png')} 
                         style = {styles.bgmi} />
                 </TouchableOpacity>
@@ -113,15 +114,15 @@ export default function GameHubPage ({ navigation }){
 
             <ScrollView style = {styles.scrollContainer3} horizontal={true} 
                 showsHorizontalScrollIndicator={false} >
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'C0'})}>
                     <Image source={require('./GameHubAssets/GOWLogo.png')} 
                         style = {styles.gow} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'C2'})}>
                     <Image source={require('./GameHubAssets/MortalKombat.png')} 
                         style = {styles.mortalKombat} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'C1'})}>
                     <Image source={require('./GameHubAssets/SpidermanLogo.png')} 
                         style = {styles.spiderMan} />
                 </TouchableOpacity>
