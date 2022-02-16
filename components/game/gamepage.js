@@ -16,6 +16,7 @@ export default function gamepage({ navigation, route }) {
     const [gameInfo,setGameInfo] = React.useState()
     var gameTags=[];
     var tagArray=[];
+    //auth.currentUser.uid
     const db = getDatabase();
     const GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
     console.log(GameRef)
@@ -141,7 +142,7 @@ if(!gameInfo)
                   Height: (896 / 896) * windowHeight,
                   top: (0 / 896) * windowHeight,
                   marginVertical: 2,
-                  justifyContent: 'space-between',
+                  justifyContent: 'flex-start',
                 }}>
                                 <TouchableOpacity
                   style={styles.tagButton}
