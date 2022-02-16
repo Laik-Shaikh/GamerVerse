@@ -3,22 +3,27 @@ import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpaci
 import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
+import 'firebase/auth';
+import { getAuth } from "firebase/auth";
 import 'firebase/database'
-import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo, push } from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height
 
 
 export default function gamepage({ navigation, route }) {
+    const auth = getAuth();
     const {GameCode} = route.params
     console.log(GameCode)
     const [gameInfo,setGameInfo] = React.useState()
     var gameTags=[];
     var tagArray=[];
-    //auth.currentUser.uid
     const db = getDatabase();
+    const user = auth.currentUser.uid;
+    console.log(user);
     const GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
+    const UserRef = query(ref(db,'users'),orderByChild('uid'),equalTo(user))
     console.log(GameRef)
     React.useEffect(() => {
     onValue(GameRef,(snapshot)=>{
@@ -122,7 +127,13 @@ if(!gameInfo)
                 <View style={styles.gameContainer}>
                     <Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text>
                     <Image source={gameInfo.Image} style={styles.dpicture}></Image>
-                <TouchableOpacity style={styles.Button} title='Follow'>
+                <TouchableOpacity style={styles.Button} title='Follow' 
+                onPress={() => 
+                {
+                    push(UserRef, {
+                        Games: GameCode,
+                      });
+                }}>
                     <Text style={styles.ButtonText}>Follow</Text>
                 </TouchableOpacity>
                 </View>
@@ -142,7 +153,7 @@ if(!gameInfo)
                   Height: (896 / 896) * windowHeight,
                   top: (0 / 896) * windowHeight,
                   marginVertical: 2,
-                  justifyContent: 'flex-start',
+                  justifyContent: 'space-between',
                 }}>
                                 <TouchableOpacity
                   style={styles.tagButton}

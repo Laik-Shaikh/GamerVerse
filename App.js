@@ -23,8 +23,8 @@ export default function App() {
         <Stack.Screen name='Profile' component={profilepage} options={{ headerShown: false }} />
         <Stack.Screen name='CreateProfile' component={createprofilepage} options={{ headerShown: false }} />
         <Stack.Screen name='MyGames' component={MyGamesPage} options={{ headerShown: false }} />
-        <Stack.Screen name='GameHub' component={GameHubPage} options={{ headerShown: false }} />
         <Stack.Screen name='Game' component={gamepage} options={{ headerShown: false }} />
+        <Stack.Screen name='GameHub' component={GameHubPage} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
