@@ -9,7 +9,6 @@ import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
-
 export default function homepage({ navigation, route }) {
 
     const [textInputValue, setTextInputValue] = React.useState('');
@@ -26,7 +25,14 @@ export default function homepage({ navigation, route }) {
     if (!users) {
         return (<Text>Rukavat ke liye khed hai</Text>)
     }
-    console.log(users)
+    
+  var handleSearch = (e) => {
+      if (e.nativeEvent.key == 'Enter') {
+        navigation.navigate("SearchName", {textInputValue})
+        console.log('search started')
+    }
+  }
+
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -54,9 +60,8 @@ export default function homepage({ navigation, route }) {
                     placeholder='Search for friends, games or location'
                     onChangeText={(text) => setTextInputValue(text)}
                     value={textInputValue}
-                    onKeyDown={e => e.key === 'Enter' && handle}
+                    onKeyPress={e => handleSearch(e)}
                     ></TextInput>
-                    
                     <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
                     <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
                     <Text style={styles.nametxt}>Danny Devadiga</Text>
@@ -68,7 +73,7 @@ export default function homepage({ navigation, route }) {
                     </LinearGradient>
             </View>
     );
-    //}
+    
 }
 
 const styles = StyleSheet.create({

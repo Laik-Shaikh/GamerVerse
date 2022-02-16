@@ -15,21 +15,26 @@ export default function searchpagename ({ navigation, route }){
     const [state, setState] = useState({
         search: '',
       })
-      const {GameCode} = route.params
-      console.log(GameCode)
-      const [gameInfo,setGameInfo] = React.useState()
-      var gameTags=[];
-      var tagArray=[];
+      const {textInputValue} = route.params
+      const [userInfo,setUserInfo] = React.useState()
+    //   var gameTags=[];
+    //   var tagArray=[];
       const db = getDatabase();
-      const GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
-      console.log(GameRef)
+      const searchRef = query(ref(db,'users'),orderByChild('Name'),equalTo(textInputValue))
+      console.log(searchRef)
       React.useEffect(() => {
-      onValue(GameRef,(snapshot)=>{
-          const data = Object.values(snapshot.val());
-          setGameInfo(data[0])
+      onValue(searchRef,(snapshot)=>{
+        try{
+        const data = Object.values(snapshot.val());
+        setUserInfo(data[0])
+        } catch(e) { console.log(e); }
       })
   },[])
+  
+  console.log(userInfo)
 
+  if(!userInfo)
+    {
     return(
         <View style={styles.container}>
             <LinearGradient
@@ -64,32 +69,79 @@ export default function searchpagename ({ navigation, route }){
             <Image source={require('./searchAssets/searchIcon.png')} style={styles.searchIcon} />
             <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or location'></TextInput>
 
+            {/*Search Result*/}
             <Text style={styles.playersearchText} >Player Search Result:</Text>
 
-            <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
-                <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
-                    <TouchableOpacity onPress={() => navigation.navigate("")}>
-                        <Image source={require('./searchAssets/profile1.png')} style = {styles.profile} />
-                        <Text style={styles.profilename} >ValorantX01</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
-                <View style={styles.whitebg}/>
-                <TouchableOpacity onPress={() => navigation.navigate("Game")}>
-                <Image source={require('./searchAssets/ValoLogo.png')} style = {styles.valo} />
-                </TouchableOpacity>
-                <View style={styles.valoContainer}>
-                    <Text style={styles.tagText} >Tags: </Text>
-                    <Text style={styles.subtagText} >#BattleRoyale</Text>
-                    <Text style={styles.subtagText} >#BattleRoyale1test</Text>
-                </View>
-                </View>
+            <ScrollView style = {styles.scrollContainer} showsVerticalScrollIndicator={false}>
+                <Image source={require('./searchAssets/frown.png')} style = {styles.frown}></Image>
+                <Text style={styles.notfoundText}>Result not found</Text>
             </ScrollView>
 
         </View>
     )
 }
 
+
+return(
+    <View style={styles.container}>
+        <LinearGradient
+            start = {{x:0, y:1}}
+            end = {{x:0, y:-1}}
+            colors={['#013C00', '#000000']}
+            style = {styles.background}
+        />
+        
+        <ImageBackground source={require('./searchAssets/designspikes1.png')} 
+            style={styles.spikes1} />
+        <ImageBackground source={require('./searchAssets/designspikes2.png')} 
+            style={styles.spikes2} />
+        <Image source={require('./searchAssets/GamerVerseTitle.png')} 
+            style = {styles.GamerVerseTitle} />   
+        <ImageBackground source={require('./searchAssets/MenuBar.png')}
+            style = {styles.menuBar} />
+
+        {/* NavBar Buttons     */}
+        <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+            <Text style={styles.robototxt}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+            <Text style={styles.robototxt}>Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+            <Text style={styles.highlighttxt}>My Games</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+            <Text style={styles.robototxt}>Game Hub</Text>
+        </TouchableOpacity>
+        <Image source={require('./searchAssets/searchIcon.png')} style={styles.searchIcon} />
+        <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or location'></TextInput>
+
+        {/*Search Result*/}
+        <Text style={styles.playersearchText} >Player Search Result:</Text>
+
+        <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
+            <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
+                <TouchableOpacity onPress={() => navigation.navigate("")}>
+                    <Image source={require('./searchAssets/profile1.png')} style = {styles.profile} />
+                    <Text style={styles.profilename} >ValorantX01</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
+            <View style={styles.whitebg}/>
+            <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+            <Image source={require('./searchAssets/ValoLogo.png')} style = {styles.valo} />
+            </TouchableOpacity>
+            <View style={styles.valoContainer}>
+                <Text style={styles.tagText} >Tags: </Text>
+                <Text style={styles.subtagText} >#BattleRoyale</Text>
+                <Text style={styles.subtagText} >#BattleRoyale1test</Text>
+            </View>
+            </View>
+        </ScrollView>
+
+    </View>
+)
+}
 
 const styles = StyleSheet.create({
     container : {
@@ -233,7 +285,35 @@ const styles = StyleSheet.create({
         top : 0.25*windowHeight,
         left : 0.016*windowWidth
     },
+
+    scrollContainer:{
+        position: 'absolute',
+        flexGrow: 0.75,
+        width: windowWidth,
+        height : 0.7*windowHeight,
+        top : 0.25*windowHeight,
+        left : 0.015*windowWidth
+    },
     
+    frown:{
+        position:'absolute',
+        resizeMode: 'contain',
+        width: 50 / 1440 * windowWidth,
+        height: 50 / 1024 * windowHeight,
+        top: 0.014 *windowHeight,
+        left: 560 / 1440 *windowWidth
+    },
+    
+   notfoundText:{
+    position:'absolute',
+    "fontStyle": "normal",
+    "fontWeight": "100",
+    "fontSize": 25,
+    top: 0.015*windowHeight,
+    left: 620 / 1440 *windowWidth,
+    "color": "#FFFFFF"
+   },
+
     profile:{
         position:'absolute',
         resizeMode: 'contain',
