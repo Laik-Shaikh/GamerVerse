@@ -72,70 +72,70 @@ export default function GameHubPage({ navigation, route }) {
                 
                 
                 <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={styles.scrollContainer1} horizontal={true}>
-                    {games.map((item, index) => {
-                        return (
-                            <View key={index} >   
-                                
-                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
-                                <Image source={item.Image}
-                                    style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-                                </TouchableOpacity>
-                           
-                            </View>
-
-
-                        )
+                    {games.map((item, index) => {  
+                        let computer;
+                        computer = item.Code.charAt(0); 
+                        if(computer === "P"){
+                            return (
+                                <View key={index} >   
+                                    
+                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
+                                    <Image source={item.Image}
+                                        style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                    </TouchableOpacity>
+                               
+                                </View>
+    
+    
+                            )
+                        }
                     })}
                 </ScrollView>
 
 
+                
 
-                <ScrollView style={styles.scrollContainer2} horizontal={true}>
-                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M0' })}>
-                        <Image source={require('./GameHubAssets/cocLogo.png')}
-                            style={styles.cocLogo} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M4' })}>
-                        <Image source={require('./GameHubAssets/CODMLogo.png')}
-                            style={styles.codMob} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M3' })}>
-                        <Image source={require('./GameHubAssets/FreeFire.png')}
-                            style={styles.freeFire} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M5' })}>
-                        <Image source={require('./GameHubAssets/CRLogo.png')}
-                            style={styles.crLogo} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M6' })}>
-                        <Image source={require('./GameHubAssets/MobileLegend.png')}
-                            style={styles.mobileLegend} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M2' })}>
-                        <Image source={require('./GameHubAssets/PokeLogo.png')}
-                            style={styles.pokeLogo} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'M1' })}>
-                        <Image source={require('./GameHubAssets/bgmiLogo.png')}
-                            style={styles.bgmi} />
-                    </TouchableOpacity>
+
+
+                <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={styles.scrollContainer2} horizontal={true}>
+                    {games.map((item, index) => {
+                        let mobile;
+                        mobile = item.Code.charAt(0);
+                        
+                        if(mobile === "M"){
+                            return(<View key = {index}>
+                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.code })}>
+                                    <Image source={item.Image}
+                                    style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                </TouchableOpacity>
+                            </View>
+                            )
+                        }
+
+                    }
+                    )}
+                    
+                    
                 </ScrollView>
 
 
                 <ScrollView style={styles.scrollContainer3} horizontal={true}
                     showsHorizontalScrollIndicator={false} >
-                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'C0' })}>
-                        <Image source={require('./GameHubAssets/GOWLogo.png')}
-                            style={styles.gow} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'C2' })}>
-                        <Image source={require('./GameHubAssets/MortalKombat.png')}
-                            style={styles.mortalKombat} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate("Game", { GameCode: 'C1' })}>
-                        <Image source={require('./GameHubAssets/SpidermanLogo.png')}
-                            style={styles.spiderMan} />
-                    </TouchableOpacity>
+                    {games.map((item, index) => {
+                        let console = item.Code.charAt(0);
+                        if(console === "C")
+                        {
+                            return(
+                                <View>
+                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.code })}>
+                                        <Image source={item.Image}
+                                        style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        }
+                        } )}
+                    
                 </ScrollView>
             </LinearGradient>
         </View>
@@ -328,7 +328,8 @@ const styles = StyleSheet.create({
         height: 0.28 * windowHeight,
         left: 0.19 * windowWidth,
         top: 0.13 * windowHeight,
-        flexGrow: 0.1
+        flexGrow: 0.1,
+        // flexDirection: 'row'
     },
 
     scrollContainer2: {
@@ -336,7 +337,8 @@ const styles = StyleSheet.create({
         width: 0.8 * windowWidth,
         height: 0.34 * windowHeight,
         left: 0.19 * windowWidth,
-        top: 0.38 * windowHeight
+        top: 0.38 * windowHeight,
+        flexGrow: 0.1
     },
 
     scrollContainer3: {
@@ -399,14 +401,10 @@ const styles = StyleSheet.create({
     },
 
     cocLogo: {
-        position: 'absolute',
-        resizeMode: 'contain',
         paddingLeft: 10,
         paddingRight: 10,
         width: 0.13 * windowWidth,
         height: 0.24 * windowHeight,
-        left: 0.001 * windowWidth,
-        top: 0.08 * windowHeight,
     },
 
     codMob: {
