@@ -40,6 +40,8 @@ export default function Login({ navigation }) {
                         console.log(UName+" "+PWord);
                         await signInWithEmailAndPassword(auth,UName,PWord);
                         console.log("yes")
+                        setPWord(" ");
+                        setUName(" ");
                         navigation.navigate("Home") 
                       } catch (error) {
                         console.log(error);

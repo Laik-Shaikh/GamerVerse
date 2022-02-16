@@ -1,12 +1,115 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 
-const windowWidth = Dimensions.get('screen').width;
-const windowHeight = Dimensions.get('screen').height
+import fire from '../firebase';
+import uuid from 'uuid';
+import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import {getAuth} from "firebase/auth";
+import {getDatabase,ref,set} from "firebase/database"
+
+import * as ImagePicker from 'expo-image-picker';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height
 
 import BG from './createProfileAssets/BG.png'
 
-export default function CreateProfile({ navigation }) {
+export default function CreateProfile({navigation}) {
+
+  const [image, setImage] = useState(null);
+
+  const storage = getStorage();
+  const metadata = {
+    contentType: 'image/jpg',
+  };
+
+  const auth = getAuth()
+  const db = getDatabase()
+  
+  const storageRef = strRef(storage, 'Profile/' + auth.currentUser.uid + '.jpg');
+  const dbRef = ref(db,'users/' + auth.currentUser.uid)
+  console.log(auth.currentUser)
+
+  const pickImage = async () => {
+    
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      
+    }
+  };
+  const [UName, setName] = React.useState();
+  const [PNum, setPNum] = React.useState(0);
+  const [Loc, setLoc] = React.useState();
+  const [Disc, setDisc] = React.useState();
+  function discCheck(Disc){
+    let numbers = '0123456789';
+    let j=0;
+    let k=0;
+    let hash = '#'
+    for (var i=0; i < Disc.length; i++) {
+      console.log(Disc[i]);
+        if(Disc[i]=='#') {
+            k++;
+            for (var l=1;l<5;l++){
+            if(numbers.indexOf(Disc[i+l]) > -1) {
+              j++;
+              }
+            }
+        }
+      }
+        if(k>=1 && j == 4)
+        {
+          console.log("disc tag approoved");
+          return true
+        }
+        else 
+        {
+          alert("Please enter valid discord ID");
+          return false
+        }
+}
+  function mobileCheck(PNum){
+    let numbers = '0123456789';
+    for (var i=0; i < PNum.length; i++) {
+        if(numbers.indexOf(PNum[i]) > -1 && PNum.length==10) {
+            console.log("Phone number approoved")
+        }
+        else {
+            alert("Please enter valid phone number");
+            return false
+        }
+    }
+    
+    return true
+}
+async function sendFirebaseData(){
+            console.log(image);
+            const response = await fetch(image);
+            const blob = await response.blob();
+            uploadBytes(storageRef, blob, metadata).then((snapshot) => {
+              getDownloadURL(storageRef).then((url)=>{
+                set(dbRef,{
+                    Email: auth.currentUser.email,
+                    PhoneNumber: PNum,
+                    Location: Loc,
+                    DiscordId: Disc,
+                    uid: auth.currentUser.uid,
+                    Name: UName,
+                    DisplayPicture: url
+                  })
+                  })
+              })
+}
+
   return (
     <View style={styles.container}>
       <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
@@ -16,14 +119,33 @@ export default function CreateProfile({ navigation }) {
 
         <View style={styles.whitebg} >
           <Text style={styles.signinText}>Create Your Profile</Text>
+          <TouchableOpacity onPress={pickImage} >
           <Image source={require('./createProfileAssets/CamIcon.png')} style={styles.CamIcon} />
-          <TextInput style={styles.InputStyle1} placeholder='Name'></TextInput>
-          <TextInput style={styles.InputStyle2} placeholder='Phone Number'></TextInput>
-          <TextInput style={styles.InputStyle3} placeholder='Location'></TextInput>
-          <TextInput style={styles.InputStyle4} placeholder='Discord ID'></TextInput>
+          {image && <Image source={{ uri:image }} style={styles.ProfileImage} />}
+          </TouchableOpacity>
+          <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={UName => setName(UName)}></TextInput>
+          <TextInput style={styles.InputStyle2} placeholder='Phone Number' onChangeText={PNum => setPNum(PNum)}></TextInput>
+          <TextInput style={styles.InputStyle3} placeholder='Location'  onChangeText={Loc => setLoc(Loc)}></TextInput>
+          <TextInput style={styles.InputStyle4} placeholder='Discord ID' onChangeText={Disc => setDisc(Disc)}></TextInput>
 
-          <TouchableOpacity style={styles.Button} title='Continue' onPress={() => navigation.navigate("Profile")}>
-            <Text style={styles.ButtonText}>Continue</Text>
+          <TouchableOpacity style={styles.Button} title='Continue' 
+            onPress={
+              async () => {
+                try {
+                  console.log(UName+" "+PNum+" "+Loc+" "+Disc);
+                  mobileCheck(PNum);
+                  discCheck(Disc);
+                  if(mobileCheck(PNum) && discCheck(Disc)){
+                    sendFirebaseData();
+                    navigation.navigate('GameHub')
+                  }
+                } catch (error) {
+                  console.log(error);
+                  alert('Error');
+                }
+              }
+            }>
+              <Text>Continue</Text>
           </TouchableOpacity>
 
         </View>
@@ -85,7 +207,7 @@ const styles = StyleSheet.create({
 
   signinText: {
     position: "absolute",
-    top: 0.02*windowHeight,
+    top: 0.001*windowHeight,
     height: 32/1024*windowHeight,
     width: 305/1440*windowWidth,
     color: 'white',
@@ -95,11 +217,23 @@ const styles = StyleSheet.create({
   },
 
   CamIcon: {
-    "position": "absolute",
+    position: "absolute",
     resizeMode:"contain",
-    top: 0.08 * windowHeight,
-    height: 0.137 * windowHeight,
-    width: 0.137 * windowWidth,
+    width: 0.12*windowWidth,
+    height: 0.12*windowHeight,
+    top: -0.28*windowHeight,
+    left: -0.06*windowWidth
+  },
+
+  ProfileImage: {
+    position: "absolute",
+    // resizeMode:"contain",
+    width: 0.07*windowWidth,
+    height: 0.13*windowHeight,
+    top: -0.28*windowHeight,
+    left: -0.035*windowWidth,
+    overflow:'hidden',
+    borderRadius: '45%'
   },
 
   InputStyle1: {
