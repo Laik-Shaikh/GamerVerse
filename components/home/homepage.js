@@ -5,9 +5,9 @@ import * as ImagePicker from 'expo-image-picker';
 import fire from '../firebase';
 import uuid from 'uuid';
 import { getStorage, ref as strRef, uploadBytes} from "firebase/storage";
-// import {Picker} from '@react-native-picker/picker';
-// import { PickerItem } from 'react-native/Libraries/Components/Picker/Picker';
-// import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
+import {Picker} from '@react-native-picker/picker';
+import { PickerItem } from 'react-native/Libraries/Components/Picker/Picker';
+
 
 
 const windowWidth = Dimensions.get('screen').width;
@@ -18,9 +18,9 @@ export default function homepage({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [image, setImage] = useState(null);
-    // const [platform, setPlatform] = useState(null);
+    const [platform, setPlatform] = useState(null);
 
-    // const pickerRef = useRef();
+    const pickerRef = useRef();
 
     const storage = getStorage();
     const metadata = {
@@ -28,15 +28,6 @@ export default function homepage({ navigation }) {
     };
 
     const storageRef = strRef(storage, 'Post/'+'Something'+'.jpg');
-
-    // const dropDown = () => {
-    //     let arr;  
-    //     arr:{
-    //         value: 'apple';
-    //         value: 'banana';
-    //         value : 'pineapple'
-    //     }  
-    // }
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -150,7 +141,7 @@ export default function homepage({ navigation }) {
                                 {image && <Image source={{ uri:image }} style={styles.selectedImage} />}
                             </TouchableOpacity>
 
-                            {/* <Picker
+                            <Picker
                                 ref={pickerRef}
                                 selectedValue={platform}
                                 onValueChange={(itemValue, itemIndex) => {
@@ -160,14 +151,9 @@ export default function homepage({ navigation }) {
                                 <Picker.Item label='Computer' value="Comp" />
                                 <Picker.Item label='Mobile' value="Mob" />
                                 <Picker.Item label='Console' value="CG" />
-                            </Picker> */}
+                            </Picker>
 
-                            {/* <Dropdown
-                                icon='chevron-down'
-                                iconColor='#E1E1E1'
-                                label='Favorite Fruit'
-                                data={dropDown}
-                            /> */}
+                            
                            
                         </View>
                     </View>
