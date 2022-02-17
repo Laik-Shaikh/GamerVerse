@@ -101,6 +101,7 @@ async function sendFirebaseData(){
                     Email: auth.currentUser.email,
                     PhoneNumber: PNum,
                     Location: Loc,
+                    Games:'',
                     DiscordId: Disc,
                     uid: auth.currentUser.uid,
                     Name: UName,

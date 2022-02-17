@@ -114,7 +114,7 @@ export default function GameHubPage({ navigation, route }) {
 
                     }
                     )}
-                       
+   
                 </ScrollView>
 
 
