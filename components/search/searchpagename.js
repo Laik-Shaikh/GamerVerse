@@ -26,7 +26,7 @@ export default function searchpagename ({ navigation, route }){
       onValue(searchRef,(snapshot)=>{
         try{
         const data = Object.values(snapshot.val());
-        setUserInfo(data[0])
+        setUserInfo(data)
         } catch(e) { console.log(e); }
       })
   },[])
@@ -82,6 +82,26 @@ export default function searchpagename ({ navigation, route }){
 }
 
 
+{/* 
+<View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
+<TouchableOpacity onPress={() => navigation.navigate("")}>
+    <Image source={require('./searchAssets/profile1.png')} style = {styles.profile} />
+    <Text style={styles.profilename} >ValorantX01</Text>
+</TouchableOpacity>
+</View> 
+            <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
+            <View style={styles.whitebg}/>
+            <TouchableOpacity onPress={() => navigation.navigate("Game")}>
+            <Image source={require('./searchAssets/ValoLogo.png')} style = {styles.valo} />
+            </TouchableOpacity>
+            <View style={styles.valoContainer}>
+                <Text style={styles.tagText} >Tags: </Text>
+                <Text style={styles.subtagText} >#BattleRoyale</Text>
+                <Text style={styles.subtagText} >#BattleRoyale1test</Text>
+            </View>
+            </View>
+*/}
+
 return(
     <View style={styles.container}>
         <LinearGradient
@@ -119,24 +139,20 @@ return(
         {/*Search Result*/}
         <Text style={styles.playersearchText} >Player Search Result:</Text>
 
-        <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
-            <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
-                <TouchableOpacity onPress={() => navigation.navigate("")}>
-                    <Image source={require('./searchAssets/profile1.png')} style = {styles.profile} />
-                    <Text style={styles.profilename} >ValorantX01</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
-            <View style={styles.whitebg}/>
-            <TouchableOpacity onPress={() => navigation.navigate("Game")}>
-            <Image source={require('./searchAssets/ValoLogo.png')} style = {styles.valo} />
-            </TouchableOpacity>
-            <View style={styles.valoContainer}>
-                <Text style={styles.tagText} >Tags: </Text>
-                <Text style={styles.subtagText} >#BattleRoyale</Text>
-                <Text style={styles.subtagText} >#BattleRoyale1test</Text>
-            </View>
-            </View>
+        <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false} contentContainerStyle= {{justifyContent:'space-around'}}>
+        
+        {userInfo.map((item, index) => {
+            if(item.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+            return (
+                <View key={index} style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight, flex: 1, marginVertical:35}}>   
+                    <TouchableOpacity onPress={() => navigation.navigate("")}>
+                    <Image source={item.DisplayPicture} style = {styles.profile}/>
+                    <Text style={styles.profilename}>{item.Name}</Text>
+                    </TouchableOpacity>
+                </View>
+            )
+            }
+        })}
         </ScrollView>
 
     </View>
@@ -279,10 +295,10 @@ const styles = StyleSheet.create({
 
     scrollContainer1:{
         position: 'absolute',
-        flexGrow: 0.75,
+        flexGrow: 0.1,
         width: 0.3*windowWidth,
         height : 0.7*windowHeight,
-        top : 0.25*windowHeight,
+        top : 0.1*windowHeight,
         left : 0.016*windowWidth
     },
 
@@ -320,7 +336,11 @@ const styles = StyleSheet.create({
         width: 55 / 1440 * windowWidth,
         height: 55 / 1024 * windowHeight,
         top: 0.25*windowHeight,
-        left: 0.02*windowWidth
+        left: 0.02*windowWidth,
+        borderTopRightRadius: 0.03 * windowWidth,
+        borderBottomLeftRadius: 0.03 * windowWidth,
+        borderBottomRightRadius: 0.03 * windowWidth,
+        borderTopLeftRadius: 0.03 * windowWidth,
     },
 
     profilename:{
