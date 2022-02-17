@@ -3,10 +3,11 @@ import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, 
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('screen').width;
+const windowHeight = Dimensions.get('screen').height;
 
-export default function MyGamesPage ({ navigation }){
+export default function MyGamesPage ({ navigation, route }){
+    const [GameCode,setGameCode] = React.useState(null);
     return(
         <View style={styles.container}>
             <LinearGradient
@@ -33,7 +34,7 @@ export default function MyGamesPage ({ navigation }){
                 <Text style={styles.robototxt}>Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
-                <Text style={styles.robototxt}>My Games</Text>
+                <Text style={styles.highlighttxt}>My Games</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
                 <Text style={styles.robototxt}>Game Hub</Text>
@@ -57,21 +58,15 @@ export default function MyGamesPage ({ navigation }){
 
 
             <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
                 <Image source={require('./MyGamesAssets/ApexLogo.png')} 
                     style = {styles.apexLegend} />
                 </TouchableOpacity>
-                <ScrollView style={styles.apexContainer} showsVerticalScrollIndicator={false}>
+                <View style={styles.gta5Container}>
                     <Text style={styles.tagText} >Tags: </Text>
                     <Text style={styles.tagText} >#BattleRoyale</Text>
-                    <Text style={styles.tagText} >#BattleRoyale</Text>
-                    <Text style={styles.tagText} >#BattleRoyale</Text>
-                    <Text style={styles.tagText} >#BattleRoyale</Text>
-                    <Text style={styles.tagText} >#BattleRoyale</Text>
-                    <Text style={styles.tagText} >#BattleRoyale</Text>
-                    <Text style={styles.tagText} >#BattleRoyale</Text>
-                </ScrollView>
-                <TouchableOpacity>
+                </View>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
                 <Image source={require('./MyGamesAssets/GTAVLogo.png')} 
                     style = {styles.gta5} />
                 </TouchableOpacity>
@@ -79,7 +74,7 @@ export default function MyGamesPage ({ navigation }){
                     <Text style={styles.tagText} >Tags: </Text>
                     <Text style={styles.tagText} >#BattleRoyale</Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
                 <Image source={require('./MyGamesAssets/ValoLogo.png')} 
                     style = {styles.valorant} />
                 </TouchableOpacity>
@@ -87,7 +82,7 @@ export default function MyGamesPage ({ navigation }){
                     <Text style={styles.tagText} >Tags: </Text>
                     <Text style={styles.tagText} >#BattleRoyale</Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
                 <Image source={require('./MyGamesAssets/CODWZLogo.png')} 
                     style = {styles.cod} />
                 </TouchableOpacity>
@@ -99,7 +94,7 @@ export default function MyGamesPage ({ navigation }){
 
 
             <ScrollView style = {styles.scrollContainer2} showsVerticalScrollIndicator={false}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
             <Image source={require('./MyGamesAssets/cocLogo.png')} 
                     style = {styles.coc} />
             </TouchableOpacity>
@@ -107,7 +102,7 @@ export default function MyGamesPage ({ navigation }){
                 <Text style={styles.tagText} >Tags: </Text>
                 <Text style={styles.tagText} >#BattleRoyale</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
             <Image source={require('./MyGamesAssets/CODMLogo.png')} 
                     style = {styles.codMob} />
             </TouchableOpacity>
@@ -115,7 +110,7 @@ export default function MyGamesPage ({ navigation }){
                 <Text style={styles.tagText} >Tags: </Text>
                 <Text style={styles.tagText} >#BattleRoyale</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
             <Image source={require('./MyGamesAssets/PokeLogo.png')} 
                     style = {styles.pogo} />
             </TouchableOpacity>
@@ -123,7 +118,7 @@ export default function MyGamesPage ({ navigation }){
                 <Text style={styles.tagText} >Tags: </Text>
                 <Text style={styles.tagText} >#BattleRoyale</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
             <Image source={require('./MyGamesAssets/FreeFire.png')} 
                     style = {styles.freeFire} />
             </TouchableOpacity>
@@ -135,7 +130,7 @@ export default function MyGamesPage ({ navigation }){
 
 
             <ScrollView style = {styles.scrollContainer3} showsVerticalScrollIndicator={false}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
             <Image source={require('./MyGamesAssets/GOWLogo.png')} 
                     style = {styles.gow} />
             </TouchableOpacity>
@@ -143,7 +138,7 @@ export default function MyGamesPage ({ navigation }){
                 <Text style={styles.tagText} >Tags: </Text>
                 <Text style={styles.tagText} >#BattleRoyale</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
             <Image source={require('./MyGamesAssets/MortalKombat.png')} 
                     style = {styles.mortalKombat} />
             </TouchableOpacity>
@@ -151,7 +146,7 @@ export default function MyGamesPage ({ navigation }){
                 <Text style={styles.tagText} >Tags: </Text>
                 <Text style={styles.tagText} >#BattleRoyale</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
             <Image source={require('./MyGamesAssets/SpiderManLogo.png')} 
                     style = {styles.spiderMan} />
             </TouchableOpacity>
@@ -217,6 +212,15 @@ const styles = StyleSheet.create({
         "fontSize": 14,
         "color": "#FFFFFF"
     },
+    
+    highlighttxt:{ 
+        "fontStyle": "normal",
+        "fontWeight": "500",
+        "fontSize": 15,
+        borderBottomColor: "#FFFFFF",
+        borderBottomWidth: 1,
+        "color": "#FFFFFF"
+    },
    
     homebtn:{
         position:"absolute",
@@ -234,10 +238,9 @@ const styles = StyleSheet.create({
     },
     mygamesbtn:{
         position:"absolute",
-        top:0.11*windowHeight,
+        top:0.107*windowHeight,
         left:0.35*windowWidth,
         height: 0.03*windowHeight,
-        width: 0.05*windowWidth
     },
     gamehubbtn:{
         position:"absolute",
