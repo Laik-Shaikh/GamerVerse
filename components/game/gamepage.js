@@ -20,7 +20,8 @@ export default function gamepage({ navigation, route }) {
     const [userInfo,setUserInfo] = React.useState()
     var gameTags=[];
     var tagArray=[];
-    var games=[];
+    var games = [ "YY" ];
+    // var gameArray=[];
     const db = getDatabase();
     const GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
     const UserRef = query(ref(db,'users/'+ auth.currentUser.uid))
@@ -48,6 +49,15 @@ console.log(tagArray)
 if(userInfo){
     games = userInfo.Games;
     console.log(games);
+    // gameArray = Object.entries(games);
+    // console.log(tagArray)
+    }
+    function gameFollowCheck(GameCode){
+        for(var i = 0; i < games.length; i++)
+        {
+            if (GameCode==games[i]) return false;
+        }
+        return true
     }
 if(!gameInfo)
 {
@@ -140,7 +150,8 @@ if(!gameInfo)
                 <TouchableOpacity style={styles.Button} title='Follow' 
                 onPress={() => 
                 {
-                    games=games+GameCode;
+                    if (gameFollowCheck(GameCode)) games.push(GameCode);
+                    console.log(games);
                     update(UserRef, {
                         Games: games,
                       });
