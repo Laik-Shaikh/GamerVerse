@@ -1,13 +1,39 @@
 import React from 'react';
 import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,Button,TextInput} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useState, useEffect } from 'react';
 
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
+import fire from '../firebase';
+import 'firebase/database'
+import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
 
-export default function profilepage({ navigation }) {
+export default function searchpagename ({ navigation, route }){
+
+      var profileUid = route.params
+      const [userInfo,setUserInfo] = React.useState()
+      const db = getDatabase();
+      const profileRef = query(ref(db,'users'),orderByChild('uid'),equalTo(profileUid))
+      console.log(profileRef)
+      React.useEffect(() => {
+      onValue(profileRef,(snapshot)=>{
+        try{
+        const data = Object.values(snapshot.val());
+        setUserInfo(data)
+        } catch(e) { console.log(e); }
+      })
+  },[])
+  
+  console.log(userInfo)
+
+  if (!userInfo) {
+    return (<Text>Rukavat ke liye khed hai</Text>)
+}
+
+  if (userInfo){
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -38,14 +64,15 @@ export default function profilepage({ navigation }) {
                     <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
                     <ImageBackground source={require('./profileAssets/designspikes.png')} style={styles.spike2} />
                     
+                    
                     <View style={styles.photoContainer}>
                         <Text style={styles.headTxt}>My Photo</Text>
-                        <View style={styles.dpicture}></View>
+                        <Image source={userInfo[0].DisplayPicture} style = {styles.dpicture}/>
                     </View>
                     
                     <View style={styles.aboutMeContainer}>
                         <Text style={styles.headTxt}>About Me</Text>
-                        <Text style={styles.aboutMeTxt}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at condimentum velit. Etiam pretium justo ac tellus blandit, eget maximus metus maximus. Phasellus dictum dignissim nulla, sit amet porttitor lacus consequat sed. Sed a risus imperdiet, iaculis metus ac, condimentum ex. Cras vestibulum vestibulum orci, sit amet rhoncus risus placerat quis. Donec nulla velit, fringilla eget tellus sit amet, malesuada vulputate sapien. Nullam eget sem finibus neque interdum commodo vel non sapien. Ut a nulla in augue bibendum aliquam.</Text>
+                        <Text style={styles.aboutMeTxt}>{userInfo[0].Name}</Text>
                     </View>
                     
                     <TouchableOpacity style={styles.Button} title='Edit'>
@@ -53,30 +80,30 @@ export default function profilepage({ navigation }) {
                     </TouchableOpacity>
                     
                     <View style={styles.divider1}/>
-                    
+                    {console.log(userInfo[0].Name)}
                     <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>John Doe</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userInfo[0].Name}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
                         <Text style={styles.infoHeadTxt}>Location</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>John Doe</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userInfo[0].Location}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Phone Number</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 9999999999</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 {userInfo[0].PhoneNumber}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
                         <Text style={styles.infoHeadTxt}>Email</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>JohnDoe@gmail.com</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userInfo[0].Email}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Discord Id</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>JohnnyDoe#2320</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userInfo[0].DiscordId}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
@@ -86,9 +113,11 @@ export default function profilepage({ navigation }) {
                     </View>
                     
                     <View style={styles.divider2}/>
+                    
                     </LinearGradient>
             </View>
     );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -177,7 +206,6 @@ const styles = StyleSheet.create({
         width: 0.15 * windowHeight,
         height: 0.15 * windowHeight,
         borderRadius: 0.075 * windowHeight,
-        backgroundColor: "rgba(120, 225, 100, 0.2)"
     },
 
     searchIcon:{

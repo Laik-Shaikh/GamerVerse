@@ -17,10 +17,9 @@ export default function searchpagename ({ navigation, route }){
       })
       const {textInputValue} = route.params
       const [userInfo,setUserInfo] = React.useState()
-    //   var gameTags=[];
-    //   var tagArray=[];
       const db = getDatabase();
       const searchRef = query(ref(db,'users'),orderByChild('Name'),equalTo(textInputValue))
+      console.log('searchRef')
       console.log(searchRef)
       React.useEffect(() => {
       onValue(searchRef,(snapshot)=>{
@@ -55,13 +54,13 @@ export default function searchpagename ({ navigation, route }){
 
             {/* NavBar Buttons     */}
             <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
-                <Text style={styles.robototxt}>Home</Text>
+                <Text style={styles.highlighttxt}>Home</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
                 <Text style={styles.robototxt}>Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
-                <Text style={styles.highlighttxt}>My Games</Text>
+                <Text style={styles.robototxt}>My Games</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
                 <Text style={styles.robototxt}>Game Hub</Text>
@@ -81,27 +80,6 @@ export default function searchpagename ({ navigation, route }){
     )
 }
 
-
-{/* 
-<View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
-<TouchableOpacity onPress={() => navigation.navigate("")}>
-    <Image source={require('./searchAssets/profile1.png')} style = {styles.profile} />
-    <Text style={styles.profilename} >ValorantX01</Text>
-</TouchableOpacity>
-</View> 
-            <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
-            <View style={styles.whitebg}/>
-            <TouchableOpacity onPress={() => navigation.navigate("Game")}>
-            <Image source={require('./searchAssets/ValoLogo.png')} style = {styles.valo} />
-            </TouchableOpacity>
-            <View style={styles.valoContainer}>
-                <Text style={styles.tagText} >Tags: </Text>
-                <Text style={styles.subtagText} >#BattleRoyale</Text>
-                <Text style={styles.subtagText} >#BattleRoyale1test</Text>
-            </View>
-            </View>
-*/}
-
 return(
     <View style={styles.container}>
         <LinearGradient
@@ -120,40 +98,40 @@ return(
         <ImageBackground source={require('./searchAssets/MenuBar.png')}
             style = {styles.menuBar} />
 
-        {/* NavBar Buttons     */}
-        <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
-            <Text style={styles.robototxt}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
-            <Text style={styles.robototxt}>Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
-            <Text style={styles.highlighttxt}>My Games</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
-            <Text style={styles.robototxt}>Game Hub</Text>
-        </TouchableOpacity>
-        <Image source={require('./searchAssets/searchIcon.png')} style={styles.searchIcon} />
-        <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or location'></TextInput>
-
         {/*Search Result*/}
         <Text style={styles.playersearchText} >Player Search Result:</Text>
 
         <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false} contentContainerStyle= {{justifyContent:'space-around'}}>
         
-        {userInfo.map((item, index) => {
-            if(item.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+        {userInfo.map((profile, index) => {
+            if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
             return (
-                <View key={index} style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight, flex: 1, marginVertical:35}}>   
-                    <TouchableOpacity onPress={() => navigation.navigate("")}>
-                    <Image source={item.DisplayPicture} style = {styles.profile}/>
-                    <Text style={styles.profilename}>{item.Name}</Text>
+                <View key={index} style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight, flex: 1, marginVertical:35}}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Profile", profile.uid)}>
+                        <Image source={profile.DisplayPicture} style = {styles.profileimg}/>
+                        <Text style={styles.profilename}>{profile.Name}</Text>
                     </TouchableOpacity>
                 </View>
             )
             }
         })}
         </ScrollView>
+        
+        {/* NavBar Buttons     */}
+        <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+            <Text style={styles.highlighttxt}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+            <Text style={styles.robototxt}>Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+            <Text style={styles.robototxt}>My Games</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+            <Text style={styles.robototxt}>Game Hub</Text>
+        </TouchableOpacity>
+        <Image source={require('./searchAssets/searchIcon.png')} style={styles.searchIcon} />
+        <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or location'></TextInput>
 
     </View>
 )
@@ -261,7 +239,6 @@ const styles = StyleSheet.create({
         top:0.11*windowHeight,
         left:0.05*windowWidth,
         height: 0.03*windowHeight,
-        width: 0.03*windowWidth
     },
     profilebtn:{
         position:"absolute",
@@ -272,7 +249,7 @@ const styles = StyleSheet.create({
     },
     mygamesbtn:{
         position:"absolute",
-        top:0.107*windowHeight,
+        top:0.11*windowHeight,
         left:0.35*windowWidth,
         height: 0.03*windowHeight,
     },
@@ -330,17 +307,13 @@ const styles = StyleSheet.create({
     "color": "#FFFFFF"
    },
 
-    profile:{
+    profileimg:{
         position:'absolute',
-        resizeMode: 'contain',
-        width: 55 / 1440 * windowWidth,
-        height: 55 / 1024 * windowHeight,
+        width: 0.06 * windowHeight,
+        height: 0.06 * windowHeight,
         top: 0.25*windowHeight,
         left: 0.02*windowWidth,
-        borderTopRightRadius: 0.03 * windowWidth,
-        borderBottomLeftRadius: 0.03 * windowWidth,
-        borderBottomRightRadius: 0.03 * windowWidth,
-        borderTopLeftRadius: 0.03 * windowWidth,
+        borderRadius: 0.075 * windowHeight,
     },
 
     profilename:{
