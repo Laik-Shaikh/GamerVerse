@@ -21,13 +21,12 @@ export default function searchpagename ({ navigation, route }){
       const db = getDatabase();
       
       var searchRef = query(ref(db,'users'),orderByChild('Name'),equalTo(textInputValue))
-      console.log('searchRef')
       console.log(searchRef)
       var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
           textInputValue =(searchAgain);
           console.log(textInputValue)
-          navigation.navigate("SearchName", {textInputValue})
+          navigation.push("SearchName", {textInputValue})
           console.log("Hi")
       }
     }
