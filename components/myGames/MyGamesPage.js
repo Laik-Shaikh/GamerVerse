@@ -1,13 +1,60 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import fire from '../firebase';
+import 'firebase/database'
+import { getDatabase, onValue, ref, query, orderByChild, equalTo } from "firebase/database";
+import 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 export default function MyGamesPage ({ navigation, route }){
-    const [GameCode,setGameCode] = React.useState(null);
+    const auth = getAuth();
+    // const ImageCode = "P0"
+    const [games, setGames] = React.useState(null);
+    // const [userGameInfo, setuserGameInfo] = React.useState();
+    const [displayGame, setDisplayGame] = React.useState([])
+    const db = getDatabase();
+    const GameRef = query(ref(db,'games'))
+    // const gameImage = query(ref(db, 'games'),equalTo('P0'))
+    const UserRef = query(ref(db,'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3'))
+    console.log(UserRef);
+    console.log(GameRef);
+    // console.log(ImageCode);
+    
+    React.useEffect(() => {
+        onValue(GameRef, (snapshot) => {
+            const data = Object.values(snapshot.val());
+            setGames(data)
+            console.log(data)
+        })
+
+        onValue(UserRef, (snapshot) => {
+            const data1 = Object.values(snapshot.val());
+            setDisplayGame(data1[3])
+            console.log(data1)
+            }
+        )
+        
+        // onValue(gameImage, (snapshot) => {
+        //     const data2 = Object.values(snapshot.val)
+        //     setDisplayGame(data2)
+        //     console.log(data2)
+        // }
+        // )
+
+    },[])
+
+    console.log(games)
+    console.log(displayGame);
+    // console.log(displayGame[1].charAt(0))
+
+    if (!games) {
+        return (<Text>Rukavat ke liye khed hai</Text>)
+    }
     return(
         <View style={styles.container}>
             <LinearGradient
@@ -57,39 +104,34 @@ export default function MyGamesPage ({ navigation, route }){
                 style = {styles.consoleLogo} />
 
 
-            <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-                <Image source={require('./MyGamesAssets/ApexLogo.png')} 
-                    style = {styles.apexLegend} />
-                </TouchableOpacity>
-                <View style={styles.gta5Container}>
-                    <Text style={styles.tagText} >Tags: </Text>
-                    <Text style={styles.tagText} >#BattleRoyale</Text>
-                </View>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-                <Image source={require('./MyGamesAssets/GTAVLogo.png')} 
-                    style = {styles.gta5} />
-                </TouchableOpacity>
-                <View style={styles.gta5Container}>
-                    <Text style={styles.tagText} >Tags: </Text>
-                    <Text style={styles.tagText} >#BattleRoyale</Text>
-                </View>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-                <Image source={require('./MyGamesAssets/ValoLogo.png')} 
-                    style = {styles.valorant} />
-                </TouchableOpacity>
-                <View style={styles.valorantContainer}>
-                    <Text style={styles.tagText} >Tags: </Text>
-                    <Text style={styles.tagText} >#BattleRoyale</Text>
-                </View>
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-                <Image source={require('./MyGamesAssets/CODWZLogo.png')} 
-                    style = {styles.cod} />
-                </TouchableOpacity>
-                <View style={styles.codContainer}>
-                    <Text style={styles.tagText} >Tags: </Text>
-                    <Text style={styles.tagText} >#BattleRoyale</Text>
-                </View>
+            <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
+            {games.map((item, index) =>{
+                    for(let i=1; i<displayGame.length;i++){
+                        var computer = displayGame[i].charAt(0)
+                        // console.log(computer);
+                        
+                        console.log(item.Code);
+                        var displayComp = item.Code.charAt(0)
+                        // for(let j=0; j<item.Code.length; j++)
+                        console.log(displayComp);
+                        if(displayComp === "P" && computer === "P"){
+                            return (
+                                <View key={index} >   
+                                    {/* {console.log(computer)} */}
+                                    <TouchableOpacity style={styles.apexLegend} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
+                                    <Image source={item.Image}
+                                        style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                    </TouchableOpacity>
+                               
+                                </View>
+    
+    
+                            )
+                        }
+                            
+                    }
+                    })}    
+                
             </ScrollView>
 
 
@@ -318,7 +360,8 @@ const styles = StyleSheet.create({
         width: 0.58*windowWidth,
         height : 0.6*windowHeight,
         top : 0.37*windowHeight,
-        left : 0.016*windowWidth
+        left : 0.016*windowWidth,
+        flexGrow: 0.1
     },
 
     scrollContainer2:{
@@ -338,12 +381,10 @@ const styles = StyleSheet.create({
     },
 
     apexLegend:{
-        position: 'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        top: 0.02*windowHeight,
-        left: -0.12*windowWidth,
+        paddingLeft: 10,
+        paddingRight: 10,
+        width: 0.13 * windowWidth,
+        height: 0.24 * windowHeight,
     },
 
     apexContainer:{
