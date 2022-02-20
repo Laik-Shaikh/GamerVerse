@@ -4,8 +4,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
 
 import fire from '../firebase';
-import 'firebase/auth';
-import { getAuth } from "firebase/auth";
 import 'firebase/database'
 import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
 
@@ -13,9 +11,9 @@ const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 
-export default function searchpagename ({ navigation }){
-      const auth = getAuth();
-      var profileUid = auth.currentUser.uid;
+export default function searchProfilePage ({ navigation, route }){
+
+      var profileUid = route.params
       const [userInfo,setUserInfo] = React.useState()
       const db = getDatabase();
       const profileRef = query(ref(db,'users'),orderByChild('uid'),equalTo(profileUid))
@@ -78,7 +76,7 @@ export default function searchpagename ({ navigation }){
                     </View>
                     
                     <TouchableOpacity style={styles.Button} title='Edit'>
-                        <Text style={styles.ButtonText}>Edit</Text>
+                        <Text style={styles.ButtonText}>Follow</Text>
                     </TouchableOpacity>
                     
                     <View style={styles.divider1}/>
