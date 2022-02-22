@@ -26,8 +26,8 @@ export default function CreateProfile({navigation}) {
   const auth = getAuth()
   const db = getDatabase()
   
-  const storageRef = strRef(storage, 'Profile/' + auth.currentUser.uid + '.jpg');
-  const dbRef = ref(db,'users/' + auth.currentUser.uid)
+  const storageRef = strRef(storage, 'Profile/bHSYBWb7Z0XZyuVmmuPZ83GmUNT2.jpg');
+  const dbRef = ref(db,'users/bHSYBWb7Z0XZyuVmmuPZ83GmUNT2')
   console.log(auth.currentUser)
 
   const [location,setLocation] = React.useState()
@@ -112,7 +112,7 @@ async function sendFirebaseData(){
                     PhoneNumber: PNum,
                     Location: selectedValue,
                     DiscordId: Disc,
-                    uid: auth.currentUser.uid,
+                    uid: 'bHSYBWb7Z0XZyuVmmuPZ83GmUNT2',
                     Name: UName,
                     DisplayPicture: url
                   })
@@ -122,8 +122,11 @@ async function sendFirebaseData(){
 
 function renderSug() {
   if(!selectedValue){
-    return(<FlatList
-  
+    return(
+    
+    <FlatList
+      
+      style={styles.LocSuggestions}
       data={location}
       keyExtractor={(item) => item.magicKey}
       renderItem={(suggestion) => {
@@ -134,7 +137,9 @@ function renderSug() {
       }}
 
       
-      ></FlatList>)}
+      ></FlatList>
+      
+      )}
 }
 
   return (
@@ -146,7 +151,7 @@ function renderSug() {
 
         <View style={styles.whitebg} >
           <Text style={styles.signinText}>Create Your Profile</Text>
-          <TouchableOpacity onPress={pickImage} >
+          <TouchableOpacity onPress={pickImage} style={{position:'absolute'}} >
           <Image source={require('./createProfileAssets/CamIcon.png')} style={styles.CamIcon} />
           {image && <Image source={{ uri:image }} style={styles.ProfileImage} />}
           </TouchableOpacity>
@@ -366,15 +371,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#FFFFFF"
   },
+  LocSuggestions:{
+    position:'absolute',
+    top: 0.45 * windowHeight,
+    flexGrow: 0,
+    width: 305 / 1440 * windowWidth,
+    backgroundColor: 'rgba(255, 255, 255,1)',
+    zIndex:1,
+  },
   itemText: {
     fontSize: 15,
-    paddingTop: 5,
-    paddingBottom: 5,
-    margin: 2,
+    paddingLeft: 10
   },
   item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    width: 305 / 1440 * windowWidth,
+    paddingTop:10
   },
 });
