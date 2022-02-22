@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView, FlatList } from 'react-native'
 
 import fire from '../firebase';
 import uuid from 'uuid';
@@ -30,6 +30,17 @@ export default function CreateProfile({navigation}) {
   const dbRef = ref(db,'users/' + auth.currentUser.uid)
   console.log(auth.currentUser)
 
+  const [location,setLocation] = React.useState()
+  const [selectedValue,setSelectedValue] = React.useState()
+
+  const getLocationsFromApi = async (loc) => {
+    let response = await fetch(
+      'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?text='+loc+'&f=json'
+    );
+    let json = await response.json();
+    setLocation(json.suggestions);
+  }
+
   const pickImage = async () => {
     
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -48,7 +59,6 @@ export default function CreateProfile({navigation}) {
   };
   const [UName, setName] = React.useState();
   const [PNum, setPNum] = React.useState(0);
-  const [Loc, setLoc] = React.useState();
   const [Disc, setDisc] = React.useState();
   function discCheck(Disc){
     let numbers = '0123456789';
@@ -100,7 +110,7 @@ async function sendFirebaseData(){
                 set(dbRef,{
                     Email: auth.currentUser.email,
                     PhoneNumber: PNum,
-                    Location: Loc,
+                    Location: selectedValue,
                     DiscordId: Disc,
                     uid: auth.currentUser.uid,
                     Name: UName,
@@ -108,6 +118,23 @@ async function sendFirebaseData(){
                   })
                   })
               })
+}
+
+function renderSug() {
+  if(!selectedValue){
+    return(<FlatList
+  
+      data={location}
+      keyExtractor={(item) => item.magicKey}
+      renderItem={(suggestion) => {
+        return(
+        <TouchableOpacity style={styles.item} onPress={() =>setSelectedValue(suggestion.item.text)}>
+          <Text style={styles.itemText}>{suggestion.item.text}</Text>
+        </TouchableOpacity>)
+      }}
+
+      
+      ></FlatList>)}
 }
 
   return (
@@ -125,14 +152,26 @@ async function sendFirebaseData(){
           </TouchableOpacity>
           <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={UName => setName(UName)}></TextInput>
           <TextInput style={styles.InputStyle2} placeholder='Phone Number' onChangeText={PNum => setPNum(PNum)}></TextInput>
-          <TextInput style={styles.InputStyle3} placeholder='Location'  onChangeText={Loc => setLoc(Loc)}></TextInput>
+          <TextInput 
+          
+          style={styles.InputStyle3} 
+          value={selectedValue}
+          onChangeText={(text) => getLocationsFromApi(text)}
+          placeholder="Enter your location"
+          onFocus={() => {
+            if(selectedValue)
+              setSelectedValue(undefined)
+            }}>
+
+          </TextInput>
+          {renderSug()}
+          
           <TextInput style={styles.InputStyle4} placeholder='Discord ID' onChangeText={Disc => setDisc(Disc)}></TextInput>
 
           <TouchableOpacity style={styles.Button} title='Continue' 
             onPress={
               async () => {
                 try {
-                  console.log(UName+" "+PNum+" "+Loc+" "+Disc);
                   mobileCheck(PNum);
                   discCheck(Disc);
                   if(mobileCheck(PNum) && discCheck(Disc)){
@@ -326,5 +365,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     color: "#FFFFFF"
+  },
+  itemText: {
+    fontSize: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    margin: 2,
+  },
+  item: {
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
 });
