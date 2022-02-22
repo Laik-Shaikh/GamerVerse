@@ -20,7 +20,7 @@ export default function MyGamesPage ({ navigation, route }){
     const db = getDatabase();
     const GameRef = query(ref(db,'games'))
     // const gameImage = query(ref(db, 'games'),equalTo('P0'))
-    const UserRef = query(ref(db,'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3'))
+    const UserRef = query(ref(db,'users/' + auth.currentUser.uid))
     console.log(UserRef);
     console.log(GameRef);
     // console.log(ImageCode);
@@ -106,15 +106,11 @@ export default function MyGamesPage ({ navigation, route }){
 
             <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
             {games.map((item, index) =>{
-                    for(let i=1; i<displayGame.length;i++){
-                        var computer = displayGame[i].charAt(0)
-                        // console.log(computer);
-                        
-                        console.log(item.Code);
-                        var displayComp = item.Code.charAt(0)
-                        // for(let j=0; j<item.Code.length; j++)
-                        console.log(displayComp);
-                        if(displayComp === "P" && computer === "P"){
+                     if(displayGame.includes(item.Code)){   
+                        console.log(item.Code)
+                        var computer = item.Code
+
+                        if(computer.charAt(0) === "P"){
                             return (
                                 <View key={index} >   
                                     {/* {console.log(computer)} */}
@@ -129,74 +125,64 @@ export default function MyGamesPage ({ navigation, route }){
                             )
                         }
                             
-                    }
-                    })}    
+                    }}
+                    )}    
                 
             </ScrollView>
 
+            <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style = {styles.scrollContainer2} showsVerticalScrollIndicator={false}>
+            {games.map((item, index) =>{
+                     if(displayGame.includes(item.Code)){   
+                        console.log(item.Code)
+                        var mobile= item.Code
 
-            <ScrollView style = {styles.scrollContainer2} showsVerticalScrollIndicator={false}>
-            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-            <Image source={require('./MyGamesAssets/cocLogo.png')} 
-                    style = {styles.coc} />
-            </TouchableOpacity>
-            <View style={styles.cocContainer}>
-                <Text style={styles.tagText} >Tags: </Text>
-                <Text style={styles.tagText} >#BattleRoyale</Text>
-            </View>
-            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-            <Image source={require('./MyGamesAssets/CODMLogo.png')} 
-                    style = {styles.codMob} />
-            </TouchableOpacity>
-            <View style={styles.codMobContainer}>
-                <Text style={styles.tagText} >Tags: </Text>
-                <Text style={styles.tagText} >#BattleRoyale</Text>
-            </View>
-            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-            <Image source={require('./MyGamesAssets/PokeLogo.png')} 
-                    style = {styles.pogo} />
-            </TouchableOpacity>
-            <View style={styles.pogoContainer}>
-                <Text style={styles.tagText} >Tags: </Text>
-                <Text style={styles.tagText} >#BattleRoyale</Text>
-            </View>
-            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-            <Image source={require('./MyGamesAssets/FreeFire.png')} 
-                    style = {styles.freeFire} />
-            </TouchableOpacity>
-            <View style={styles.freeFireContainer}>
-                <Text style={styles.tagText} >Tags: </Text>
-                <Text style={styles.tagText} >#BattleRoyale</Text>
-            </View>
+                        if(mobile.charAt(0) === "M"){
+                            return (
+                                <View key={index} >   
+                                    {/* {console.log(computer)} */}
+                                    <TouchableOpacity style={styles.apexLegend} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
+                                    <Image source={item.Image}
+                                        style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                    </TouchableOpacity>
+                               
+                                </View>
+    
+    
+                            )
+                        }
+                            
+                    }}
+                    )}    
+                
             </ScrollView>
 
+            <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style = {styles.scrollContainer3} showsVerticalScrollIndicator={false}>
+            {games.map((item, index) =>{
+                     if(displayGame.includes(item.Code)){   
+                        console.log(item.Code)
+                        var consoleGame= item.Code
 
-            <ScrollView style = {styles.scrollContainer3} showsVerticalScrollIndicator={false}>
-            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-            <Image source={require('./MyGamesAssets/GOWLogo.png')} 
-                    style = {styles.gow} />
-            </TouchableOpacity>
-            <View style={styles.gowContainer}>
-                <Text style={styles.tagText} >Tags: </Text>
-                <Text style={styles.tagText} >#BattleRoyale</Text>
-            </View>
-            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-            <Image source={require('./MyGamesAssets/MortalKombat.png')} 
-                    style = {styles.mortalKombat} />
-            </TouchableOpacity>
-            <View style={styles.mkContainer}>
-                <Text style={styles.tagText} >Tags: </Text>
-                <Text style={styles.tagText} >#BattleRoyale</Text>
-            </View>
-            <TouchableOpacity onPress={() => navigation.navigate("Game",{GameCode: 'P1'})}>
-            <Image source={require('./MyGamesAssets/SpiderManLogo.png')} 
-                    style = {styles.spiderMan} />
-            </TouchableOpacity>
-            <View style={styles.spiderContainer}>
-                <Text style={styles.tagText} >Tags: </Text>
-                <Text style={styles.tagText} >#BattleRoyale</Text>
-            </View>
+                        if(consoleGame.charAt(0) === "C"){
+                            return (
+                                <View key={index} >   
+                                    {/* {console.log(computer)} */}
+                                    <TouchableOpacity style={styles.apexLegend} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
+                                    <Image source={item.Image}
+                                        style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                    </TouchableOpacity>
+                               
+                                </View>
+    
+    
+                            )
+                        }
+                            
+                    }}
+                    )}    
+                
             </ScrollView>
+
+            
             
         </View>
     )
@@ -369,15 +355,17 @@ const styles = StyleSheet.create({
         width: 0.58*windowWidth,
         height : 0.6*windowHeight,
         top : 0.37*windowHeight,
-        left: 0.345*windowWidth
+        left: 0.345*windowWidth,
+        flexGrow: 0.1
     },
 
     scrollContainer3:{
         position:'absolute',
-        width: 0.32*windowWidth,
+        width: 0.58*windowWidth,
         height : 0.6*windowHeight,
         top : 0.37*windowHeight,
-        left: 0.68*windowWidth
+        left: 0.7*windowWidth,
+        flexGrow: 0.1
     },
 
     apexLegend:{

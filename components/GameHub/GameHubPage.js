@@ -101,10 +101,11 @@ export default function GameHubPage({ navigation, route }) {
                     {games.map((item, index) => {
                         let mobile;
                         mobile = item.Code.charAt(0);
+                        console.log(mobile.Code)
                         
                         if(mobile === "M"){
                             return(<View key = {index}>
-                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.code })}>
+                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                     style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                 </TouchableOpacity>
@@ -126,7 +127,7 @@ export default function GameHubPage({ navigation, route }) {
                         {
                             return(
                                 <View>
-                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.code })}>
+                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
                                         <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                     </TouchableOpacity>
