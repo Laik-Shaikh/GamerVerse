@@ -78,7 +78,7 @@ export default function GameHubPage({ navigation, route }) {
                         if(computer === "P"){
                             return (
                                 <View key={index} >   
-                                    
+                                     {console.log(item.Code)}
                                     <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
@@ -104,7 +104,8 @@ export default function GameHubPage({ navigation, route }) {
                         
                         if(mobile === "M"){
                             return(<View key = {index}>
-                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.code })}>
+                                {console.log(item.Code)}
+                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                     style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                 </TouchableOpacity>
@@ -126,7 +127,7 @@ export default function GameHubPage({ navigation, route }) {
                         {
                             return(
                                 <View>
-                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.code })}>
+                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
                                         <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                     </TouchableOpacity>
