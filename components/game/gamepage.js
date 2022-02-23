@@ -9,7 +9,7 @@ import 'firebase/database'
 import { getDatabase, onValue,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
-const windowHeight = Dimensions.get('screen').height
+const windowHeight = Dimensions.get('screen').height;
 
 
 export default function gamepage({ navigation, route }) {

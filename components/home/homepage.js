@@ -2,12 +2,37 @@ import React from 'react';
 import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import fire from '../firebase';
+import 'firebase/database'
+import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
+export default function homepage({ navigation, route }) {
 
-export default function homepage({ navigation }) {
+    const [textInputValue, setTextInputValue] = React.useState('');
+
+    const [users, setUsers] = React.useState(null);
+    const db = getDatabase();
+    const GameRef = query(ref(db, 'users'))
+    React.useEffect(() => {
+        onValue(GameRef, (snapshot) => {
+            const data = Object.values(snapshot.val());
+            setUsers(data)
+        })
+    }, [])
+    if (!users) {
+        return (<Text>Rukavat ke liye khed hai</Text>)
+    }
+    
+  var handleSearch = (e) => {
+      if (e.nativeEvent.key == 'Enter') {
+        navigation.navigate("SearchName", {textInputValue})
+        console.log('search started')
+    }
+  }
+
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -30,7 +55,13 @@ export default function homepage({ navigation }) {
                     <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     <Image source={require('./homeAssets/searchIcon.png')} style={styles.searchIcon} />
-                    <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                    <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => setTextInputValue(text)}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    ></TextInput>
                     <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
                     <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
                     <Text style={styles.nametxt}>Danny Devadiga</Text>
@@ -42,6 +73,7 @@ export default function homepage({ navigation }) {
                     </LinearGradient>
             </View>
     );
+    
 }
 
 const styles = StyleSheet.create({

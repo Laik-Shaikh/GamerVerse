@@ -20,7 +20,7 @@ export default function MyGamesPage ({ navigation, route }){
     const db = getDatabase();
     const GameRef = query(ref(db,'games'))
     // const gameImage = query(ref(db, 'games'),equalTo('P0'))
-    const UserRef = query(ref(db,'users/' + auth.currentUser.uid))
+    const UserRef = query(ref(db,'users/' + auth.currentUser.uid + '/Games'))
     console.log(UserRef);
     console.log(GameRef);
     // console.log(ImageCode);
@@ -34,7 +34,7 @@ export default function MyGamesPage ({ navigation, route }){
 
         onValue(UserRef, (snapshot) => {
             const data1 = Object.values(snapshot.val());
-            setDisplayGame(data1[3])
+            setDisplayGame(data1)
             console.log(data1)
             }
         )
