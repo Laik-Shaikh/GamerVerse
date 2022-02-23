@@ -17,17 +17,19 @@ export default function searchpagename ({ navigation, route }){
       })
       var {textInputValue} = route.params
       console.log(textInputValue)
-      const [userInfo,setUserInfo] = React.useState()
+      var [userInfo,setUserInfo] = React.useState()
+      var [searchedGame,setSearchedGame] = React.useState()
       const db = getDatabase();
       
       var searchRef = query(ref(db,'users'),orderByChild('Name'),equalTo(textInputValue))
+      var searchGameRef = query(ref(db,'games'),orderByChild('Name'),equalTo(textInputValue))
       console.log('searchRef')
       console.log(searchRef)
       var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
           textInputValue =(searchAgain);
           console.log(textInputValue)
-          navigation.navigate("SearchName", {textInputValue})
+          navigation.push("SearchName", {textInputValue})
           console.log("Hi")
       }
     }
@@ -38,11 +40,37 @@ export default function searchpagename ({ navigation, route }){
         setUserInfo(data)
         } catch(e) { console.log(e); }
       })
+      onValue(searchGameRef,(snapshot)=>{
+        try{
+        const data1 = Object.values(snapshot.val());
+        setSearchedGame(data1)
+        } catch(e) { console.log(e); }
+      })
   },[])
 
   console.log(userInfo)
+  console.log(searchedGame)
+  if (!userInfo)
+  {
+      if (searchedGame)
+      {
+          console.log("Yo")
+          userInfo = []
+      }
+  }
 
-  if(!userInfo)
+  if (!searchedGame)
+  {
+      if (userInfo)
+      {
+        console.log("Yo Ho")
+        searchedGame = []
+      }
+  }
+
+  console.log(userInfo)
+  console.log(searchedGame)
+  if(!userInfo && !searchedGame)
     {
     return(
         <View style={styles.container}>
@@ -118,7 +146,6 @@ return(
         <Text style={styles.playersearchText} >Player Search Result:</Text>
 
         <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false} contentContainerStyle= {{justifyContent:'space-around'}}>
-        
         {userInfo.map((profile, index) => {
             if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
             return (
@@ -126,6 +153,19 @@ return(
                     <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", profile.uid)}>
                         <Image source={profile.DisplayPicture} style = {styles.profileimg}/>
                         <Text style={styles.profilename}>{profile.Name}</Text>
+                    </TouchableOpacity>
+                </View>
+            )
+            }
+        })}
+        {searchedGame.map((game, index) => {
+            if(game.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+            return (
+                <View key={index} style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight, flex: 1, marginVertical:35}}>
+                    {console.log(game.Code)}
+                    <TouchableOpacity onPress={() => navigation.navigate("Game",{ GameCode: game.Code })}>
+                        <Image source={game.Image} style = {styles.profileimg}/>
+                        <Text style={styles.profilename}>{game.Name}</Text>
                     </TouchableOpacity>
                 </View>
             )
