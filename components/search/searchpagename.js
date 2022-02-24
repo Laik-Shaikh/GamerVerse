@@ -119,7 +119,7 @@ return(
         <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false} contentContainerStyle= {{justifyContent:'space-around'}}>
         
         {userInfo.map((profile, index) => {
-            if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+            if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase())){
             return (
                 <View key={index} style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight, flex: 1, marginVertical:35}}>
                     <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", profile.uid)}>
