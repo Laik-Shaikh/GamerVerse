@@ -16,20 +16,20 @@ export default function gamepage({ navigation, route }) {
     const auth = getAuth();
     var {GameCode} = route.params
     console.log(GameCode)
-    const [gameInfo,setGameInfo] = React.useState()
+    var [gameInfo,setGameInfo] = React.useState()
     const [userInfo,setUserInfo] = React.useState()
     var gameTags=[];
     var tagArray=[];
     var games = [ "YY" ];
     // var gameArray=[];
     const db = getDatabase();
-    const GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
+    var GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
     const UserRef = query(ref(db,'users/'+ auth.currentUser.uid))
-    const GetUserRef = query(ref(db,'users'),orderByChild('uid'),equalTo( auth.currentUser.uid))
+    var GetUserRef = query(ref(db,'users'),orderByChild('uid'),equalTo( auth.currentUser.uid))
     console.log(GameRef)
     React.useEffect(() => {
     onValue(GameRef,(snapshot)=>{
-        const data = Object.values(snapshot.val());
+        var data = Object.values(snapshot.val());
         setGameInfo(data[0])
     })
     onValue(GetUserRef,(snapshot)=>{

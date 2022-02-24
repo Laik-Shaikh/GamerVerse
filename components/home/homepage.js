@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput} from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
@@ -62,7 +62,36 @@ export default function homepage({ navigation, route }) {
                     value={textInputValue}
                     onKeyPress={e => handleSearch(e)}
                     ></TextInput>
-                    <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
+                    <View style={styles.notif}>
+                        <Image style={{position:'absolute', 
+                        resizeMode: 'contain',
+                        top:0.005*windowHeight,
+                        left:0.015*windowWidth,
+                        width:0.03*windowWidth,
+                        height:0.03*windowHeight
+                    }} source={require('./homeAssets/Bell.png')}/>
+                    <Text style ={{  position: 'absolute',
+                    left: 0.045*windowWidth,
+                    top:0.01*windowHeight,
+                    color: 'white',
+                    fontWeight: 'bold'}}>Notifications</Text>
+                    <ScrollView style={styles.notifscroll}>
+                        <View style={styles.notifbox}>
+                            <Text style={{position: 'relative'}}>Friend Request by:</Text>
+                            <View style={{position:'relative',flex:1, flexDirection:'row'}}>
+                            <Image source={require('./homeAssets/dp.png')} style={{
+                        resizeMode:'contain',
+                        width:'50%', 
+                        height:'50%'}} />
+                            <Text>Aartem Singh</Text>
+                            </View>
+                            <View style={styles.notifdecisionbox}>
+                        <TouchableOpacity><Text>Accept</Text></TouchableOpacity>
+                        <TouchableOpacity><Text>Decline</Text></TouchableOpacity>
+                        </View>
+                        </View>
+                    </ScrollView>
+                    </View>
                     <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
                     <Text style={styles.nametxt}>Danny Devadiga</Text>
                     <Text style={styles.posttxt}>Maddy Sheikh</Text>
@@ -240,6 +269,40 @@ const styles = StyleSheet.create({
         left:0.8*windowWidth,
         height:(695/900) * windowHeight,
         width: (227/1600)*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        borderRadius: 10,
+    },
+    
+    notifbox:{
+        position:"absolute",
+        flex:1, 
+        flexDirection:"column",
+        top:0.05*windowHeight,
+        left:0.005*windowWidth,
+        height:0.08 * windowHeight,
+        width: 0.13*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: 10,
+    },
+    notifdecisionbox:{
+        position:"absolute",
+        flex:1, 
+        flexDirection:"row",
+        justifyContent:'space-between',
+        top:0.05*windowHeight,
+        left:0.005/4*windowWidth,
+        height:0.02 * windowHeight,
+        width: 0.12*windowWidth,
+        borderRadius: 10,
+    },
+    
+    
+    notifscroll:{
+        position:"absolute",
+        height:(595/900) * windowHeight,
+        width: (227/1600)*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        borderRadius: 10,
     },
 
     spike1:{
