@@ -17,8 +17,11 @@ export default function homepage({ navigation, route }) {
     const [textInputValue, setTextInputValue] = React.useState('');
     const [IncomingRequests, setIncomingRequests] = React.useState(null);
     const [users, setUsers] = React.useState(null);
+    var requestNames = [];
+    var requestImages = [];
     const db = getDatabase();
     const UserRef = query(ref(db,'users/' + auth.currentUser.uid + '/RequestedProfiles'))
+    const ProfileRef = query(ref(db,'users'))
     React.useEffect(() => {
         onValue(UserRef, (snapshot) => {
             const data = Object.values(snapshot.val());
@@ -26,9 +29,16 @@ export default function homepage({ navigation, route }) {
             // console.log(data)
             }
         )
+        onValue(ProfileRef, (snapshot) => {
+            const data1 = Object.values(snapshot.val());
+            setUsers(data1)
+            // console.log(data1)
+            }
+        )
     },[])
 console.log(IncomingRequests)
-    if (!IncomingRequests) {
+console.log(users)
+    if (!users) {
         return (<Text>Rukavat ke liye khed hai</Text>)
     }
     
@@ -38,7 +48,24 @@ console.log(IncomingRequests)
         console.log('search started')
     }
   }
-    if(IncomingRequests)
+  if(users && IncomingRequests)
+  {
+    for(var i= 1; i<users.length;i++)
+    {
+        var x = users[i].uid;
+        console.log(x);
+        if (IncomingRequests.includes(x))
+        {
+           requestNames.push(users[i].Name);
+           requestImages.push(users[i].DisplayPicture);
+    
+        }
+    }
+    console.log(requestNames)
+    console.log(requestImages)
+  }
+ 
+    if(users)
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -83,17 +110,19 @@ console.log(IncomingRequests)
                     fontWeight: 'bold'}}>Notifications</Text>
                     <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
                     style={styles.notifscroll}>
-                    {IncomingRequests.map((profile,index)=>
+                    {requestNames.map((profile,index)=>
                         {
-                           { console.log("WORKS") }
+                           { console.log("WORKS")
+                        console.log(profile)
+                        console.log(requestImages[index])}   
                         <View  key={index} style={styles.notifbox}>
                             <Text style={{position: 'absolute'}}>Friend Request by:</Text>
                             <View style={{position:'absolute',flex:1, flexDirection:'row'}}>
-                            <Image source={require('./homeAssets/dp.png')} style={{
+                            <Image source={requestImages[index]} style={{
                         resizeMode:'contain',
                         width:'50%', 
                         height:'50%'}} />
-                            <Text>Aartem Singh</Text>
+                            <Text>{profile}</Text>
                             </View>
                             <View style={styles.notifdecisionbox}>
                         <TouchableOpacity><Text>Accept</Text></TouchableOpacity>
@@ -295,7 +324,7 @@ const styles = StyleSheet.create({
         height:0.08 * windowHeight,
         width: 0.13*windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.8)",
-        borderRadius: 10,
+        // borderRadius: 10,
     },
     notifdecisionbox:{
         position:"absolute",
