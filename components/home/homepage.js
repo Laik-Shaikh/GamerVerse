@@ -10,21 +10,36 @@ const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 export default function homepage({ navigation, route }) {
-
+    var requests = [ "YY" ];
+    var friends = [ "YY" ];
+    var friendsArray = [ "YY" ];
     const [textInputValue, setTextInputValue] = React.useState('');
-
-    const [users, setUsers] = React.useState(null);
+    const [users, setUsers] = React.useState()
     const db = getDatabase();
-    const GameRef = query(ref(db, 'users'))
+    const userRef = query(ref(db, 'users'))
+    // const friendRef = 
     React.useEffect(() => {
-        onValue(GameRef, (snapshot) => {
+        onValue(userRef, (snapshot) => {
             const data = Object.values(snapshot.val());
-            setUsers(data)
+            setUsers(data[0])
         })
     }, [])
+
+    console.log(users)
+
     if (!users) {
         return (<Text>Rukavat ke liye khed hai</Text>)
     }
+
+    if(users){
+        requests = users.RequestedProfiles
+        console.log(requests)
+        friends = users.ConfirmedProfiles
+        console.log(friends)
+        // friendsArray = Object.entries(friends)
+        // console.log(friendsArray)
+        }
+
     
   var handleSearch = (e) => {
       if (e.nativeEvent.key == 'Enter') {

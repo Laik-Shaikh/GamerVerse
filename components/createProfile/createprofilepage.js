@@ -102,6 +102,8 @@ async function sendFirebaseData(){
                     PhoneNumber: PNum,
                     Location: Loc,
                     Games:['XX'],
+                    RequestedProfiles:['XX'],
+                    ConfirmedProfiles:['XX'],
                     DiscordId: Disc,
                     uid: auth.currentUser.uid,
                     Name: UName,

@@ -14,7 +14,7 @@ const windowHeight = Dimensions.get('screen').height;
 
 export default function gamepage({ navigation, route }) {
     const auth = getAuth();
-    const {GameCode} = route.params
+    var {GameCode} = route.params
     console.log(GameCode)
     const [gameInfo,setGameInfo] = React.useState()
     const [userInfo,setUserInfo] = React.useState()
@@ -154,8 +154,7 @@ if(!gameInfo)
                     console.log(games);
                     update(UserRef, {
                         Games: games,
-                      });
-                    
+                      }); 
                 }}>
                     <Text style={styles.ButtonText}>Follow</Text>
                 </TouchableOpacity>
