@@ -71,14 +71,16 @@ export default function GameHubPage({ navigation, route }) {
                     style={styles.consoleLogo} />
                 
                 
-                <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={styles.scrollContainer1} horizontal={true}>
+                <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
+                    style={styles.scrollContainer1} horizontal={true} 
+                    showsHorizontalScrollIndicator={false}>
                     {games.map((item, index) => {  
                         let computer;
                         computer = item.Code.charAt(0); 
                         if(computer === "P"){
                             return (
                                 <View key={index} >   
-                                    
+                                     {console.log(item.Code)}
                                     <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
@@ -96,15 +98,19 @@ export default function GameHubPage({ navigation, route }) {
                 
 
 
-
-                <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={styles.scrollContainer2} horizontal={true}>
+            
+                <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
+                    style={styles.scrollContainer2} horizontal={true} 
+                    showsHorizontalScrollIndicator={false}>
                     {games.map((item, index) => {
                         let mobile;
                         mobile = item.Code.charAt(0);
+                        console.log(mobile.Code)
                         
                         if(mobile === "M"){
                             return(<View key = {index}>
-                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.code })}>
+                                {console.log(item.Code)}
+                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                     style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                 </TouchableOpacity>
@@ -114,7 +120,7 @@ export default function GameHubPage({ navigation, route }) {
 
                     }
                     )}
-                       
+   
                 </ScrollView>
 
 
@@ -126,7 +132,7 @@ export default function GameHubPage({ navigation, route }) {
                         {
                             return(
                                 <View>
-                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.code })}>
+                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
                                         <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                     </TouchableOpacity>
@@ -290,7 +296,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: 1 * windowWidth,
         height: 0.01 * windowHeight,
-        top: 0.73 * windowHeight,
+        top: 0.71 * windowHeight,
         left: '0px'
     },
 
@@ -326,9 +332,9 @@ const styles = StyleSheet.create({
         width: 0.8 * windowWidth,
         height: 0.28 * windowHeight,
         left: 0.19 * windowWidth,
-        top: 0.13 * windowHeight,
+        top: 0.17 * windowHeight,
         flexGrow: 0.1,
-        // flexDirection: 'row'
+        
     },
 
     scrollContainer2: {
@@ -336,16 +342,17 @@ const styles = StyleSheet.create({
         width: 0.8 * windowWidth,
         height: 0.34 * windowHeight,
         left: 0.19 * windowWidth,
-        top: 0.38 * windowHeight,
+        top: 0.44 * windowHeight,
         flexGrow: 0.1
     },
 
     scrollContainer3: {
         position: 'absolute',
         width: 0.8 * windowWidth,
-        height: 0.36 * windowHeight,
+        height: 0.28 * windowHeight,
         left: 0.19 * windowWidth,
-        top: 0.63 * windowHeight
+        top: 0.73 * windowHeight,
+        flexGrow: 0.1
     },
 
     apexLogo: {
@@ -355,121 +362,12 @@ const styles = StyleSheet.create({
         height: 0.24 * windowHeight,
     },
 
-    gta5: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.13 * windowWidth,
-        top: 0.05 * windowHeight,
-    },
-
-    valoLogo: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.26 * windowWidth,
-        top: 0.05 * windowHeight,
-    },
-
-    codwz: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.39 * windowWidth,
-        top: 0.05 * windowHeight,
-    },
-
-    dotaLogo: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.52 * windowWidth,
-        top: 0.05 * windowHeight,
-    },
 
     cocLogo: {
         paddingLeft: 10,
         paddingRight: 10,
         width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-    },
-
-    codMob: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.12 * windowWidth,
-        top: 0.08 * windowHeight,
-    },
-
-    freeFire: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.24 * windowWidth,
-        top: 0.08 * windowHeight,
-    },
-
-    crLogo: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.36 * windowWidth,
-        top: 0.08 * windowHeight,
-    },
-
-    mobileLegend: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.48 * windowWidth,
-        top: 0.08 * windowHeight,
-    },
-
-    pokeLogo: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.60 * windowWidth,
-        top: 0.08 * windowHeight,
-    },
-
-    bgmi: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.72 * windowWidth,
-        top: 0.08 * windowHeight,
+        height: 0.27 * windowHeight,
     },
 
     gow: {
@@ -480,28 +378,6 @@ const styles = StyleSheet.create({
         width: 0.13 * windowWidth,
         height: 0.24 * windowHeight,
         left: 0.001 * windowWidth,
-        top: 0.12 * windowHeight,
-    },
-
-    mortalKombat: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.12 * windowWidth,
-        top: 0.12 * windowHeight,
-    },
-
-    spiderMan: {
-        position: 'absolute',
-        resizeMode: 'contain',
-        paddingLeft: 10,
-        paddingRight: 10,
-        width: 0.13 * windowWidth,
-        height: 0.24 * windowHeight,
-        left: 0.24 * windowWidth,
         top: 0.12 * windowHeight,
     },
 
