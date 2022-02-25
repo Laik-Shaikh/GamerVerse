@@ -5,24 +5,30 @@ import { LinearGradient } from 'expo-linear-gradient';
 import fire from '../firebase';
 import 'firebase/database'
 import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
+import 'firebase/auth';
+import { getAuth } from "firebase/auth";
+
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 export default function homepage({ navigation, route }) {
-
+    const auth = getAuth();
     const [textInputValue, setTextInputValue] = React.useState('');
-
+    const [IncomingRequests, setIncomingRequests] = React.useState(null);
     const [users, setUsers] = React.useState(null);
     const db = getDatabase();
-    const GameRef = query(ref(db, 'users'))
+    const UserRef = query(ref(db,'users/' + auth.currentUser.uid + '/RequestedProfiles'))
     React.useEffect(() => {
-        onValue(GameRef, (snapshot) => {
+        onValue(UserRef, (snapshot) => {
             const data = Object.values(snapshot.val());
-            setUsers(data)
-        })
-    }, [])
-    if (!users) {
+            setIncomingRequests(data)
+            // console.log(data)
+            }
+        )
+    },[])
+console.log(IncomingRequests)
+    if (!IncomingRequests) {
         return (<Text>Rukavat ke liye khed hai</Text>)
     }
     
@@ -32,7 +38,7 @@ export default function homepage({ navigation, route }) {
         console.log('search started')
     }
   }
-
+    if(IncomingRequests)
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -75,10 +81,14 @@ export default function homepage({ navigation, route }) {
                     top:0.01*windowHeight,
                     color: 'white',
                     fontWeight: 'bold'}}>Notifications</Text>
-                    <ScrollView style={styles.notifscroll}>
-                        <View style={styles.notifbox}>
-                            <Text style={{position: 'relative'}}>Friend Request by:</Text>
-                            <View style={{position:'relative',flex:1, flexDirection:'row'}}>
+                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
+                    style={styles.notifscroll}>
+                    {IncomingRequests.map((profile,index)=>
+                        {
+                           { console.log("WORKS") }
+                        <View  key={index} style={styles.notifbox}>
+                            <Text style={{position: 'absolute'}}>Friend Request by:</Text>
+                            <View style={{position:'absolute',flex:1, flexDirection:'row'}}>
                             <Image source={require('./homeAssets/dp.png')} style={{
                         resizeMode:'contain',
                         width:'50%', 
@@ -90,6 +100,8 @@ export default function homepage({ navigation, route }) {
                         <TouchableOpacity><Text>Decline</Text></TouchableOpacity>
                         </View>
                         </View>
+                    })
+                    }
                     </ScrollView>
                     </View>
                     <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
@@ -102,7 +114,7 @@ export default function homepage({ navigation, route }) {
                     </LinearGradient>
             </View>
     );
-    
+                    
 }
 
 const styles = StyleSheet.create({
@@ -265,6 +277,7 @@ const styles = StyleSheet.create({
 
     notif:{
         position:"absolute",
+        flex:1,
         top:0.2*windowHeight,
         left:0.8*windowWidth,
         height:(695/900) * windowHeight,
@@ -274,11 +287,11 @@ const styles = StyleSheet.create({
     },
     
     notifbox:{
-        position:"absolute",
         flex:1, 
         flexDirection:"column",
-        top:0.05*windowHeight,
-        left:0.005*windowWidth,
+        marginVertical:60,
+        // top:0.005*windowHeight,
+        // left:0.005*windowWidth,
         height:0.08 * windowHeight,
         width: 0.13*windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.8)",
@@ -298,10 +311,9 @@ const styles = StyleSheet.create({
     
     
     notifscroll:{
-        position:"absolute",
-        height:(595/900) * windowHeight,
-        width: (227/1600)*windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        flexGrow: 0.1,
+        height:'100%',
+        width: '100%',
         borderRadius: 10,
     },
 
