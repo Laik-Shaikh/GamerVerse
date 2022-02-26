@@ -22,7 +22,7 @@ export default function Login({ navigation }) {
             <View style={styles.rectanglebg} />
             
             <Image source={require('./authAssets/logo.png')} style={styles.logo} />
-            <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 1400/1440 * windowWidth, "height": 685/1024 * windowHeight, "left": 40/1440 * windowWidth, "top": 70/1024 * windowHeight}}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 1400/1440 * windowWidth, "height": 685/1024 * windowHeight, "left": 40/1440 * windowWidth, "top": 70/1024 * windowHeight}}>
                 <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
                   <View style={styles.whitebg}/>
                   <Image source={require('./authAssets/group1.png')} style={styles.img1} />
@@ -42,7 +42,7 @@ export default function Login({ navigation }) {
                         console.log("yes")
                         setPWord(" ");
                         setUName(" ");
-                        navigation.navigate("Register") 
+                        navigation.navigate("Home") 
                       } catch (error) {
                         console.log(error);
                         // alert('Error');
@@ -80,7 +80,7 @@ Find all sorts of players over all of platforms with just a few simple steps!</T
                   <Image source={require('./authAssets/group5.png')} style={styles.img1} />
                   <Image source={require('./authAssets/group6.png')} style={styles.img2} />
                   <Text style={styles.title3}>Update your own posts, gameplays and achievements</Text>
-                  <Text style={styles.subtext3}>Share all of your achievements, badges, gameplays, etc with all of your friends on Gamer Verse now!</Text>
+                  <Text style={styles.subtext3}>Share all of your achievements, badges, gameplays, etc with all of your friends on GamerVerse now!</Text>
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     rectanglebg:
   {
     position: "absolute",
-    width: 1440 / 1440 * windowWidth,
+    width: "100%",
     height: 126 / 1024 * windowHeight,
     left: 0 / 1024 * windowWidth,
     top: 0 / 1440 * windowHeight,

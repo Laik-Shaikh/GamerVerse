@@ -40,7 +40,7 @@ export default function Login({ navigation }) {
                         if(PWord==ConfirmPWord){ 
                           await createUserWithEmailAndPassword(auth,UName,PWord);
                           console.log("yes")
-                          navigation.navigate("Login")
+                          navigation.navigate("CreateProfile")
                         }
                         else
                         {
