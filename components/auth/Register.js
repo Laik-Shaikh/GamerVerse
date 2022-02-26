@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import fire from '../firebase';
 import 'firebase/auth';
-import { getAuth,createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth,createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup } from "firebase/auth";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height
@@ -18,6 +18,8 @@ export default function Login({ navigation }) {
   const [ConfirmPWord, setConfirmPWord] = React.useState();
   const unamekeeper = React.createRef();
   const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+
     return(
         <View style={styles.container}>
         <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
@@ -58,6 +60,20 @@ export default function Login({ navigation }) {
                   }>
                   <Text style={styles.ButtonText}>Register</Text>
                   </TouchableOpacity>
+                  <TouchableOpacity style={styles.Button2} onPress={() => {
+                    signInWithPopup(auth, provider)
+                    .then((result) => {
+                      
+                      const credential = GoogleAuthProvider.credentialFromResult(result);
+                      const token = credential.accessToken;
+                      
+                      const user = result.user;
+                      console.log(user)
+                      console.log(token)
+                      navigation.navigate("CreateProfile")
+                      
+                    })
+                  }}><Text style={styles.ButtonText}>Sign Up with google</Text></TouchableOpacity>
                   <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Login")}>
                     <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Have an account already? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14,borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Login</Text></Text>
                   </TouchableOpacity>
@@ -154,6 +170,22 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   },
   
+  Button2:
+  {
+    position: "absolute",
+    width: 305 / 1440 * windowWidth,
+    height: 55 / 1024 * windowHeight,
+    left: 877 / 1440 * windowWidth,
+    top: 450 / 1024 * windowHeight,
+    backgroundColor: "#54E0FF",
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  
   img1:{
     "position": "absolute",
     marginTop: 0,
@@ -169,7 +201,7 @@ const styles = StyleSheet.create({
   {
     position: "absolute",
     width: 1305 / 1440 * windowWidth,
-    height: 450 / 1024 * windowHeight,
+    height: 500 / 1024 * windowHeight,
     left: 28 / 1440 * windowWidth,
     top: 35 / 1024 * windowHeight,
     justifyContent: 'center',

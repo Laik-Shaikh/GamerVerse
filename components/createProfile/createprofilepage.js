@@ -26,8 +26,8 @@ export default function CreateProfile({navigation}) {
   const auth = getAuth()
   const db = getDatabase()
   
-  const storageRef = strRef(storage, 'Profile/bHSYBWb7Z0XZyuVmmuPZ83GmUNT2.jpg');
-  const dbRef = ref(db,'users/bHSYBWb7Z0XZyuVmmuPZ83GmUNT2')
+  const storageRef = strRef(storage, 'Profile/'+auth.currentUser.uid+'.jpg');
+  const dbRef = ref(db,'users/'+auth.currentUser.uid)
   console.log(auth.currentUser)
 
   const [location,setLocation] = React.useState()
@@ -112,7 +112,7 @@ async function sendFirebaseData(){
                     PhoneNumber: PNum,
                     Location: selectedValue,
                     DiscordId: Disc,
-                    uid: 'bHSYBWb7Z0XZyuVmmuPZ83GmUNT2',
+                    uid: auth.currentUser.uid,
                     Name: UName,
                     DisplayPicture: url
                   })

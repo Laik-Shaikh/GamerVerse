@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import fire from '../firebase';
 import 'firebase/database'
 import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
+import { getAuth } from 'firebase/auth';
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -13,8 +14,9 @@ const windowHeight = Dimensions.get('screen').height;
 export default function profilepage({ navigation }) {
     
     const [userProfile,setUserProfile] = React.useState()
+    const auth = getAuth();
     const db = getDatabase();
-    const UserRef = query(ref(db,'users'),orderByChild('uid'),equalTo('4ZdmjNrzBKNVHpoX1fvTNaWfTZa2'))
+    const UserRef = query(ref(db,'users'),orderByChild('uid'),equalTo(auth.currentUser.uid))
     console.log(UserRef)
     React.useEffect(() => {
     onValue(UserRef,(snapshot)=>{
