@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
@@ -15,12 +15,19 @@ const windowHeight = Dimensions.get('screen').height;
 export default function homepage({ navigation, route }) {
     const auth = getAuth();
     const [textInputValue, setTextInputValue] = React.useState('');
-    const [IncomingRequests, setIncomingRequests] = React.useState(null);
+    var [IncomingRequests, setIncomingRequests] = React.useState(null);
+    var [friendIncomingRequests, setFriendIncomingRequests] = React.useState(null);
+    var [friends, setFriends] = React.useState(null);
     const [users, setUsers] = React.useState(null);
     var requestNames = [];
     var requestImages = [];
+    var requestUID = [];
+    var acceptedProfiles =[];
+    var rejectedProfiles =[];
     const db = getDatabase();
     const UserRef = query(ref(db,'users/' + auth.currentUser.uid + '/RequestedProfiles'))
+    const ConfirmedProfilesRef = query(ref(db,'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
+    const ThisProfileRef = query(ref(db,'users/' + auth.currentUser.uid))
     const ProfileRef = query(ref(db,'users'))
     React.useEffect(() => {
         onValue(UserRef, (snapshot) => {
@@ -35,20 +42,56 @@ export default function homepage({ navigation, route }) {
             // console.log(data1)
             }
         )
+        onValue(ConfirmedProfilesRef, (snapshot) => {
+            const data2 = Object.values(snapshot.val());
+            setFriends(data2)
+            // console.log(data1)
+            }
+        )
     },[])
 console.log(IncomingRequests)
 console.log(users)
-    if (!users) {
-        return (<Text>Rukavat ke liye khed hai</Text>)
+console.log(friends)
+
+function requestAccepted(requestUID){
+    var y = requestUID;
+    if (!friends.includes(y))
+    {
+        friends.push(y);
+        requestDenied(y);
+        // update(ThisProfileRef, {
+        //     RequestedProfiles: IncomingRequests,
+        //   });
+        var FriendProfileRef = query(ref(db,'users/' + y + '/ConfirmedProfiles'))
+                onValue(FriendProfileRef, (snapshot) =>  {
+                const data3 = Object.values(snapshot.val());
+                setFriendIncomingRequests(data3)
+                console.log(data3)
+                }
+            )
+        console.log(friendIncomingRequests)
+        // update(FriendProfileRef, {
+        //     RequestedProfiles: auth.currentUser.uid,
+        //   });  
     }
-    
-  var handleSearch = (e) => {
-      if (e.nativeEvent.key == 'Enter') {
-        navigation.navigate("SearchName", {textInputValue})
-        console.log('search started')
-    }
-  }
-  if(users && IncomingRequests)
+}
+
+function requestDenied(requestUID){
+var toRemove = requestUID;
+console.log(toRemove)
+var index = IncomingRequests.indexOf(toRemove);
+if (index > -1) { 
+IncomingRequests.splice(index, 1);
+}
+}
+
+var handleSearch = (e) => {
+if (e.nativeEvent.key == 'Enter') {
+navigation.navigate("SearchName", {textInputValue})
+console.log('search started')
+}
+}
+if(users && IncomingRequests)
   {
     for(var i= 1; i<users.length;i++)
     {
@@ -58,13 +101,19 @@ console.log(users)
         {
            requestNames.push(users[i].Name);
            requestImages.push(users[i].DisplayPicture);
+           requestUID.push(users[i].uid);
     
         }
     }
     console.log(requestNames)
     console.log(requestImages)
+    console.log(requestUID)
   }
  
+    if (!users) {
+        return (<Text>Rukavat ke liye khed hai</Text>)
+    }
+
     if(users)
     return (
             <View style={styles.container} >
@@ -114,21 +163,36 @@ console.log(users)
                         {
                            { console.log("WORKS")
                         console.log(profile)
-                        console.log(requestImages[index])}   
+                        console.log(requestImages[index])} 
+                        return(
                         <View  key={index} style={styles.notifbox}>
-                            <Text style={{position: 'absolute'}}>Friend Request by:</Text>
-                            <View style={{position:'absolute',flex:1, flexDirection:'row'}}>
+                            <Text style={{position: 'relative'}}>Friend Request by:</Text>
+                            <View style={{position:'relative',flex:1, flexDirection:'row'}}>
                             <Image source={requestImages[index]} style={{
                         resizeMode:'contain',
-                        width:'50%', 
-                        height:'50%'}} />
-                            <Text>{profile}</Text>
-                            </View>
+                        width:'100%', 
+                        height:'100%'}} />
+                            <Text>{profile}</Text>                            
+                            </View> 
                             <View style={styles.notifdecisionbox}>
-                        <TouchableOpacity><Text>Accept</Text></TouchableOpacity>
-                        <TouchableOpacity><Text>Decline</Text></TouchableOpacity>
+                        <TouchableOpacity  onPress={() => 
+                {
+                    if (requestAccepted(requestUID[index]));
+                    update(ThisProfileRef, {
+                        ConfirmedProfiles: friends,
+                      }); 
+                }} ><Text>Accept</Text></TouchableOpacity>
+                        <TouchableOpacity 
+                         onPress={() => 
+                            {
+                                if (IncomingRequests.includes(requestUID[index])) requestDenied(requestUID[index]);
+                                update(ThisProfileRef, {
+                                    RequestedProfiles: IncomingRequests,
+                                  }); 
+                            }}><Text>Decline</Text></TouchableOpacity>
                         </View>
                         </View>
+                        )
                     })
                     }
                     </ScrollView>
@@ -319,12 +383,13 @@ const styles = StyleSheet.create({
         flex:1, 
         flexDirection:"column",
         marginVertical:60,
+        alignItems: "center",
         // top:0.005*windowHeight,
         // left:0.005*windowWidth,
         height:0.08 * windowHeight,
         width: 0.13*windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.8)",
-        // borderRadius: 10,
+        borderRadius: 10,
     },
     notifdecisionbox:{
         position:"absolute",
