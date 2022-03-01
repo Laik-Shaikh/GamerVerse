@@ -8,7 +8,6 @@ const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 import BG from './authAssets/BG.png'
-import S1 from './authAssets/slide1.png'
 
 export default function Login({ navigation }) {
   const [UName, setUName] = React.useState();
@@ -45,7 +44,7 @@ export default function Login({ navigation }) {
                         navigation.navigate("Home") 
                       } catch (error) {
                         console.log(error);
-                        // alert('Error');
+                        alert('Error');
                       }
                     }
                   }

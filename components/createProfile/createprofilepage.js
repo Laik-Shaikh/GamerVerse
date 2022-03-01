@@ -111,6 +111,10 @@ async function sendFirebaseData(){
                     Email: auth.currentUser.email,
                     PhoneNumber: PNum,
                     Location: selectedValue,
+                    LocationLower: selectedValue.toLowerCase(),
+                    Games:['XX'],
+                    RequestedProfiles:['XX'],
+                    ConfirmedProfiles:['XX'],
                     DiscordId: Disc,
                     uid: 'bHSYBWb7Z0XZyuVmmuPZ83GmUNT2',
                     Name: UName,
@@ -181,7 +185,7 @@ function renderSug() {
                   discCheck(Disc);
                   if(mobileCheck(PNum) && discCheck(Disc)){
                     sendFirebaseData();
-                    navigation.navigate('Home')
+                    navigation.navigate('GameHub')
                   }
                 } catch (error) {
                   console.log(error);
@@ -225,20 +229,20 @@ const styles = StyleSheet.create({
   rectanglebg:
   {
     position: "absolute",
-    width: 1440 / 1440 * windowWidth,
+    width: "100%",
     height: 126 / 1024 * windowHeight,
     left: 0 / 1024 * windowWidth,
     top: 0 / 1440 * windowHeight,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
 
   whitebg:
   {
     position: "absolute",
-    width: 0.25 * windowWidth,
-    height: 0.68 * windowHeight,
-    left: 0.375 * windowWidth,
-    top: 0.2 * windowHeight,
+    width: 405 / 1440 * windowWidth,
+    height: 670 / 1024 * windowHeight,
+    left: 517 / 1440 * windowWidth,
+    top: 160 / 1024 * windowHeight,
     justifyContent: 'center',
     alignItems:"center",
     alignContent:"center",
@@ -282,7 +286,7 @@ const styles = StyleSheet.create({
 
   InputStyle1: {
     "position": "absolute",
-    top: 0.2 * windowHeight,
+    top: 250 / 1024 * windowHeight,
     height: 45 / 1024 * windowHeight,
     width: 305 / 1440 * windowWidth,
     color: 'white',
@@ -298,7 +302,7 @@ const styles = StyleSheet.create({
 
   InputStyle2: {
     "position": "absolute",
-    top: 0.3 * windowHeight,
+    top: 325 / 1024 * windowHeight,
     height: 45 / 1024 * windowHeight,
     width: 305 / 1440 * windowWidth,
     color: 'white',
@@ -314,7 +318,7 @@ const styles = StyleSheet.create({
 
   InputStyle3: {
     "position": "absolute",
-    top: 0.4 * windowHeight,
+    top: 400 / 1024 * windowHeight,
     height: 45 / 1024 * windowHeight,
     width: 305 / 1440 * windowWidth,
     color: 'white',
@@ -330,7 +334,7 @@ const styles = StyleSheet.create({
 
   InputStyle4: {
     "position": "absolute",
-    top: 0.5 * windowHeight,
+    top: 475 / 1024 * windowHeight,
     height: 45 / 1024 * windowHeight,
     width: 305 / 1440 * windowWidth,
     color: 'white',
@@ -349,7 +353,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 305 / 1440 * windowWidth,
     height: 55 / 1024 * windowHeight,
-    top: 0.6 * windowHeight,
+    top: 0.55 * windowHeight,
     backgroundColor: "#54E0FF",
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,

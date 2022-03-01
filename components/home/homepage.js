@@ -1,13 +1,102 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput} from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, ScrollView,FlatList} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+
+import fire from '../firebase';
+import 'firebase/database'
+import { getDatabase, onValue,ref,query, orderByChild, equalTo, startAt, endAt } from "firebase/database";
+import 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
+export default function homepage({ navigation, route }) {
+    const auth = getAuth();
+    const [textInputValue, setTextInputValue] = React.useState('');
+    const [IncomingRequests, setIncomingRequests] = React.useState(null);
+    const [users, setUsers] = React.useState(null);
+    const [location, setLocation] = React.useState(null);
+    const [selectedValue,setSelectedValue] = React.useState()
+    var requestNames = [];
+    var requestImages = [];
+    const db = getDatabase();
+    const UserRef = query(ref(db,'users/' + auth.currentUser.uid + '/RequestedProfiles'))
+    const ProfileRef = query(ref(db,'users'))
+    React.useEffect(() => {
+        onValue(UserRef, (snapshot) => {
+            console.log(snapshot.val())
+            const data = Object.values(snapshot.val());
+            setIncomingRequests(data)
+            // console.log(data)
+            }
+        )
+        onValue(ProfileRef, (snapshot) => {
+            const data1 = Object.values(snapshot.val());
+            setUsers(data1)
+            // console.log(data1)
+            }
+        )
+    },[])
 
-export default function homepage({ navigation }) {
+    const getLocations = async (loc) => {
+    
+        const UserRef = query(ref(db, 'users'),orderByChild('LocationLower'),startAt(loc),endAt(loc+"\uf8ff"))
+        onValue(UserRef,(snapshot)=>{
+            if(snapshot.val()){
+            setLocation(Object.values(snapshot.val()))
+            }
+          })
+        }
+
+        function renderSug() {
+            if(!selectedValue){
+              return(<FlatList
+            
+                data={location}
+                keyExtractor={(item) => item.magicKey}
+                renderItem={(suggestion) => {
+                  return(
+                  <TouchableOpacity style={styles.item} onPress={() =>setSelectedValue(suggestion.item.text)}>
+                    <Text style={styles.itemText}>{suggestion.item.text}</Text>
+                  </TouchableOpacity>)
+                }}
+        
+                
+                ></FlatList>)}
+          }
+
+console.log(IncomingRequests)
+console.log(users)
+    if (!users) {
+        return (<Text>Rukavat ke liye khed hai</Text>)
+    }
+    
+  var handleSearch = (e) => {
+      if (e.nativeEvent.key == 'Enter') {
+        navigation.navigate("SearchName", {textInputValue})
+        console.log('search started')
+    }
+  }
+  if(users && IncomingRequests)
+  {
+    for(var i= 1; i<users.length;i++)
+    {
+        var x = users[i].uid;
+        console.log(x);
+        if (IncomingRequests.includes(x))
+        {
+           requestNames.push(users[i].Name);
+           requestImages.push(users[i].DisplayPicture);
+    
+        }
+    }
+    console.log(requestNames)
+    console.log(requestImages)
+  }
+ 
+    if(users)
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -30,8 +119,57 @@ export default function homepage({ navigation }) {
                     <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     <Image source={require('./homeAssets/searchIcon.png')} style={styles.searchIcon} />
-                    <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
-                    <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
+                    <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        getLocations(text.toLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onFocus={() => {
+                        if(selectedValue)
+                          setSelectedValue(undefined)
+                      }}
+                    ></TextInput>
+                    <View style={styles.notif}>
+                        <Image style={{position:'absolute', 
+                        resizeMode: 'contain',
+                        top:0.005*windowHeight,
+                        left:0.015*windowWidth,
+                        width:0.03*windowWidth,
+                        height:0.03*windowHeight
+                    }} source={require('./homeAssets/Bell.png')}/>
+                    <Text style ={{  position: 'absolute',
+                    left: 0.045*windowWidth,
+                    top:0.01*windowHeight,
+                    color: 'white',
+                    fontWeight: 'bold'}}>Notifications</Text>
+                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
+                    style={styles.notifscroll}>
+                    {requestNames.map((profile,index)=>
+                        {
+                           { console.log("WORKS")
+                        console.log(profile)
+                        console.log(requestImages[index])}   
+                        <View  key={index} style={styles.notifbox}>
+                            <Text style={{position: 'absolute'}}>Friend Request by:</Text>
+                            <View style={{position:'absolute',flex:1, flexDirection:'row'}}>
+                            <Image source={requestImages[index]} style={{
+                        resizeMode:'contain',
+                        width:'50%', 
+                        height:'50%'}} />
+                            <Text>{profile}</Text>
+                            </View>
+                            <View style={styles.notifdecisionbox}>
+                        <TouchableOpacity><Text>Accept</Text></TouchableOpacity>
+                        <TouchableOpacity><Text>Decline</Text></TouchableOpacity>
+                        </View>
+                        </View>
+                    })
+                    }
+                    </ScrollView>
+                    </View>
                     <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
                     <Text style={styles.nametxt}>Danny Devadiga</Text>
                     <Text style={styles.posttxt}>Maddy Sheikh</Text>
@@ -42,6 +180,7 @@ export default function homepage({ navigation }) {
                     </LinearGradient>
             </View>
     );
+                    
 }
 
 const styles = StyleSheet.create({
@@ -75,9 +214,21 @@ const styles = StyleSheet.create({
         backgroundColor: "#e5e5e500"
     },
 
+    itemText: {
+        fontSize: 15,
+        paddingTop: 5,
+        paddingBottom: 5,
+        margin: 2,
+      },
+      item: {
+        padding: 20,
+        marginVertical: 8,
+        marginHorizontal: 16,
+      },
+
     title:{
         position:"absolute",
-        left:0.3*windowWidth,
+        left:0.35*windowWidth,
         resizeMode:'contain',
         height: 0.1*windowHeight,
         width: 0.35*windowWidth,
@@ -204,10 +355,44 @@ const styles = StyleSheet.create({
 
     notif:{
         position:"absolute",
+        flex:1,
         top:0.2*windowHeight,
         left:0.8*windowWidth,
         height:(695/900) * windowHeight,
         width: (227/1600)*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        borderRadius: 10,
+    },
+    
+    notifbox:{
+        flex:1, 
+        flexDirection:"column",
+        marginVertical:60,
+        // top:0.005*windowHeight,
+        // left:0.005*windowWidth,
+        height:0.08 * windowHeight,
+        width: 0.13*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        // borderRadius: 10,
+    },
+    notifdecisionbox:{
+        position:"absolute",
+        flex:1, 
+        flexDirection:"row",
+        justifyContent:'space-between',
+        top:0.05*windowHeight,
+        left:0.005/4*windowWidth,
+        height:0.02 * windowHeight,
+        width: 0.12*windowWidth,
+        borderRadius: 10,
+    },
+    
+    
+    notifscroll:{
+        flexGrow: 0.1,
+        height:'100%',
+        width: '100%',
+        borderRadius: 10,
     },
 
     spike1:{
