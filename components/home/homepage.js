@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
+import { getDatabase, onValue,get,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
@@ -59,17 +59,20 @@ function requestAccepted(requestUID){
     {
         friends.push(y);
         requestDenied(y);
-        // update(ThisProfileRef, {
-        //     RequestedProfiles: IncomingRequests,
-        //   });
+        update(ThisProfileRef, {
+            RequestedProfiles: IncomingRequests,
+          });
         var FriendProfileRef = query(ref(db,'users/' + y + '/ConfirmedProfiles'))
-                onValue(FriendProfileRef, (snapshot) =>  {
+        var FriendProfileUpdateRef = query(ref(db,'users/' + y))
+                get(FriendProfileRef).then((snapshot) =>  {
                 const data3 = Object.values(snapshot.val());
-                setFriendIncomingRequests(data3)
+                data3.push(auth.currentUser.uid)
                 console.log(data3)
+                update(FriendProfileUpdateRef, {
+                    ConfirmedProfiles: data3,
+                  }); 
                 }
             )
-        console.log(friendIncomingRequests)
         // update(FriendProfileRef, {
         //     RequestedProfiles: auth.currentUser.uid,
         //   });  
