@@ -1,46 +1,74 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput} from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
 import 'firebase/database'
+import 'firebase/auth';
+import { getAuth } from "firebase/auth";
 import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 export default function homepage({ navigation, route }) {
-    var requests = [ "YY" ];
-    var friends = [ "YY" ];
-    var friendsArray = [ "YY" ];
+    const auth = getAuth();
+    var profileUid = auth.currentUser.uid;
+    // var requests = [ "YY" ];
+    // var friends = [ "YY" ];
+    // var friendsArray = [ "YY" ];
+    var friendNames = [];
+    var friendImages = [];
+    var friendUid = [];
     const [textInputValue, setTextInputValue] = React.useState('');
     const [users, setUsers] = React.useState()
+    var [friends, setFriends] = React.useState(null);
+    // var [confirmedFriends, setconfirmedFriends] = React.useState(null);
     const db = getDatabase();
-    const userRef = query(ref(db, 'users'))
-    // const friendRef = 
+    const userRef = query(ref(db, 'users'),orderByChild('uid'),equalTo(profileUid))
+    const ConfirmedProfilesRef = query(ref(db,'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
+    const ProfileRef = query(ref(db,'users'))
+    
     React.useEffect(() => {
-        onValue(userRef, (snapshot) => {
-            const data = Object.values(snapshot.val());
-            setUsers(data[0])
-        })
+
+        onValue(ProfileRef, (snapshot) => {
+            const data1 = Object.values(snapshot.val());
+            setUsers(data1)
+            })
+
+            onValue(ConfirmedProfilesRef, (snapshot) => {
+                const data2 = Object.values(snapshot.val());
+                setFriends(data2)
+                })
     }, [])
 
     console.log(users)
+    console.log(friends)
 
     if (!users) {
         return (<Text>Rukavat ke liye khed hai</Text>)
     }
 
     if(users){
-        requests = users.RequestedProfiles
-        console.log(requests)
-        friends = users.ConfirmedProfiles
-        console.log(friends)
-        // friendsArray = Object.entries(friends)
-        // console.log(friendsArray)
+        if(friends)
+        {
+            for(var i= 0; i<users.length;i++)
+            {
+                var x = users[i].uid;
+                console.log(x);
+                if (friends.includes(x))
+                {
+                friendNames.push(users[i].Name);
+                friendImages.push(users[i].DisplayPicture);
+                friendUid.push(users[i].uid);
+                }
+        }
+        console.log(friendImages)
+        console.log(friendNames)
+    }
         }
 
-    
+        
   var handleSearch = (e) => {
       if (e.nativeEvent.key == 'Enter') {
         navigation.navigate("SearchName", {textInputValue})
@@ -79,9 +107,23 @@ export default function homepage({ navigation, route }) {
                     ></TextInput>
                     <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
                     <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
-                    <Text style={styles.nametxt}>Danny Devadiga</Text>
+                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
+                    style={styles.notifscroll}>
+                    {friendNames.map((profile,index)=>
+                        {
+                           { console.log("WORKS")} 
+                        return(
+                        <View  key={index} style={styles.friendbox}>
+                            <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", friendUid[index])}>
+                                <Image source={friendImages[index]} style={styles.dpview}/>
+                                <Text style={styles.nametxt}>{profile}</Text>
+                            </TouchableOpacity> 
+                        </View>
+                        )
+                    })
+                    }
+                    </ScrollView>
                     <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dpview} />
                     <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} />
                     <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
                     <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
@@ -153,7 +195,7 @@ const styles = StyleSheet.create({
         "color": "#FFFFFF",
         position:'absolute',
         top:0.21*windowHeight,
-        left:0.05*windowWidth
+        left:0.02*windowWidth
     },
 
     posttxt:{ 
@@ -164,6 +206,27 @@ const styles = StyleSheet.create({
         position:'absolute',
         top:0.21*windowHeight,
         left:0.3*windowWidth
+    },
+
+    notifscroll:{
+        flexGrow: 0.1,
+        height:'100%',
+        width: '100%',
+        borderRadius: 10,
+    },
+
+    friendbox:{
+        flex:1, 
+        flexDirection:"column",
+        marginVertical:30,
+        alignItems: "center",
+        // top:0.005*windowHeight,
+        left:0*windowWidth,
+        height:0.08 * windowHeight,
+        width: 0.13*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        // borderRadius: 10,
+        transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
     homebtn:{
@@ -215,11 +278,12 @@ const styles = StyleSheet.create({
     },
 
     dpview:{
-        position:"absolute",
-        top:0.2*windowHeight,
-        resizeMode:'contain',
-        height: 0.06*windowHeight,
-        width: 0.05*windowWidth,
+        position: "absolute",
+        top: 0.2 * windowHeight,
+        left:-0.02*windowWidth,
+        width: 0.05 * windowHeight,
+        height: 0.05 * windowHeight,
+        borderRadius: 0.065 * windowHeight,
     },
 
     dppostview:{
