@@ -150,14 +150,15 @@ if(users && IncomingRequests)
                     <View style={styles.notif}>
                         <Image style={{position:'absolute', 
                         resizeMode: 'contain',
-                        top:0.005*windowHeight,
+                        top:0.01*windowHeight,
                         left:0.015*windowWidth,
                         width:0.03*windowWidth,
-                        height:0.03*windowHeight
+                        height:0.03*windowHeight,
+                        transform: [{ rotate: '20deg' }]
                     }} source={require('./homeAssets/Bell.png')}/>
                     <Text style ={{  position: 'absolute',
                     left: 0.045*windowWidth,
-                    top:0.01*windowHeight,
+                    top:0.015 *windowHeight,
                     color: 'white',
                     fontWeight: 'bold'}}>Notifications</Text>
                     <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
@@ -169,13 +170,25 @@ if(users && IncomingRequests)
                         console.log(requestImages[index])} 
                         return(
                         <View  key={index} style={styles.notifbox}>
-                            <Text style={{position: 'relative'}}>Friend Request by:</Text>
+                            {/* <Text style={{
+                                position: 'relative',
+                                "color": "#FFFFFF",
+                                }}>
+                                Friend Request by:</Text> */}
                             <View style={{position:'relative',flex:1, flexDirection:'row'}}>
                             <Image source={requestImages[index]} style={{
-                        resizeMode:'contain',
-                        width:'100%', 
-                        height:'100%'}} />
-                            <Text>{profile}</Text>                            
+                        position: "absolute",
+                        top: 0 * windowHeight,
+                        left: 0*windowWidth,
+                        width: 0.05 * windowHeight,
+                        height: 0.05 * windowHeight,
+                        borderRadius: 0.065 * windowHeight,}} />
+                            <Text style={{
+                                position: 'absolute',
+                                left:0.045*windowWidth,
+                                width: 0.07*windowWidth,
+                                "color": "#FFFFFF",
+                                }}>{profile} sent a friend request!</Text>                            
                             </View> 
                             <View style={styles.notifdecisionbox}>
                         <TouchableOpacity  onPress={() => 
@@ -184,7 +197,7 @@ if(users && IncomingRequests)
                     update(ThisProfileRef, {
                         ConfirmedProfiles: friends,
                       }); 
-                }} ><Text>Accept</Text></TouchableOpacity>
+                }} ><Text style={[styles.decisionbutton,{backgroundColor: "rgba(3, 184, 21, 1)"}]}>Accept</Text></TouchableOpacity>
                         <TouchableOpacity 
                          onPress={() => 
                             {
@@ -192,7 +205,7 @@ if(users && IncomingRequests)
                                 update(ThisProfileRef, {
                                     RequestedProfiles: IncomingRequests,
                                   }); 
-                            }}><Text>Decline</Text></TouchableOpacity>
+                            }}><Text style={[styles.decisionbutton,{backgroundColor: "rgba(255, 255, 255, 0.25)"},{left: -0.03*windowWidth}]}>Decline</Text></TouchableOpacity>
                         </View>
                         </View>
                         )
@@ -288,6 +301,19 @@ const styles = StyleSheet.create({
         left:0.3*windowWidth
     },
 
+    decisionbutton: {
+        position: "absolute",
+        width: 55 / 1440 * windowWidth,
+        height: 25 / 1024 * windowHeight,
+        // left: 165 / 1440 * windowWidth,
+        color: '#FFFFFF',
+        textAlign: 'center',
+        top: 15 / 1024 * windowHeight,
+        borderRadius: 3,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
     homebtn:{
         position:"absolute",
         top:0.107*windowHeight,
@@ -378,22 +404,23 @@ const styles = StyleSheet.create({
         left:0.8*windowWidth,
         height:(695/900) * windowHeight,
         width: (227/1600)*windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        backgroundColor: "rgba(255, 255, 255, 0.25)",
         borderRadius: 10,
     },
     
     notifbox:{
         flex:1, 
-        flexDirection:"column",
-        marginVertical:60,
-        alignItems: "center",
-        // top:0.005*windowHeight,
-        // left:0.005*windowWidth,
-        height:0.08 * windowHeight,
+        // flexDirection:"column",
+        marginVertical:50,
+        // alignItems: "center",
+        top:0.02*windowHeight,
+        left:0.005*windowWidth,
+        height:0.7 * windowHeight,
         width: 0.13*windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        // backgroundColor: "rgba(255, 255, 255, 0.5)",
         borderRadius: 10,
     },
+    
     notifdecisionbox:{
         position:"absolute",
         flex:1, 
