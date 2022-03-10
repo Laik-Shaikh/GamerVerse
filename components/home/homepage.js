@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, Modal, Alert} from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, Modal, Alert, ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
+// import fire from '../firebase';
+// import uuid from 'uuid';
+import { getStorage, ref as strRef, uploadBytes, getDownloadURL} from "firebase/storage";
 import fire from '../firebase';
-import uuid from 'uuid';
-import { getStorage, ref as strRef, uploadBytes} from "firebase/storage";
-import {Picker} from '@react-native-picker/picker';
-import { PickerItem } from 'react-native/Libraries/Components/Picker/Picker';
+import 'firebase/database'
+import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, push, get } from "firebase/database";
+import 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
 
 
@@ -15,19 +18,55 @@ const windowHeight = Dimensions.get('screen').height;
 
 
 export default function homepage({ navigation }) {
+    const auth = getAuth();
+    const db = getDatabase();
 
     const [modalVisible, setModalVisible] = useState(false);
     const [image, setImage] = useState(null);
-    const [platform, setPlatform] = useState(null);
-
-    const pickerRef = useRef();
+    const [games, setGames] = React.useState(null);
+    const [gamesName, setGamesName] = React.useState([]);
+    const [description, setDescription] = useState(null)
 
     const storage = getStorage();
     const metadata = {
       contentType: 'image/jpg',
     };
 
-    const storageRef = strRef(storage, 'Post/'+'Something'+'.jpg');
+    const GameRef = query(ref(db,'games'))
+    const UserRef = query(ref(db,'users/UT9NF61y2ieqcv2VUT2es7C6WZJ3' + '/Games'))
+    const PostCounter = query(ref(db, 'users/UT9NF61y2ieqcv2VUT2es7C6WZJ3/PostCount'));
+    const PostCounter1 = query(ref(db, 'users/UT9NF61y2ieqcv2VUT2es7C6WZJ3'));
+    
+    var userid = 'UT9NF61y2ieqcv2VUT2es7C6WZJ3'
+    const dbRef = ref(db,'posts/Post1')
+    console.log(userid.Name)
+    
+    console.log(GameRef)
+    console.log(UserRef)
+
+    React.useEffect(() => {
+        onValue(GameRef, (snapshot) => {
+            const data = Object.values(snapshot.val());
+            setGames(data)
+            console.log(data)
+        })
+
+        onValue(UserRef, (snapshot) => {
+            const data1 = Object.values(snapshot.val());
+            setGamesName(data1)
+            console.log(data1)
+            }
+        )
+
+        // onValue(PostCounter, (snapshot) => {
+        //     const data2 = snapshot.val();
+        //     update(PostCounter, data2 + 1);
+        //     }
+            
+       // )
+    },[])
+
+    console.log(gamesName);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -47,11 +86,38 @@ export default function homepage({ navigation }) {
     async function uploadPost(){
         const response = await fetch(image);
         const blob = await response.blob();
-        uploadBytes(storageRef, blob, metadata).then((snapshot) => {
-            console.log('Uploaded a blob or file!');
+       
+          get(PostCounter).then((snapshot) =>  {
+            var data3 = snapshot.val();
+            data3 = data3 + 1;
+            console.log(data3)
+            var storageRef = strRef(storage, 'Post/'+ userid + '_' + data3 + '.jpg');
+            uploadBytes(storageRef, blob, metadata).then((snapshot) => {
+                // getDownloadURL(storageRef).then((url)=>{
+                //     set(dbRef,{
+                //         Description : description,
+                //         GameName: 'Clash of Clan',
+                //         Image: url,
+                //         Likes: 0,
+                //         User: userid.Name
+                //       })
+                //       })
+                // //   })
+                console.log('Uploaded a blob or file!');
           });
+            console.log(data3)
+            update(PostCounter1, {
+                PostCount: data3,
+              }); 
+            }
+        )
+        
+
     }
 
+    if(!games){
+        return (<Text>Rukavat ke liye khed hai</Text>)
+    }
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -101,9 +167,11 @@ export default function homepage({ navigation }) {
                         <View style={styles.modalView}>
                             {/* <View> */}
                                 <TextInput placeholder='Enter the Discription' 
-                                    style={styles.textInput}
+                                    style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
+                                {console.log(description)}
                             {/* </View> */}
+                            {/* <Image source={require('./homeAssets/divider.png')} style={styles.divider1} /> */}
                             <TouchableOpacity style={styles.button, styles.buttonClose}
                                 onPress={() => {
                                     setModalVisible(!modalVisible)
@@ -141,20 +209,29 @@ export default function homepage({ navigation }) {
                                 {image && <Image source={{ uri:image }} style={styles.selectedImage} />}
                             </TouchableOpacity>
 
-                            <Picker
-                                ref={pickerRef}
-                                selectedValue={platform}
-                                onValueChange={(itemValue, itemIndex) => {
-                                    setPlatform(itemValue)
-                                }}
-                                >
-                                <Picker.Item label='Computer' value="Comp" />
-                                <Picker.Item label='Mobile' value="Mob" />
-                                <Picker.Item label='Console' value="CG" />
-                            </Picker>
+                            <View style={styles.name}>
+                                <Text style={styles.text1}>This Post is Related to : </Text>
+                            </View>
 
-                            
-                           
+                            <ScrollView style={styles.gameScrollContainer} vertical={true}>
+                                {games.map((item, index) => {
+                                    console.log(item.Code)
+                                    if(gamesName.includes(item.Code)){
+                                        
+                                        return(
+                                            <View key={index}>
+                                                <TouchableOpacity style={styles.gameName} >
+                                                <Text style={styles.gameText}>{item.Name}</Text>
+                                                {console.log(item.Name)}
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    }
+                                }
+   
+                                )}
+                            </ScrollView>
+            
                         </View>
                     </View>
                     </Modal>
@@ -238,6 +315,13 @@ const styles = StyleSheet.create({
         left:0.3*windowWidth
     },
 
+    text1:{
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 18,
+        "color": "#000000",
+    },
+
     homebtn:{
         position:"absolute",
         top:0.107*windowHeight,
@@ -312,6 +396,15 @@ const styles = StyleSheet.create({
         width: "3px",
     },
 
+    // divider1:{
+    //     position:"absolute",
+    //     top:0.2*windowHeight,
+    //     left:0.02*windowWidth,
+    //     resizeMode:'contain',
+    //     height: 0.3*windowHeight,
+    //     width: 0.01*windowWidth,
+    // },
+
     searchIcon:{
         position:"absolute",
         resizeMode:'contain',
@@ -362,6 +455,29 @@ const styles = StyleSheet.create({
         "color": '#ffffff'
     },
 
+    gameText:{
+        "fontStyle" : 'normal',
+        "fontSize": 16,
+        "fontWeight": '700',
+        "color": '#000000',
+        // paddingLeft: '10px',
+        margin: '5px', 
+        textAlign: 'center'
+        
+    },
+
+    gameName:{
+        // position: 'absolute',
+        // borderTopRightRadius:  60,
+        // borderBottomRightRadius:  60,
+        borderWidth: '2px',
+        borderStyle: 'solid',
+        borderColor: '#006400',
+        alignItems: 'center',
+        paddingTop: '5px',
+        paddingBottom: '5px'
+    },
+
     centeredView: {
         flex: 1,
         justifyContent: 'center',
@@ -374,8 +490,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 20,
         padding: 35,
-        width: 0.5*windowWidth,
-        height: 0.5*windowHeight,
+        width: 0.6*windowWidth,
+        height: 0.6*windowHeight,
         // width: '50%',
         // height: '70%',
         alignItems: 'center',
@@ -400,32 +516,34 @@ const styles = StyleSheet.create({
         elevation: 2,
       },
 
-      buttonClose: {
-        backgroundColor: 'red',
-        // height: '80px',
-        // width: '100px',
-        height: 0.05*windowHeight,
-        width: 0.08*windowWidth,
-        left: 0.18*windowWidth,
-        top: 0.38*windowHeight
-      },
-
       uploadButton:{
         backgroundColor: 'green',
         height: 0.05*windowHeight,
-        width: 0.08*windowWidth,
+        width: 0.15*windowWidth,
         left: -0.18*windowWidth,
-        top: 0.33*windowHeight
+        top: 0.43*windowHeight,
+      
       },
 
       chooseButton:{
         backgroundColor: '#0000cd',
         height: 0.05*windowHeight,
-        width: 0.08*windowWidth,
+        width: 0.15*windowWidth,
         // left: 0.05*windowWidth,
-        top: 0.28*windowHeight,
+        top: 0.38*windowHeight,
         alignContent: 'center',
         alignItems: 'center'
+      },
+
+      buttonClose: {
+        backgroundColor: 'red',
+        // height: '80px',
+        // width: '100px',
+        height: 0.05*windowHeight,
+        width: 0.15*windowWidth,
+        left: 0.18*windowWidth,
+        top: 0.48*windowHeight,
+        
       },
 
       textStyle: {
@@ -433,24 +551,45 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
+        fontSize: 20,
+        marginBottom: '15px'
       },
 
     selectedImage:{
         position: 'absolute',
         resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.27*windowHeight,
+        width: 0.38*windowWidth,
+        height: 0.38*windowHeight,
         bottom: 0.07*windowHeight,
-        left: -0.1*windowWidth,
+        left: -0.02*windowWidth,
     },
 
     textInput:{
         position: 'absolute',
-        width: 0.45*windowWidth,
+        width: 0.54*windowWidth,
         height: 0.08*windowHeight,
         paddingLeft: '15px',
         top: '20px',
         backgroundColor: 'cyan'
-    }
+    },
+
+    name:{
+        position: 'absolute',
+        // width: 0.15*windowWidth,
+        // height: 0.*windowHeight,
+        left : 0.02*windowWidth,
+        top: 0.14*windowHeight
+    },
+
+    gameScrollContainer:{
+        position: 'absolute',
+        width: 0.15*windowWidth,
+        height: 0.3*windowHeight,
+        left : 0.02*windowWidth,
+        top: 0.19*windowHeight,
+        // flexGrow: 0.1,
+        // justifyContent: 'space-between',
+        // backgroundColor: 'cyan'
+    },
 
 });
