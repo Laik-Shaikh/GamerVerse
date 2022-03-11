@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, ScrollView} from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, ScrollView, ActivityIndicator} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
@@ -46,7 +46,14 @@ export default function homepage({ navigation, route }) {
     console.log(friends)
 
     if (!users) {
-        return (<Text>Rukavat ke liye khed hai</Text>)
+        return (
+            <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+            </LinearGradient>
+            )
     }
 
     if(users){
@@ -107,6 +114,11 @@ export default function homepage({ navigation, route }) {
                     ></TextInput>
                     <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
                     <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
+                    
+                    <Text style={styles.posttxt}>Maddy Sheikh</Text>
+                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} />
+                    <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
+                    <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
                     <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
                     style={styles.notifscroll}>
                     {friendNames.map((profile,index)=>
@@ -123,10 +135,6 @@ export default function homepage({ navigation, route }) {
                     })
                     }
                     </ScrollView>
-                    <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} />
-                    <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
-                    <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
                     </LinearGradient>
             </View>
     );
@@ -210,8 +218,8 @@ const styles = StyleSheet.create({
 
     notifscroll:{
         flexGrow: 0.1,
-        height:'100%',
-        width: '100%',
+        width: 250 / 1440 * windowWidth,
+        height: 592 / 1024 * windowHeight,
         borderRadius: 10,
     },
 
@@ -221,9 +229,9 @@ const styles = StyleSheet.create({
         marginVertical:30,
         alignItems: "center",
         // top:0.005*windowHeight,
-        left:0*windowWidth,
+        left:0.05*windowWidth,
         height:0.08 * windowHeight,
-        width: 0.13*windowWidth,
+        width: 0.013*windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.8)",
         // borderRadius: 10,
         transform: "matrix(1, 0, 0, 1, 0, 0)"
