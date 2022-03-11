@@ -22,6 +22,9 @@ export default function homepage({ navigation, route }) {
     var requestNames = [];
     var requestImages = [];
     var requestUID = [];
+    var friendNames = [];
+    var friendImages = [];
+    var friendUid = [];
     var acceptedProfiles =[];
     var rejectedProfiles =[];
     const db = getDatabase();
@@ -118,6 +121,24 @@ if(users && IncomingRequests)
     }
 
     if(users)
+    {
+        if(friends)
+        {
+            for(var i= 0; i<users.length;i++)
+            {
+                var x = users[i].uid;
+                console.log(x);
+                if (friends.includes(x))
+                {
+                friendNames.push(users[i].Name);
+                friendImages.push(users[i].DisplayPicture);
+                friendUid.push(users[i].uid);
+                }
+            }
+        console.log(friendImages)
+        console.log(friendNames)
+        }
+        
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -201,16 +222,29 @@ if(users && IncomingRequests)
                     </ScrollView>
                     </View>
                     <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
-                    <Text style={styles.nametxt}>Danny Devadiga</Text>
+                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
+                    style={styles.friendscroll}>
+                    {friendNames.map((profile,index)=>
+                        {
+                        return(
+                        <View  key={index} style={styles.friendbox}>
+                            <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", friendUid[index])}>
+                                <Image source={friendImages[index]} style={styles.dpview}/>
+                                <Text style={styles.nametxt}>{profile}</Text>
+                            </TouchableOpacity> 
+                        </View>
+                        )
+                    })
+                    }
+                    </ScrollView>
                     <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dpview} />
                     <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} />
                     <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
                     <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
                     </LinearGradient>
             </View>
     );
-                    
+                }              
 }
 
 const styles = StyleSheet.create({
@@ -225,6 +259,23 @@ const styles = StyleSheet.create({
         position:"relative",
         width: windowWidth,
         height: windowHeight,
+    },
+    friendscroll:{
+        flexGrow: 0.1,
+        width: 250 / 1440 * windowWidth,
+        height: 592 / 1024 * windowHeight,
+        borderRadius: 10,
+    },
+    friendbox:{
+        flex:1, 
+        flexDirection:"column",
+        marginVertical:30,
+        alignItems: "center",
+        left:0.05*windowWidth,
+        height:0.08 * windowHeight,
+        width: 0.013*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
     InputStyle1:{
