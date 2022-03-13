@@ -24,8 +24,12 @@ export default function homepage({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [image, setImage] = useState(null);
     const [games, setGames] = React.useState(null);
+    const [selectGameName, setSelectGameName] = useState(null);
     const [gamesName, setGamesName] = React.useState([]);
     const [description, setDescription] = useState(null)
+    const [userName, setUserName] = useState(null);
+    const [postNumber, setPostNumber] = React.useState([]);
+    const [postImage, setPostImage] = React.useState([]);
 
     const storage = getStorage();
     const metadata = {
@@ -33,16 +37,22 @@ export default function homepage({ navigation }) {
     };
 
     const GameRef = query(ref(db,'games'))
-    const UserRef = query(ref(db,'users/UT9NF61y2ieqcv2VUT2es7C6WZJ3' + '/Games'))
-    const PostCounter = query(ref(db, 'users/UT9NF61y2ieqcv2VUT2es7C6WZJ3/PostCount'));
-    const PostCounter1 = query(ref(db, 'users/UT9NF61y2ieqcv2VUT2es7C6WZJ3'));
+    const UserRef = query(ref(db,'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3' + '/Games'))
+    const UserName = query(ref(db,'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3' + '/Name'))
+    const PostCounter = query(ref(db, 'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3' + '/PostCount'));
+    const PostCounter1 = query(ref(db, 'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3'));
+    const PostCounter3 = query(ref(db, 'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3' + '/PostCount'));
+    const PostRef = query(ref(db,'posts'))
     
-    var userid = 'UT9NF61y2ieqcv2VUT2es7C6WZJ3'
-    const dbRef = ref(db,'posts/Post1')
-    console.log(userid.Name)
-    
+    var userid = 'ToEDaabwu7NlvJq3CjNEJWZzEcG3'
+    // const dbRef = ref(db,'posts/Post1')
+  
+    console.log(UserName)
+    console.log(PostCounter3)
     console.log(GameRef)
     console.log(UserRef)
+    console.log(PostRef)
+    
 
     React.useEffect(() => {
         onValue(GameRef, (snapshot) => {
@@ -58,15 +68,33 @@ export default function homepage({ navigation }) {
             }
         )
 
-        // onValue(PostCounter, (snapshot) => {
-        //     const data2 = snapshot.val();
-        //     update(PostCounter, data2 + 1);
-        //     }
-            
-       // )
+        onValue(UserName, (snapshot) => {
+            const data2 = snapshot.val();
+            setUserName(data2)
+            console.log(data2)
+            }
+        )
+
+        onValue(PostCounter3, (snapshot) => {
+            const data4 = snapshot.val();
+            setPostNumber(data4)
+            console.log(data4)
+            }
+        )
+
+        onValue(PostRef, (snapshot) => {
+            const data5 = Object.values(snapshot.val());
+            setPostImage(data5)
+            console.log(data5)
+            }
+        )
     },[])
 
     console.log(gamesName);
+    console.log(userName);
+    console.log(postNumber);
+    console.log(PostRef);
+    console.log(postImage);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -92,17 +120,18 @@ export default function homepage({ navigation }) {
             data3 = data3 + 1;
             console.log(data3)
             var storageRef = strRef(storage, 'Post/'+ userid + '_' + data3 + '.jpg');
+            const dbRef = ref(db,'posts/' + userName + '/Post' + postNumber)
             uploadBytes(storageRef, blob, metadata).then((snapshot) => {
-                // getDownloadURL(storageRef).then((url)=>{
-                //     set(dbRef,{
-                //         Description : description,
-                //         GameName: 'Clash of Clan',
-                //         Image: url,
-                //         Likes: 0,
-                //         User: userid.Name
-                //       })
-                //       })
-                // //   })
+                getDownloadURL(storageRef).then((url)=>{
+                    set(dbRef,{
+                        Description : description,
+                        GameName: selectGameName,
+                        Image: url,
+                        Likes: 0,
+                        User: userName
+                      })
+                      })
+               
                 console.log('Uploaded a blob or file!');
           });
             console.log(data3)
@@ -142,13 +171,29 @@ export default function homepage({ navigation }) {
                     <Image source={require('./homeAssets/searchIcon.png')} style={styles.searchIcon} />
                     <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
                     <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
-                    <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
+                    {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
                     <Text style={styles.nametxt}>Danny Devadiga</Text>
-                    <Text style={styles.posttxt}>Maddy Sheikh</Text>
+                    {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
                     <Image source={require('./homeAssets/dp.png')} style={styles.dpview} />
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} />
+                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
                     <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
                     <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
+
+                    <ScrollView style={styles.postContainer}>
+                        {postImage.map((item, index) => {
+                            console.log(postImage);
+                            console.log(item)
+                            return(
+                                <View key={index}>
+                                    <View style={styles.post}>
+                                        <Image source={item.Image} />
+                                        {console.log(item.Image)}
+                                    </View>
+                                </View>
+                            )
+                            })}
+                    </ScrollView>
+
 
                     <TouchableOpacity style={styles.upload} onPress={()=>setModalVisible(true)}>
                         <Text style={styles.uploadText}>Upload a Post</Text>
@@ -220,7 +265,12 @@ export default function homepage({ navigation }) {
                                         
                                         return(
                                             <View key={index}>
-                                                <TouchableOpacity style={styles.gameName} >
+                                                <TouchableOpacity style={styles.gameName} 
+                                                   onPress={ () => {
+                                                       setSelectGameName(item.Name)
+                                                       console.log(selectGameName)
+                                                    //    console.log(item.Name)
+                                                       }} >
                                                 <Text style={styles.gameText}>{item.Name}</Text>
                                                 {console.log(item.Name)}
                                                 </TouchableOpacity>
@@ -591,5 +641,28 @@ const styles = StyleSheet.create({
         // justifyContent: 'space-between',
         // backgroundColor: 'cyan'
     },
+
+    postContainer:{
+        position: 'absolute',
+        width: 0.58*windowWidth,
+        height: 0.73*windowHeight,
+        top: 0.23*windowHeight,
+        left: 0.21*windowWidth,
+        backgroundColor: 'red'
+    },
+
+    post:{
+        position: 'absolute',
+        resizeMode: 'contain',
+        width: 0.38*windowWidth,
+        height: 0.58*windowHeight,
+        marginTop: '50px',
+        paddingLeft: '25px'
+    }
+
+
+
+
+
 
 });
