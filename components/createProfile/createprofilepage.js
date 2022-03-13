@@ -5,7 +5,7 @@ import fire from '../firebase';
 import uuid from 'uuid';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import {getAuth} from "firebase/auth";
-import {getDatabase,ref,set} from "firebase/database"
+import {getDatabase,ref,set, query,push,get, orderByChild, equalTo} from "firebase/database"
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -26,8 +26,8 @@ export default function CreateProfile({navigation}) {
   const auth = getAuth()
   const db = getDatabase()
   
-  const storageRef = strRef(storage, 'Profile/bHSYBWb7Z0XZyuVmmuPZ83GmUNT2.jpg');
-  const dbRef = ref(db,'users/bHSYBWb7Z0XZyuVmmuPZ83GmUNT2')
+  const storageRef = strRef(storage, 'Profile/'+auth.currentUser.uid+'.jpg');
+  const dbRef = ref(db,'users/'+auth.currentUser.uid)
   console.log(auth.currentUser)
 
   const [location,setLocation] = React.useState()
@@ -116,11 +116,25 @@ async function sendFirebaseData(){
                     RequestedProfiles:['XX'],
                     ConfirmedProfiles:['XX'],
                     DiscordId: Disc,
-                    uid: 'bHSYBWb7Z0XZyuVmmuPZ83GmUNT2',
+                    uid: auth.currentUser.uid,
                     Name: UName,
                     DisplayPicture: url
                   })
+                let LocUploadRef = query(ref(db,'locations/'),orderByChild('LocationLower'),equalTo(selectedValue.toLowerCase()))
+                get(LocUploadRef).then((snapshot) => {
+                  console.log("Snapshot exists?: " + snapshot.exists())
+                  console.log(snapshot.val())
+                  if(!snapshot.exists){
+                    push(ref(db,'locations/'),{
+                      Location: selectedValue,
+                      LocationLower: selectedValue.toLowerCase(),
+                    })
+                  }
+                    
+                  
+                })
                   })
+                
               })
 }
 
