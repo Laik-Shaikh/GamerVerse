@@ -130,7 +130,7 @@ if(users && IncomingRequests)
                     <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
                     <Text style={styles.highlighttxt}>Home</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile",false)}>
                     <Text style={styles.robototxt}>Profile</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
