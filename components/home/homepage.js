@@ -11,19 +11,22 @@ import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
+// const createExpoWebpackConfigAsync = require('@expo/webpack-config');
+// module.exports = async function(env, argv) {
+//   const config = await createExpoWebpackConfigAsync(env, argv);
+//   config.resolve.alias['lottie-react-native'] = 'react-native-web-lottie';
+//   return config;
+// };
+
 export default function homepage({ navigation, route }) {
     const auth = getAuth();
     var profileUid = auth.currentUser.uid;
-    // var requests = [ "YY" ];
-    // var friends = [ "YY" ];
-    // var friendsArray = [ "YY" ];
     var friendNames = [];
     var friendImages = [];
     var friendUid = [];
     const [textInputValue, setTextInputValue] = React.useState('');
     const [users, setUsers] = React.useState()
     var [friends, setFriends] = React.useState(null);
-    // var [confirmedFriends, setconfirmedFriends] = React.useState(null);
     const db = getDatabase();
     const userRef = query(ref(db, 'users'),orderByChild('uid'),equalTo(profileUid))
     const ConfirmedProfilesRef = query(ref(db,'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
@@ -52,6 +55,9 @@ export default function homepage({ navigation, route }) {
                     colors={['#013C00', '#000000']}
                     style={styles.background} >
                 <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+                {/* <View style={styles.loading}>
+
+                </View> */}
             </LinearGradient>
             )
     }
@@ -120,7 +126,7 @@ export default function homepage({ navigation, route }) {
                     <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
                     <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
                     <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
-                    style={styles.notifscroll}>
+                    style={styles.friendscroll}>
                     {friendNames.map((profile,index)=>
                         {
                            { console.log("WORKS")} 
@@ -153,6 +159,13 @@ const styles = StyleSheet.create({
         position:"relative",
         width: windowWidth,
         height: windowHeight,
+    },
+
+    loading:{
+        minHeight: 100/1024*windowHeight,
+        display: "flex",
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     InputStyle1:{
@@ -216,7 +229,7 @@ const styles = StyleSheet.create({
         left:0.3*windowWidth
     },
 
-    notifscroll:{
+    friendscroll:{
         flexGrow: 0.1,
         width: 250 / 1440 * windowWidth,
         height: 592 / 1024 * windowHeight,
@@ -228,12 +241,10 @@ const styles = StyleSheet.create({
         flexDirection:"column",
         marginVertical:30,
         alignItems: "center",
-        // top:0.005*windowHeight,
         left:0.05*windowWidth,
         height:0.08 * windowHeight,
         width: 0.013*windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.8)",
-        // borderRadius: 10,
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
