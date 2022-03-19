@@ -16,12 +16,15 @@ const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 
-
-export default function searchpagename ({ navigation , route}){
+export default function profilepage ({ navigation , route}){
       const auth = getAuth();
       var nowEditable = route.params
       var profileUid = auth.currentUser.uid;
       const [image, setImage] = useState(null);
+      var [newName,setNewName] = React.useState()
+      var [newPhone,setNewPhone] = React.useState()
+      var [newAbout,setNewAbout] = React.useState()
+      var [newDisc,setNewDisc] = React.useState()
 
       const storage = getStorage();
       const metadata = {
@@ -44,44 +47,39 @@ export default function searchpagename ({ navigation , route}){
           
         }
       };
-      
-      async function sendFirebaseData(){
-        console.log(image);
-        const response = await fetch(image);
-        const blob = await response.blob();
-        uploadBytes(storageRef, blob, metadata).then((snapshot) => {
-          getDownloadURL(storageRef).then((url)=>{
-            update(dbRef,{
-                // Email: auth.currentUser.email,
-                // PhoneNumber: PNum,
-                // Location: Loc,
-                // Games:['XX'],
-                // RequestedProfiles:['XX'],
-                // ConfirmedProfiles:['XX'],
-                // DiscordId: Disc,
-                // uid: auth.currentUser.uid,
-                // Name: UName,
-                DisplayPicture: url
-              })
-              })
-          })
-}
-
-      const [userInfo,setUserInfo] = React.useState()
+      var [userInfo,setUserInfo] = React.useState()
       const db = getDatabase();
       const profileRef = query(ref(db,'users'),orderByChild('uid'),equalTo(profileUid))
+      const picUpdateRef = query(ref(db,'users/' + profileUid ))
       console.log(profileRef)
       React.useEffect(() => {
       onValue(profileRef,(snapshot)=>{
-        try{
         const data = Object.values(snapshot.val());
+        console.log(data)
         setUserInfo(data)
-        } catch(e) { console.log(e); }
       })
-  },[])
-  
-  console.log(userInfo)
-
+  },[]) 
+  async function sendFirebaseData(){
+    const response = await fetch(image);
+    const blob = await response.blob();
+    uploadBytes(storageRef, blob, metadata).then((snapshot) => {
+      getDownloadURL(storageRef).then((url)=>{
+        update(picUpdateRef,{
+            // Email: auth.currentUser.email,
+             PhoneNumber:newPhone,
+            // Location: Loc,
+            // Games:['XX'],
+            // RequestedProfiles:['XX'],
+            // ConfirmedProfiles:['XX'],
+             DiscordId: newDisc,
+            // uid: auth.currentUser.uid,
+            Name:newName,
+            aboutMe:newAbout,
+            DisplayPicture: url
+          })
+          })
+      })
+}
   if (!userInfo) {
     return (<Text>Rukavat ke liye khed hai</Text>)
 }
@@ -127,7 +125,8 @@ export default function searchpagename ({ navigation , route}){
                 
                 <View style={styles.aboutMeContainer}>
                     <Text style={styles.headTxt}>About Me</Text>
-                    <Text style={styles.aboutMeTxt}>Hahahaha</Text>
+                    <TextInput style={styles.aboutMeTxt} placeholder='Enter something that describes you' 
+                    onChangeText={(text) => setNewAbout(text)}></TextInput>
                 </View>
                 
                 <TouchableOpacity style={styles.Button} title='Done'  onPress={() =>{
@@ -143,7 +142,9 @@ export default function searchpagename ({ navigation , route}){
                 <View style={styles.divider1}/>
                 <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                     <Text style={styles.infoHeadTxt}>Name</Text>
-                    <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>Trolled</Text>
+                    <TextInput style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]} 
+                    placeholder='Enter new name' 
+                    onChangeText={(text) => setNewName(text)}></TextInput>
                 </View>
                 
                 <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
@@ -153,7 +154,10 @@ export default function searchpagename ({ navigation , route}){
                 
                 <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                     <Text style={styles.infoHeadTxt}>Phone Number</Text>
-                    <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 trolled</Text>
+                    <TextInput style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}
+                    placeholder='Enter new phone number' 
+                    onChangeText={(text) => setNewPhone(text)}
+                    ></TextInput>
                 </View>
                 
                 <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
@@ -163,7 +167,9 @@ export default function searchpagename ({ navigation , route}){
                 
                 <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                     <Text style={styles.infoHeadTxt}>Discord Id</Text>
-                    <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>trolled</Text>
+                    <TextInput style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}
+                    placeholder='Enter new discord ID' 
+                    onChangeText={(text) => setNewDisc(text)}></TextInput>
                 </View>
                 
                 <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
@@ -217,7 +223,7 @@ export default function searchpagename ({ navigation , route}){
                     
                     <View style={styles.aboutMeContainer}>
                         <Text style={styles.headTxt}>About Me</Text>
-                        <Text style={styles.aboutMeTxt}>{userInfo[0].Name}</Text>
+                        <Text style={styles.aboutMeTxt}>{userInfo[0].aboutMe}</Text>
                     </View>
                     
                     <TouchableOpacity style={styles.Button} title='Edit'  onPress={() =>{

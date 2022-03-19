@@ -107,7 +107,8 @@ async function sendFirebaseData(){
                     DiscordId: Disc,
                     uid: auth.currentUser.uid,
                     Name: UName,
-                    DisplayPicture: url
+                    DisplayPicture: url,
+                    aboutMe:"I am "+UName
                   })
                   })
               })
