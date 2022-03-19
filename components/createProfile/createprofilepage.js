@@ -108,7 +108,7 @@ async function sendFirebaseData(){
                     uid: auth.currentUser.uid,
                     Name: UName,
                     DisplayPicture: url,
-                    aboutMe:"I am "+UName
+                    aboutMe:"Hey,I am "+UName
                   })
                   })
               })
