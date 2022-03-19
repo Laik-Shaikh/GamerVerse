@@ -7,35 +7,184 @@ import fire from '../firebase';
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 import 'firebase/database'
-import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo ,update} from "firebase/database";
+import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import * as ImagePicker from 'expo-image-picker';
+
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
 
-export default function searchpagename ({ navigation }){
+export default function profilepage ({ navigation , route}){
       const auth = getAuth();
+      var nowEditable = route.params
       var profileUid = auth.currentUser.uid;
-      const [userInfo,setUserInfo] = React.useState()
+      const [image, setImage] = useState(null);
+      var [newName,setNewName] = React.useState()
+      var [newPhone,setNewPhone] = React.useState()
+      var [newAbout,setNewAbout] = React.useState()
+      var [newDisc,setNewDisc] = React.useState()
+
+      const storage = getStorage();
+      const metadata = {
+        contentType: 'image/jpg',
+      };
+      const storageRef = strRef(storage, 'Profile/' + auth.currentUser.uid + '.jpg');
+      const pickImage = async () => {
+    
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.cancelled) {
+          setImage(result.uri);
+          
+        }
+      };
+      var [userInfo,setUserInfo] = React.useState()
       const db = getDatabase();
       const profileRef = query(ref(db,'users'),orderByChild('uid'),equalTo(profileUid))
+      const picUpdateRef = query(ref(db,'users/' + profileUid ))
       console.log(profileRef)
       React.useEffect(() => {
       onValue(profileRef,(snapshot)=>{
-        try{
         const data = Object.values(snapshot.val());
+        console.log(data)
         setUserInfo(data)
-        } catch(e) { console.log(e); }
       })
-  },[])
-  
-  console.log(userInfo)
-
+  },[]) 
+  async function sendFirebaseData(){
+    const response = await fetch(image);
+    const blob = await response.blob();
+    uploadBytes(storageRef, blob, metadata).then((snapshot) => {
+      getDownloadURL(storageRef).then((url)=>{
+        update(picUpdateRef,{
+            // Email: auth.currentUser.email,
+             PhoneNumber:newPhone,
+            // Location: Loc,
+            // Games:['XX'],
+            // RequestedProfiles:['XX'],
+            // ConfirmedProfiles:['XX'],
+             DiscordId: newDisc,
+            // uid: auth.currentUser.uid,
+            Name:newName,
+            aboutMe:newAbout,
+            DisplayPicture: url
+          })
+          })
+      })
+}
   if (!userInfo) {
     return (<Text>Rukavat ke liye khed hai</Text>)
 }
-
-  if (userInfo){
+  if (nowEditable){
+    return (
+        <View style={styles.container} >
+            <LinearGradient
+                start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                colors={['#013C00', '#000000']}
+                style={styles.background} >
+                <ImageBackground source={require('./profileAssets/designspikes1.png')} style={styles.spike1} />
+                <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")}/>
+                <ImageBackground source={require('./profileAssets/menubar.png')} style={styles.menu} />
+                
+                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                <   Text style={styles.robototxt}>Home</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile",false)}>
+                    <Text style={styles.highlighttxt}>Profile</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                    <Text style={styles.robototxt}>My Games</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                    <Text style={styles.robototxt}>Game Hub</Text>
+                </TouchableOpacity>
+                
+                <Image source={require('./profileAssets/searchIcon.png')} style={styles.searchIcon} />
+                <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                <ImageBackground source={require('./profileAssets/designspikes.png')} style={styles.spike2} />
+                
+                
+                <View style={styles.photoContainer}>
+                    <Text style={styles.headTxt}>My Photo</Text>
+                    <TouchableOpacity onPress={pickImage} >
+          <Image source={userInfo[0].DisplayPicture} style={styles.dpicture} />
+          {image && <Image source={{ uri:image }} style={styles.dpicture} />}
+          </TouchableOpacity>
+                </View>
+                
+                <View style={styles.aboutMeContainer}>
+                    <Text style={styles.headTxt}>About Me</Text>
+                    <TextInput style={styles.aboutMeTxt} placeholder='Enter something that describes you' 
+                    onChangeText={(text) => setNewAbout(text)}></TextInput>
+                </View>
+                
+                <TouchableOpacity style={styles.Button} title='Done'  onPress={() =>{
+                   console.log("Done btn pressed")
+                   sendFirebaseData()
+                   nowEditable=false;
+                   navigation.push("Profile",nowEditable)
+                }
+                }>
+                    <Text style={styles.ButtonText}>Done</Text>
+                </TouchableOpacity>
+                
+                <View style={styles.divider1}/>
+                <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <Text style={styles.infoHeadTxt}>Name</Text>
+                    <TextInput style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]} 
+                    placeholder='Enter new name' 
+                    onChangeText={(text) => setNewName(text)}></TextInput>
+                </View>
+                
+                <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
+                    <Text style={styles.infoHeadTxt}>Location</Text>
+                    <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userInfo[0].Location}</Text>
+                </View>
+                
+                <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <Text style={styles.infoHeadTxt}>Phone Number</Text>
+                    <TextInput style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}
+                    placeholder='Enter new phone number' 
+                    onChangeText={(text) => setNewPhone(text)}
+                    ></TextInput>
+                </View>
+                
+                <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
+                    <Text style={styles.infoHeadTxt}>Email</Text>
+                    <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>trolled</Text>
+                </View>
+                
+                <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <Text style={styles.infoHeadTxt}>Discord Id</Text>
+                    <TextInput style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}
+                    placeholder='Enter new discord ID' 
+                    onChangeText={(text) => setNewDisc(text)}></TextInput>
+                </View>
+                
+                <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
+                    <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
+                    <Image source={require('./profileAssets/GameImage.jpg')} style={styles.gameImage} />
+                    <Text style={[styles.infoHeadTxt,{top: 0.18*windowHeight,left:0.192*windowWidth}]}>Spider-man</Text>
+                </View>
+                
+                <View style={styles.divider2}/>
+                
+                </LinearGradient>
+        </View>
+);
+  }
+  if (userInfo && !nowEditable){
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -74,10 +223,15 @@ export default function searchpagename ({ navigation }){
                     
                     <View style={styles.aboutMeContainer}>
                         <Text style={styles.headTxt}>About Me</Text>
-                        <Text style={styles.aboutMeTxt}>{userInfo[0].Name}</Text>
+                        <Text style={styles.aboutMeTxt}>{userInfo[0].aboutMe}</Text>
                     </View>
                     
-                    <TouchableOpacity style={styles.Button} title='Edit'>
+                    <TouchableOpacity style={styles.Button} title='Edit'  onPress={() =>{
+                       console.log("Edit btn pressed")
+                       nowEditable=true;
+                       navigation.push("Profile",nowEditable)
+                    }
+                    }>
                         <Text style={styles.ButtonText}>Edit</Text>
                     </TouchableOpacity>
                     
