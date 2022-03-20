@@ -25,11 +25,12 @@ export default function homepage({ navigation }) {
     const [image, setImage] = useState(null);
     const [games, setGames] = React.useState(null);
     const [selectGameName, setSelectGameName] = useState(null);
-    const [gamesName, setGamesName] = React.useState([]);
+    const [gamesCode, setGamesCode] = React.useState([]);
     const [description, setDescription] = useState(null)
     const [userName, setUserName] = useState(null);
     const [postNumber, setPostNumber] = React.useState([]);
     const [postImage, setPostImage] = React.useState([]);
+    const [selectGameCode, setSelectGameCode] = useState(null);
 
     const storage = getStorage();
     const metadata = {
@@ -37,14 +38,14 @@ export default function homepage({ navigation }) {
     };
 
     const GameRef = query(ref(db,'games'))
-    const UserRef = query(ref(db,'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3' + '/Games'))
-    const UserName = query(ref(db,'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3' + '/Name'))
-    const PostCounter = query(ref(db, 'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3' + '/PostCount'));
-    const PostCounter1 = query(ref(db, 'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3'));
-    const PostCounter3 = query(ref(db, 'users/ToEDaabwu7NlvJq3CjNEJWZzEcG3' + '/PostCount'));
+    const UserRef = query(ref(db,'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/Games'))
+    const UserName = query(ref(db,'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/Name'))
+    const PostCounter = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/PostCount'));
+    const PostCounter1 = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2'));
+    const PostCounter3 = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/PostCount'));
     const PostRef = query(ref(db,'posts'))
     
-    var userid = 'ToEDaabwu7NlvJq3CjNEJWZzEcG3'
+    var userid = 'aoPtWnacOEccgqqvesjmC17Gibu2'
     // const dbRef = ref(db,'posts/Post1')
   
     console.log(UserName)
@@ -63,7 +64,7 @@ export default function homepage({ navigation }) {
 
         onValue(UserRef, (snapshot) => {
             const data1 = Object.values(snapshot.val());
-            setGamesName(data1)
+            setGamesCode(data1)
             console.log(data1)
             }
         )
@@ -84,17 +85,22 @@ export default function homepage({ navigation }) {
 
         onValue(PostRef, (snapshot) => {
             const data5 = Object.values(snapshot.val());
+            // setPostImage(Object.values(data5[0]))
+            // console.log(Object.values(data5[0]))
             setPostImage(data5)
-            console.log(data5)
             }
         )
     },[])
 
-    console.log(gamesName);
+    console.log(gamesCode);
     console.log(userName);
     console.log(postNumber);
     console.log(PostRef);
     console.log(postImage);
+
+  
+    
+    
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -126,6 +132,7 @@ export default function homepage({ navigation }) {
                     set(dbRef,{
                         Description : description,
                         GameName: selectGameName,
+                        GameCode: selectGameCode,
                         Image: url,
                         Likes: 0,
                         User: userName
@@ -179,18 +186,45 @@ export default function homepage({ navigation }) {
                     <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
                     <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
 
-                    <ScrollView style={styles.postContainer}>
+                    {/* {games.map((item, index) => {
+                        if(gamesCode.includes(item.Code))
+                        {
+                            setGameNames(item.Name)
+                        }
+                    })} */}
+
+                    
+
+                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={styles.postContainer}>
                         {postImage.map((item, index) => {
                             console.log(postImage);
                             console.log(item)
+                            
+                            
+                        
                             return(
                                 <View key={index}>
-                                    <View style={styles.post}>
-                                        <Image source={item.Image} />
-                                        {console.log(item.Image)}
-                                    </View>
+                                    {
+                                         Object.values(item).map((newItem, newIndex) => {
+                                            console.log(postImage);
+                                            console.log(newItem)
+                                            console.log(newItem.GameName)
+                                            console.log(gamesCode)
+                                            console.log(newItem.GameCode)
+                                        if(gamesCode.includes(newItem.GameCode)){
+                                            return(
+                                                <View>
+                                                    <Image source={newItem.Image} style={styles.post} />
+                                                    <Text style={styles.profileName}>{newItem.User}</Text>
+                                                    <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                </View>
+                                            )
+                                        }
+                                        })
+                                    }
                                 </View>
                             )
+                                
                             })}
                     </ScrollView>
 
@@ -261,18 +295,20 @@ export default function homepage({ navigation }) {
                             <ScrollView style={styles.gameScrollContainer} vertical={true}>
                                 {games.map((item, index) => {
                                     console.log(item.Code)
-                                    if(gamesName.includes(item.Code)){
+                                    if(gamesCode.includes(item.Code)){
                                         
                                         return(
                                             <View key={index}>
                                                 <TouchableOpacity style={styles.gameName} 
                                                    onPress={ () => {
                                                        setSelectGameName(item.Name)
+                                                       setSelectGameCode(item.Code)
                                                        console.log(selectGameName)
                                                     //    console.log(item.Name)
                                                        }} >
                                                 <Text style={styles.gameText}>{item.Name}</Text>
                                                 {console.log(item.Name)}
+                                                {/* {setGameNames(item.Name)} */}
                                                 </TouchableOpacity>
                                             </View>
                                         )
@@ -648,17 +684,44 @@ const styles = StyleSheet.create({
         height: 0.73*windowHeight,
         top: 0.23*windowHeight,
         left: 0.21*windowWidth,
-        backgroundColor: 'red'
+        // backgroundColor: 'red'
+        flexGrow: 0.1
     },
 
     post:{
-        position: 'absolute',
+        // position: 'absolute',
         resizeMode: 'contain',
-        width: 0.38*windowWidth,
+        width: 0.45*windowWidth,
         height: 0.58*windowHeight,
-        marginTop: '50px',
-        paddingLeft: '25px'
+        // marginTop: '50px',
+        paddingLeft: '25px',
+        paddingTop: '20px',
+        // flexGrow: 0.1
+    },
+
+
+    profileName:{
+        position: 'absolute',
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 20,
+        paddingLeft: '20px',
+        marginBottom: '15px'
+    },
+
+    displayDescription:{
+        position: 'absolute',
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 18,
+        paddingLeft: '20px',
+        marginTop: '15px',
+        top: 0.5*windowHeight
     }
+
+
 
 
 
