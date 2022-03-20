@@ -11,7 +11,6 @@ import { getDatabase, onValue,ref,query, orderByChild, equalTo ,update} from "fi
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
 
-
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 

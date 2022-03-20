@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import fire from '../firebase';
 import 'firebase/auth';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup } from "firebase/auth";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -14,6 +14,7 @@ export default function Login({ navigation }) {
   const [PWord, setPWord] = React.useState();
   const unamekeeper = React.createRef();
   const auth = getAuth();
+  const provider = new GoogleAuthProvider();
 
     return(
         <View style={styles.container}>
@@ -51,6 +52,20 @@ export default function Login({ navigation }) {
                     >
                   <Text style={styles.ButtonText}>Login</Text>
                   </TouchableOpacity>
+                  <TouchableOpacity style={styles.Button2} onPress={() => {
+                    signInWithPopup(auth, provider)
+                    .then((result) => {
+                      
+                      const credential = GoogleAuthProvider.credentialFromResult(result);
+                      const token = credential.accessToken;
+                      
+                      const user = result.user;
+                      console.log(user)
+                      console.log(token)
+                      navigation.navigate("Home")
+                      
+                    })
+                  }}><Text style={styles.ButtonText}>Sign Up with google</Text></TouchableOpacity>
                   <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Register")}>
                     <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Don't have an account? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14,borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Register</Text></Text>
                   </TouchableOpacity>
@@ -160,6 +175,22 @@ const styles = StyleSheet.create({
     height: 55 / 1024 * windowHeight,
     left: 877 / 1440 * windowWidth,
     top: 322 / 1024 * windowHeight,
+    backgroundColor: "#54E0FF",
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
+  Button2:
+  {
+    position: "absolute",
+    width: 305 / 1440 * windowWidth,
+    height: 55 / 1024 * windowHeight,
+    left: 877 / 1440 * windowWidth,
+    top: 450 / 1024 * windowHeight,
     backgroundColor: "#54E0FF",
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
