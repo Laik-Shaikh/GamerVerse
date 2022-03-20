@@ -124,7 +124,7 @@ async function sendFirebaseData(){
                 get(LocUploadRef).then((snapshot) => {
                   console.log("Snapshot exists?: " + snapshot.exists())
                   console.log(snapshot.val())
-                  if(!snapshot.exists){
+                  if(!snapshot.exists()){
                     push(ref(db,'locations/'),{
                       Location: selectedValue,
                       LocationLower: selectedValue.toLowerCase(),
