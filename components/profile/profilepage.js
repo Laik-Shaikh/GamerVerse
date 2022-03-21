@@ -25,6 +25,7 @@ export default function profilepage ({ navigation , route}){
       var [newPhone,setNewPhone] = React.useState()
       var [newAbout,setNewAbout] = React.useState()
       var [newDisc,setNewDisc] = React.useState()
+      var [url1,setUrl1]=React.useState()
 
       const storage = getStorage();
       const metadata = {
@@ -44,7 +45,6 @@ export default function profilepage ({ navigation , route}){
     
         if (!result.cancelled) {
           setImage(result.uri);
-          
         }
       };
       var [userInfo,setUserInfo] = React.useState()
@@ -59,9 +59,40 @@ export default function profilepage ({ navigation , route}){
         setUserInfo(data)
       })
   },[]) 
+ 
   async function sendFirebaseData(){
     const response = await fetch(image);
     const blob = await response.blob();
+    if (!newPhone){
+        newPhone=userInfo[0].PhoneNumber
+    }
+    if (!newName){
+        newName=userInfo[0].Name
+    }
+    if (!newAbout){
+        newAbout=userInfo[0].aboutMe
+    }
+    if (!newDisc){
+        newDisc=userInfo[0].DiscordId
+    }
+    if (blob.type == 'text/html')
+    {
+        update(picUpdateRef,{
+            // Email: auth.currentUser.email,
+             PhoneNumber:newPhone,
+            // Location: Loc,
+            // Games:['XX'],
+            // RequestedProfiles:['XX'],
+            // ConfirmedProfiles:['XX'],
+             DiscordId: newDisc,
+            // uid: auth.currentUser.uid,
+            Name:newName,
+            aboutMe:newAbout,
+            DisplayPicture: userInfo[0].DisplayPicture
+          })
+    }
+    else
+    {
     uploadBytes(storageRef, blob, metadata).then((snapshot) => {
       getDownloadURL(storageRef).then((url)=>{
         update(picUpdateRef,{
@@ -79,6 +110,7 @@ export default function profilepage ({ navigation , route}){
           })
           })
       })
+    }
 }
   if (!userInfo) {
     return (<Text>Rukavat ke liye khed hai</Text>)
@@ -162,7 +194,7 @@ export default function profilepage ({ navigation , route}){
                 
                 <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
                     <Text style={styles.infoHeadTxt}>Email</Text>
-                    <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>trolled</Text>
+                    <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{userInfo[0].Email}</Text>
                 </View>
                 
                 <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
