@@ -55,8 +55,6 @@ if(userInfo){
                 notfollowStatus=false;
             };
         }
-    // gameArray = Object.entries(games);
-    // console.log(tagArray)
     }
     function gameFollowCheck(GameCode){
         for(var i = 0; i < games.length; i++)
