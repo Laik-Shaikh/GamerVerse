@@ -76,7 +76,12 @@ export default function homepage({ navigation, route }) {
                 keyExtractor={(item) => item.magicKey}
                 renderItem={(suggestion) => {
                     return(
-                        <TouchableOpacity style={styles.item} onPress={() =>setSelectedValue(suggestion.item.Location)}>
+                        <TouchableOpacity style={styles.item} onPress={() =>{
+                            setSelectedValue(suggestion.item.Location)
+                            navigation.navigate("SearchName", { textInputValue:suggestion.item.Location} )
+                        }
+                        
+                        }>
                           <Text style={styles.itemText}>{suggestion.item.Location}</Text>
                         </TouchableOpacity>)
                 }}
