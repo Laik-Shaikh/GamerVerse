@@ -1,13 +1,123 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput} from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+
+import fire from '../firebase';
+import 'firebase/database'
+import { getDatabase, onValue,get,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
+import 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
+export default function homepage({ navigation, route }) {
+    const auth = getAuth();
+    const [textInputValue, setTextInputValue] = React.useState('');
+    var [IncomingRequests, setIncomingRequests] = React.useState(null);
+    var [friendIncomingRequests, setFriendIncomingRequests] = React.useState(null);
+    var [friends, setFriends] = React.useState(null);
+    const [users, setUsers] = React.useState(null);
+    var requestNames = [];
+    var requestImages = [];
+    var requestUID = [];
+    var acceptedProfiles =[];
+    var rejectedProfiles =[];
+    const db = getDatabase();
+    const UserRef = query(ref(db,'users/' + auth.currentUser.uid + '/RequestedProfiles'))
+    const ConfirmedProfilesRef = query(ref(db,'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
+    const ThisProfileRef = query(ref(db,'users/' + auth.currentUser.uid))
+    const ProfileRef = query(ref(db,'users'))
+    React.useEffect(() => {
+        onValue(UserRef, (snapshot) => {
+            const data = Object.values(snapshot.val());
+            setIncomingRequests(data)
+            // console.log(data)
+            }
+        )
+        onValue(ProfileRef, (snapshot) => {
+            const data1 = Object.values(snapshot.val());
+            setUsers(data1)
+            // console.log(data1)
+            }
+        )
+        onValue(ConfirmedProfilesRef, (snapshot) => {
+            const data2 = Object.values(snapshot.val());
+            setFriends(data2)
+            // console.log(data1)
+            }
+        )
+    },[])
+console.log(IncomingRequests)
+console.log(users)
+console.log(friends)
 
-export default function homepage({ navigation }) {
+function requestAccepted(requestUID){
+    var y = requestUID;
+    if (!friends.includes(y))
+    {
+        friends.push(y);
+        requestDenied(y);
+        update(ThisProfileRef, {
+            RequestedProfiles: IncomingRequests,
+          });
+        var FriendProfileRef = query(ref(db,'users/' + y + '/ConfirmedProfiles'))
+        var FriendProfileUpdateRef = query(ref(db,'users/' + y))
+                get(FriendProfileRef).then((snapshot) =>  {
+                const data3 = Object.values(snapshot.val());
+                data3.push(auth.currentUser.uid)
+                console.log(data3)
+                update(FriendProfileUpdateRef, {
+                    ConfirmedProfiles: data3,
+                  }); 
+                }
+            )
+        // update(FriendProfileRef, {
+        //     RequestedProfiles: auth.currentUser.uid,
+        //   });  
+    }
+}
+
+function requestDenied(requestUID){
+var toRemove = requestUID;
+console.log(toRemove)
+var index = IncomingRequests.indexOf(toRemove);
+if (index > -1) { 
+IncomingRequests.splice(index, 1);
+}
+}
+
+var handleSearch = (e) => {
+if (e.nativeEvent.key == 'Enter') {
+navigation.navigate("SearchName", {textInputValue})
+console.log('search started')
+}
+}
+if(users && IncomingRequests)
+  {
+    for(var i= 1; i<users.length;i++)
+    {
+        var x = users[i].uid;
+        console.log(x);
+        if (IncomingRequests.includes(x))
+        {
+           requestNames.push(users[i].Name);
+           requestImages.push(users[i].DisplayPicture);
+           requestUID.push(users[i].uid);
+    
+        }
+    }
+    console.log(requestNames)
+    console.log(requestImages)
+    console.log(requestUID)
+  }
+ 
+    if (!users) {
+        return (<Text>Rukavat ke liye khed hai</Text>)
+    }
+
+    if(users)
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -20,7 +130,7 @@ export default function homepage({ navigation }) {
                     <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
                     <Text style={styles.highlighttxt}>Home</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile",false)}>
                     <Text style={styles.robototxt}>Profile</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
@@ -30,8 +140,79 @@ export default function homepage({ navigation }) {
                     <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     <Image source={require('./homeAssets/searchIcon.png')} style={styles.searchIcon} />
-                    <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
-                    <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
+                    <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => setTextInputValue(text)}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    ></TextInput>
+                    <View style={styles.notif}>
+                        <Image style={{position:'absolute', 
+                        resizeMode: 'contain',
+                        top:0.01*windowHeight,
+                        left:0.015*windowWidth,
+                        width:0.03*windowWidth,
+                        height:0.03*windowHeight,
+                        transform: [{ rotate: '20deg' }]
+                    }} source={require('./homeAssets/Bell.png')}/>
+                    <Text style ={{  position: 'absolute',
+                    left: 0.045*windowWidth,
+                    top:0.015 *windowHeight,
+                    color: 'white',
+                    fontWeight: 'bold'}}>Notifications</Text>
+                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
+                    style={styles.notifscroll}>
+                    {requestNames.map((profile,index)=>
+                        {
+                           { console.log("WORKS")
+                        console.log(profile)
+                        console.log(requestImages[index])} 
+                        return(
+                        <View  key={index} style={styles.notifbox}>
+                            {/* <Text style={{
+                                position: 'relative',
+                                "color": "#FFFFFF",
+                                }}>
+                                Friend Request by:</Text> */}
+                            <View style={{position:'relative',flex:1, flexDirection:'row'}}>
+                            <Image source={requestImages[index]} style={{
+                        position: "absolute",
+                        top: 0 * windowHeight,
+                        left: 0*windowWidth,
+                        width: 0.05 * windowHeight,
+                        height: 0.05 * windowHeight,
+                        borderRadius: 0.065 * windowHeight,}} />
+                            <Text style={{
+                                position: 'absolute',
+                                left:0.045*windowWidth,
+                                width: 0.07*windowWidth,
+                                "color": "#FFFFFF",
+                                }}>{profile} sent a friend request!</Text>                            
+                            </View> 
+                            <View style={styles.notifdecisionbox}>
+                        <TouchableOpacity  onPress={() => 
+                {
+                    if (requestAccepted(requestUID[index]));
+                    update(ThisProfileRef, {
+                        ConfirmedProfiles: friends,
+                      }); 
+                }} ><Text style={[styles.decisionbutton,{backgroundColor: "rgba(3, 184, 21, 1)"}]}>Accept</Text></TouchableOpacity>
+                        <TouchableOpacity 
+                         onPress={() => 
+                            {
+                                if (IncomingRequests.includes(requestUID[index])) requestDenied(requestUID[index]);
+                                update(ThisProfileRef, {
+                                    RequestedProfiles: IncomingRequests,
+                                  }); 
+                            }}><Text style={[styles.decisionbutton,{backgroundColor: "rgba(255, 255, 255, 0.25)"},{left: -0.03*windowWidth}]}>Decline</Text></TouchableOpacity>
+                        </View>
+                        </View>
+                        )
+                    })
+                    }
+                    </ScrollView>
+                    </View>
                     <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
                     <Text style={styles.nametxt}>Danny Devadiga</Text>
                     <Text style={styles.posttxt}>Maddy Sheikh</Text>
@@ -42,6 +223,7 @@ export default function homepage({ navigation }) {
                     </LinearGradient>
             </View>
     );
+                    
 }
 
 const styles = StyleSheet.create({
@@ -117,6 +299,19 @@ const styles = StyleSheet.create({
         position:'absolute',
         top:0.21*windowHeight,
         left:0.3*windowWidth
+    },
+
+    decisionbutton: {
+        position: "absolute",
+        width: 55 / 1440 * windowWidth,
+        height: 25 / 1024 * windowHeight,
+        // left: 165 / 1440 * windowWidth,
+        color: '#FFFFFF',
+        textAlign: 'center',
+        top: 15 / 1024 * windowHeight,
+        borderRadius: 3,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 
     homebtn:{
@@ -204,10 +399,46 @@ const styles = StyleSheet.create({
 
     notif:{
         position:"absolute",
+        flex:1,
         top:0.2*windowHeight,
         left:0.8*windowWidth,
         height:(695/900) * windowHeight,
         width: (227/1600)*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.25)",
+        borderRadius: 10,
+    },
+    
+    notifbox:{
+        flex:1, 
+        // flexDirection:"column",
+        marginVertical:50,
+        // alignItems: "center",
+        top:0.02*windowHeight,
+        left:0.005*windowWidth,
+        height:0.7 * windowHeight,
+        width: 0.13*windowWidth,
+        // backgroundColor: "rgba(255, 255, 255, 0.5)",
+        borderRadius: 10,
+    },
+    
+    notifdecisionbox:{
+        position:"absolute",
+        flex:1, 
+        flexDirection:"row",
+        justifyContent:'space-between',
+        top:0.05*windowHeight,
+        left:0.005/4*windowWidth,
+        height:0.02 * windowHeight,
+        width: 0.12*windowWidth,
+        borderRadius: 10,
+    },
+    
+    
+    notifscroll:{
+        flexGrow: 0.1,
+        height:'100%',
+        width: '100%',
+        borderRadius: 10,
     },
 
     spike1:{

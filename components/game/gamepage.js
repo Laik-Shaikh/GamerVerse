@@ -3,29 +3,42 @@ import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpaci
 import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
+import 'firebase/auth';
+import { getAuth } from "firebase/auth";
 import 'firebase/database'
-import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
-const windowHeight = Dimensions.get('screen').height
+const windowHeight = Dimensions.get('screen').height;
 
 
 export default function gamepage({ navigation, route }) {
-    const {GameCode} = route.params
+    const auth = getAuth();
+    var {GameCode} = route.params
     console.log(GameCode)
-    const [gameInfo,setGameInfo] = React.useState()
+    var [gameInfo,setGameInfo] = React.useState()
+    const [userInfo,setUserInfo] = React.useState()
     var gameTags=[];
     var tagArray=[];
+    var games = [ "YY" ];
+    // var gameArray=[];
     const db = getDatabase();
-    const GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
+    var GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
+    const UserRef = query(ref(db,'users/'+ auth.currentUser.uid))
+    var GetUserRef = query(ref(db,'users'),orderByChild('uid'),equalTo( auth.currentUser.uid))
     console.log(GameRef)
     React.useEffect(() => {
     onValue(GameRef,(snapshot)=>{
-        const data = Object.values(snapshot.val());
+        var data = Object.values(snapshot.val());
         setGameInfo(data[0])
+    })
+    onValue(GetUserRef,(snapshot)=>{
+        const data1 = Object.values(snapshot.val());
+        setUserInfo(data1[0])
     })
 },[])
 console.log(gameInfo)
+console.log(userInfo)
 // code for displaying tags
 if(gameInfo){
 gameTags = gameInfo.Tags;
@@ -33,6 +46,19 @@ console.log(gameTags);
 tagArray = Object.entries(gameTags);
 console.log(tagArray)
 }
+if(userInfo){
+    games = userInfo.Games;
+    console.log(games);
+    // gameArray = Object.entries(games);
+    // console.log(tagArray)
+    }
+    function gameFollowCheck(GameCode){
+        for(var i = 0; i < games.length; i++)
+        {
+            if (GameCode==games[i]) return false;
+        }
+        return true
+    }
 if(!gameInfo)
 {
     return (
@@ -121,7 +147,15 @@ if(!gameInfo)
                 <View style={styles.gameContainer}>
                     <Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text>
                     <Image source={gameInfo.Image} style={styles.dpicture}></Image>
-                <TouchableOpacity style={styles.Button} title='Follow'>
+                <TouchableOpacity style={styles.Button} title='Follow' 
+                onPress={() => 
+                {
+                    if (gameFollowCheck(GameCode)) games.push(GameCode);
+                    console.log(games);
+                    update(UserRef, {
+                        Games: games,
+                      }); 
+                }}>
                     <Text style={styles.ButtonText}>Follow</Text>
                 </TouchableOpacity>
                 </View>

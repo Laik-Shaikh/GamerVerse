@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
+import fire from '../firebase';
+import 'firebase/auth';
+import { getAuth,createUserWithEmailAndPassword } from "firebase/auth";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height
@@ -10,6 +13,11 @@ import S1 from './authAssets/slide1.png'
 //
 
 export default function Login({ navigation }) {
+  const [UName, setUName] = React.useState();
+  const [PWord, setPWord] = React.useState();
+  const [ConfirmPWord, setConfirmPWord] = React.useState();
+  const unamekeeper = React.createRef();
+  const auth = getAuth();
     return(
         <View style={styles.container}>
         <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
@@ -21,10 +29,33 @@ export default function Login({ navigation }) {
                   <View style={styles.whitebg}/>
                   <Image source={require('./authAssets/group3.png')} style={styles.img1} />
                   <Text style={styles.signinText}>Sign Up</Text>
-                  <TextInput style={styles.InputStyle1} placeholder='Email ID'></TextInput>
-                  <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true}></TextInput>
-                  <TextInput style={styles.InputStyle3} placeholder='Confirm Password' secureTextEntry={true}></TextInput>
-                  <TouchableOpacity style={styles.Button} title='Register' onPress={() => navigation.navigate("CreateProfile")}>
+                  <TextInput style={styles.InputStyle1} placeholder='Email ID' onChangeText={UName => setUName(UName)} ref={unamekeeper}></TextInput>
+                  <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true} onChangeText={PWord => setPWord(PWord)} secureTextEntry={true}></TextInput>
+                  <TextInput style={styles.InputStyle3} placeholder='Confirm Password' secureTextEntry={true} onChangeText={ConfirmPWord => setConfirmPWord(ConfirmPWord)} secureTextEntry={true}></TextInput>
+                  <TouchableOpacity style={styles.Button} title='Register' secureTextEntry={true}onPress={
+                    async () => {
+                      try {
+                        console.log(fire.auth);
+                        console.log(UName+" "+PWord+" "+ConfirmPWord);
+                        if(PWord==ConfirmPWord){ 
+                          await createUserWithEmailAndPassword(auth,UName,PWord);
+                          console.log("yes")
+                          navigation.navigate("CreateProfile")
+                        }
+                        else
+                        {
+                          alert('Passwords do not match');
+                        }
+                        setPWord(" ");
+                        setConfirmPWord(" ");
+                        setUName(" ");
+                         
+                      } catch (error) {
+                        console.log(error);
+                        alert('Some error has occured');
+                      }
+                    }
+                  }>
                   <Text style={styles.ButtonText}>Register</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Login")}>
