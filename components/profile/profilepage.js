@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,Button,TextInput} from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,Button,TextInput,ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
 
@@ -7,7 +7,7 @@ import fire from '../firebase';
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 import 'firebase/database'
-import { getDatabase, onValue,ref,query, orderByChild, equalTo ,update} from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo ,update,get} from "firebase/database";
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
 
@@ -19,19 +19,22 @@ const windowHeight = Dimensions.get('screen').height;
 export default function profilepage ({ navigation , route}){
       const auth = getAuth();
       var nowEditable = route.params
-      var profileUid = auth.currentUser.uid;
+      var profileUid = 'aoPtWnacOEccgqqvesjmC17Gibu2';
       const [image, setImage] = useState(null);
       var [newName,setNewName] = React.useState()
       var [newPhone,setNewPhone] = React.useState()
       var [newAbout,setNewAbout] = React.useState()
       var [newDisc,setNewDisc] = React.useState()
+      var [myGames,setMyGames] = React.useState()
       var [url1,setUrl1]=React.useState()
+      var [gameData,setGameData] = React.useState()
+      let gameFlag
 
       const storage = getStorage();
       const metadata = {
         contentType: 'image/jpg',
       };
-      const storageRef = strRef(storage, 'Profile/' + auth.currentUser.uid + '.jpg');
+      const storageRef = strRef(storage, 'Profile/' + profileUid + '.jpg');
       const pickImage = async () => {
     
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -58,7 +61,21 @@ export default function profilepage ({ navigation , route}){
         console.log(data)
         setUserInfo(data)
       })
+
+      get(query(ref(db,'users/' + profileUid + '/Games'))).then((snapshot)=>{
+          setMyGames(Object.values(snapshot.val()))
+        })
+
+        get(query(ref(db,'games/'))).then((snapshot) =>{
+            console.log(Object.values(snapshot.val()))
+            setGameData(Object.values(snapshot.val()))
+        })             
+        
   },[]) 
+
+
+
+ 
  
   async function sendFirebaseData(){
     const response = await fetch(image);
@@ -112,7 +129,7 @@ export default function profilepage ({ navigation , route}){
       })
     }
 }
-  if (!userInfo) {
+  if (!userInfo || !myGames || !gameData) {
     return (<Text>Rukavat ke liye khed hai</Text>)
 }
   if (nowEditable){
@@ -205,6 +222,7 @@ export default function profilepage ({ navigation , route}){
                 </View>
                 
                 <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
+                    {}
                     <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
                     <Image source={require('./profileAssets/GameImage.jpg')} style={styles.gameImage} />
                     <Text style={[styles.infoHeadTxt,{top: 0.18*windowHeight,left:0.192*windowWidth}]}>Spider-man</Text>
@@ -216,7 +234,7 @@ export default function profilepage ({ navigation , route}){
         </View>
 );
   }
-  if (userInfo && !nowEditable){
+  if (userInfo && !nowEditable && gameData){
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -296,8 +314,27 @@ export default function profilepage ({ navigation , route}){
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
                         <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
-                        <Image source={require('./profileAssets/GameImage.jpg')} style={styles.gameImage} />
-                        <Text style={[styles.infoHeadTxt,{top: 0.18*windowHeight,left:0.192*windowWidth}]}>Spider-man</Text>
+                        <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
+                    style={styles.scrollContainer2} horizontal={true} 
+                    showsHorizontalScrollIndicator={false}>
+                        {
+                            
+                            gameData.map((game,index)=>{  
+                                if ( myGames.includes(gameData[index].Code)){
+                                    return(
+                                        <View key={index}>
+                                            <TouchableOpacity key={index} style={styles.gameImage} onPress={()=> navigation.navigate("Game", { GameCode: game.Code })}>
+                                            <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                            <Text style={[styles.infoHeadTxt,{top: 0.19*windowHeight,left:0.03*windowWidth,fontSize: "16px",lineHeight: "16px"}]}>{game.Name}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        )
+                                    } 
+                                })
+
+                            }
+                           
+                        </ScrollView>
                     </View>
                     
                     <View style={styles.divider2}/>
@@ -510,12 +547,17 @@ const styles = StyleSheet.create({
         color: "#FFFFFF"
     },
     gameImage: {
-        position: "absolute",
-        left: 0.05 * windowWidth,
+        padding: 1,
+        height: 0.18 * windowHeight,
+        width: 0.17 * windowWidth,
+    },
+    scrollContainer2: {
+        position: 'absolute',
+        width: 0.48 * windowWidth,
+        height: 0.22 * windowHeight,
+        left: 0.18 * windowWidth,
         top: 0.02 * windowHeight,
-        resizeMode: 'contain',
-        height: 0.15 * windowHeight,
-        width: 0.35 * windowWidth,
+        flexGrow: 0.1,
     },
     divider1: {
         position: "absolute",
