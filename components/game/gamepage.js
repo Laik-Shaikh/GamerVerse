@@ -20,6 +20,7 @@ export default function gamepage({ navigation, route }) {
     const [userInfo,setUserInfo] = React.useState()
     var gameTags=[];
     var tagArray=[];
+    var notfollowStatus =true;
     var games = [ "YY" ];
     // var gameArray=[];
     const db = getDatabase();
@@ -48,7 +49,12 @@ console.log(tagArray)
 }
 if(userInfo){
     games = userInfo.Games;
-    console.log(games);
+    for(var i = 0; i < games.length; i++)
+        {
+            if (GameCode==games[i]) {
+                notfollowStatus=false;
+            };
+        }
     // gameArray = Object.entries(games);
     // console.log(tagArray)
     }
@@ -59,58 +65,17 @@ if(userInfo){
         }
         return true
     }
+    function gameRemover(GameCode){
+        for(var i = 0; i < games.length; i++)
+        {
+            if (GameCode==games[i]) return i;
+        }
+    }
 if(!gameInfo)
 {
-    return (
-        <View style={styles.container} >
-            <LinearGradient
-                start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
-                colors={['#013C00', '#000000']}
-                style={styles.background} >
-                <ImageBackground source={require('./gameAssets/designspikes1.png')} style={styles.spike1} />
-                <Image source={require('./gameAssets/gamerversetitle.png')} style={styles.title} />
-                <ImageBackground source={require('./gameAssets/menubar.png')} style={styles.menu} />
-                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
-                <Text style={styles.robototxt}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
-                <Text style={styles.robototxt}>Profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
-                <Text style={styles.robototxt}>My Games</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
-                <Text style={styles.highlighttxt}>Game Hub</Text>
-                </TouchableOpacity>
-                <Image source={require('./gameAssets/searchIcon.png')} style={styles.searchIcon} />
-                <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
-                <View style={styles.ratingContainer}>
-                    <Text style={styles.ratingTxt}>Rating</Text>
-                </View>
-                <View style={styles.desclabContainer}>
-                    <Text style={styles.ratingTxt}>Description</Text>
-                </View>
-                <ImageBackground source={require('./gameAssets/designspikes.png')} style={styles.spike2} />
-                <View style={styles.taglabContainer}>
-                    <Text style={styles.ratingTxt}>Tag</Text>
-                </View>
-                <View style={styles.gameContainer}>
-                    <Text style={styles.gameTitleTxt}>Game's Name</Text>
-                <TouchableOpacity style={styles.Button} title='Follow'>
-                    <Text style={styles.ButtonText}>Follow</Text>
-                </TouchableOpacity>
-                </View>
-                <View style={styles.descContainer}>
-                    <Text style={styles.descriptionTxt}>Wingardium Laviosa Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at condimentum velit. Etiam pretium justo ac tellus blandit, eget maximus metus maximus. Phasellus dictum dignissim nulla, sit amet porttitor lacus consequat sed. Sed a risus imperdiet, iaculis metus ac, condimentum ex. Cras vestibulum vestibulum orci, sit amet rhoncus risus placerat quis. Donec nulla velit, fringilla eget tellus sit amet, malesuada vulputate sapien. Nullam eget sem finibus neque interdum commodo vel non sapien. Ut a nulla in augue bibendum aliquam.</Text>
-                </View>
-                <View style={styles.tagContainer}>
-                    <Text style={styles.descriptionTxt}>#yashisapro #laikisshakin #mawrahisbawrah #metraa</Text>
-                </View>
-                </LinearGradient>
-        </View>
-);
+    return (<Text>Rukavat ke liye khed hai</Text>)
     }
-    if (gameInfo){
+    if (gameInfo && notfollowStatus){
     return (
         <View style={styles.container} >
             <LinearGradient
@@ -151,12 +116,96 @@ if(!gameInfo)
                 onPress={() => 
                 {
                     if (gameFollowCheck(GameCode)) games.push(GameCode);
-                    console.log(games);
                     update(UserRef, {
                         Games: games,
                       }); 
                 }}>
                     <Text style={styles.ButtonText}>Follow</Text>
+                </TouchableOpacity>
+                </View>
+                <View style={styles.descContainer}>
+                    <Text style={styles.descriptionTxt}>{gameInfo.Description}</Text>
+                </View>
+                <View style={styles.tagContainer}>
+                    {tagArray.map(([key, value]) => {
+                        console.log(key);
+                        return (
+                            <View
+                            key={key}
+                             style={{
+                  flex: 1,
+                  flexDirection:"row",
+                  width: (414 / 414) * windowWidth,
+                  Height: (896 / 896) * windowHeight,
+                  top: (0 / 896) * windowHeight,
+                  marginVertical: 2,
+                  justifyContent: 'space-between',
+                }}>
+                                <TouchableOpacity
+                  style={styles.tagButton}
+                //   onPress={() =>}
+                ><Text style={{ color: "white" }}>
+                {key}
+              </Text></TouchableOpacity>
+                                </View>
+                        )
+                    })
+                    }
+                    {/* <Text>{tagArray}</Text>         */}
+                </View>
+                </LinearGradient>
+        </View>
+);
+}
+else{
+    return (
+        <View style={styles.container} >
+            <LinearGradient
+                start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                colors={['#013C00', '#000000']}
+                style={styles.background} >
+                <ImageBackground source={require('./gameAssets/designspikes1.png')} style={styles.spike1} />
+                <Image source={require('./gameAssets/gamerversetitle.png')} style={styles.title} />
+                <ImageBackground source={require('./gameAssets/menubar.png')} style={styles.menu} />
+                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                <Text style={styles.robototxt}>Home</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                <Text style={styles.robototxt}>Profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+                <Text style={styles.robototxt}>My Games</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+                <Text style={styles.highlighttxt}>Game Hub</Text>
+                </TouchableOpacity>
+                <Image source={require('./gameAssets/searchIcon.png')} style={styles.searchIcon} />
+                <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                <View style={styles.ratingContainer}>
+                    <Text style={styles.ratingTxt}>Rating{gameInfo.Rating}</Text>
+                </View>
+                <View style={styles.desclabContainer}>
+                    <Text style={styles.ratingTxt}>Description</Text>
+                </View>
+                <ImageBackground source={require('./gameAssets/designspikes.png')} style={styles.spike2} />
+                <View style={styles.taglabContainer}>
+                    <Text style={styles.ratingTxt}>Tag</Text>
+                </View>
+                <View style={styles.gameContainer}>
+                    <Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text>
+                    <Image source={gameInfo.Image} style={styles.dpicture}></Image>
+                <TouchableOpacity style={styles.Button} title='Unfollow' 
+                onPress={() => 
+                {
+                    if (!gameFollowCheck(GameCode)) {
+                        var gameindex = gameRemover(GameCode)
+                        delete games[gameindex];
+                    };
+                    update(UserRef, {
+                        Games: games,
+                      }); 
+                }}>
+                    <Text style={styles.ButtonText}>Unfollow</Text>
                 </TouchableOpacity>
                 </View>
                 <View style={styles.descContainer}>

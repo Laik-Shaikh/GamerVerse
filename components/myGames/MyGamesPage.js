@@ -166,7 +166,7 @@ export default function MyGamesPage ({ navigation, route }){
                             return (
                                 <View key={index} >   
                                     {/* {console.log(computer)} */}
-                                    <TouchableOpacity style={styles.apexLegend} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
+                                    <TouchableOpacity style={styles.apexLegend} onPress={() => navigation.navigate("Game", { GameCode: item.Code})}>
                                     <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                     </TouchableOpacity>
