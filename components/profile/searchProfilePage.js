@@ -23,7 +23,7 @@ export default function searchProfilePage ({ navigation, route }){
       const auth = getAuth();
       var requests = [ "YY" ];
       var friends = [ "YY" ];
-      const UserRef = query(ref(db,'users/'+ auth.currentUser.uid))
+      const UserRef = query(ref(db,'users/'+ profileUid))
       const profileRef = query(ref(db,'users'),orderByChild('uid'),equalTo(profileUid))
       const GetUserRef = query(ref(db,'users'),orderByChild('uid'),equalTo( auth.currentUser.uid))
       console.log(profileRef)
@@ -31,7 +31,7 @@ export default function searchProfilePage ({ navigation, route }){
       onValue(profileRef,(snapshot)=>{
         try{
         const data = Object.values(snapshot.val());
-        setProfileInfo(data)
+        setProfileInfo(data[0])
         } catch(e) { console.log(e); }
       })
       onValue(GetUserRef,(snapshot)=>{
@@ -39,17 +39,17 @@ export default function searchProfilePage ({ navigation, route }){
         setUserInfo(data1[0])
     })
   },[])
-  
+  console.log(userInfo)
   console.log(profileInfo)
-  if(userInfo){
-    requests = userInfo.RequestedProfiles;
+  if(profileInfo && userInfo){
+    requests = profileInfo.RequestedProfiles;
     friends = userInfo.ConfirmedProfiles;
     }
     function userFollowCheck(GameCode){
         for(var i = 0; i < requests.length; i++)
         {
-            if (profileUid==requests[i]) return false;
-            if (profileUid==friends[i]) return false;
+            if (auth.currentUser.uid==requests[i]) return false;
+            if (auth.currentUser.uid==friends[i]) return false;
         }
         return true
     }
@@ -92,18 +92,18 @@ export default function searchProfilePage ({ navigation, route }){
                     
                     <View style={styles.photoContainer}>
                         <Text style={styles.headTxt}>My Photo</Text>
-                        <Image source={profileInfo[0].DisplayPicture} style = {styles.dpicture}/>
+                        <Image source={profileInfo.DisplayPicture} style = {styles.dpicture}/>
                     </View>
                     
                     <View style={styles.aboutMeContainer}>
                         <Text style={styles.headTxt}>About Me</Text>
-                        <Text style={styles.aboutMeTxt}>{profileInfo[0].Name}</Text>
+                        <Text style={styles.aboutMeTxt}>{profileInfo.Name}</Text>
                     </View>
                     
                     <TouchableOpacity style={styles.Button} title='Edit'
                     onPress={() => 
                         {
-                            if (userFollowCheck(profileUid)) requests.push(profileUid);
+                            if (userFollowCheck(auth.currentUser.uid)) requests.push(auth.currentUser.uid);
                             console.log(requests);
                             update(UserRef, {
                                 RequestedProfiles: requests,
@@ -113,30 +113,30 @@ export default function searchProfilePage ({ navigation, route }){
                     </TouchableOpacity>
                     
                     <View style={styles.divider1}/>
-                    {console.log(profileInfo[0].Name)}
+                    {console.log(profileInfo.Name)}
                     <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo[0].Name}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Name}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
                         <Text style={styles.infoHeadTxt}>Location</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo[0].Location}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Location}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Phone Number</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 {profileInfo[0].PhoneNumber}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 {profileInfo.PhoneNumber}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
                         <Text style={styles.infoHeadTxt}>Email</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo[0].Email}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Email}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Discord Id</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo[0].DiscordId}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.DiscordId}</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>

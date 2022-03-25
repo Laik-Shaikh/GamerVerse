@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView, FlatList } from 'react-native'
 
 import fire from '../firebase';
 import uuid from 'uuid';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import {getAuth} from "firebase/auth";
-import {getDatabase,ref,set} from "firebase/database"
+import {getDatabase,ref,set, query,push,get, orderByChild, equalTo} from "firebase/database"
 
 import * as ImagePicker from 'expo-image-picker';
 
@@ -26,9 +26,20 @@ export default function CreateProfile({navigation}) {
   const auth = getAuth()
   const db = getDatabase()
   
-  const storageRef = strRef(storage, 'Profile/' + auth.currentUser.uid + '.jpg');
-  const dbRef = ref(db,'users/' + auth.currentUser.uid)
+  const storageRef = strRef(storage, 'Profile/'+auth.currentUser.uid+'.jpg');
+  const dbRef = ref(db,'users/'+auth.currentUser.uid)
   console.log(auth.currentUser)
+
+  const [location,setLocation] = React.useState()
+  const [selectedValue,setSelectedValue] = React.useState()
+
+  const getLocationsFromApi = async (loc) => {
+    let response = await fetch(
+      'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?text='+loc+'&f=json'
+    );
+    let json = await response.json();
+    setLocation(json.suggestions);
+  }
 
   const pickImage = async () => {
     
@@ -48,7 +59,6 @@ export default function CreateProfile({navigation}) {
   };
   const [UName, setName] = React.useState();
   const [PNum, setPNum] = React.useState(0);
-  const [Loc, setLoc] = React.useState();
   const [Disc, setDisc] = React.useState();
   function discCheck(Disc){
     let numbers = '0123456789';
@@ -100,7 +110,8 @@ async function sendFirebaseData(){
                 set(dbRef,{
                     Email: auth.currentUser.email,
                     PhoneNumber: PNum,
-                    Location: Loc,
+                    Location: selectedValue,
+                    LocationLower: selectedValue.toLowerCase(),
                     Games:['XX'],
                     RequestedProfiles:['XX'],
                     ConfirmedProfiles:['XX'],
@@ -109,8 +120,44 @@ async function sendFirebaseData(){
                     Name: UName,
                     DisplayPicture: url
                   })
+                let LocUploadRef = query(ref(db,'locations/'),orderByChild('LocationLower'),equalTo(selectedValue.toLowerCase()))
+                get(LocUploadRef).then((snapshot) => {
+                  console.log("Snapshot exists?: " + snapshot.exists())
+                  console.log(snapshot.val())
+                  if(!snapshot.exists()){
+                    push(ref(db,'locations/'),{
+                      Location: selectedValue,
+                      LocationLower: selectedValue.toLowerCase(),
+                    })
+                  }
+                    
+                  
+                })
                   })
+                
               })
+}
+
+function renderSug() {
+  if(!selectedValue){
+    return(
+    
+    <FlatList
+      
+      style={styles.LocSuggestions}
+      data={location}
+      keyExtractor={(item) => item.magicKey}
+      renderItem={(suggestion) => {
+        return(
+        <TouchableOpacity style={styles.item} onPress={() =>setSelectedValue(suggestion.item.text)}>
+          <Text style={styles.itemText}>{suggestion.item.text}</Text>
+        </TouchableOpacity>)
+      }}
+
+      
+      ></FlatList>
+      
+      )}
 }
 
   return (
@@ -122,20 +169,32 @@ async function sendFirebaseData(){
 
         <View style={styles.whitebg} >
           <Text style={styles.signinText}>Create Your Profile</Text>
-          <TouchableOpacity onPress={pickImage} >
+          <TouchableOpacity onPress={pickImage} style={{position:'absolute'}} >
           <Image source={require('./createProfileAssets/CamIcon.png')} style={styles.CamIcon} />
           {image && <Image source={{ uri:image }} style={styles.ProfileImage} />}
           </TouchableOpacity>
           <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={UName => setName(UName)}></TextInput>
           <TextInput style={styles.InputStyle2} placeholder='Phone Number' onChangeText={PNum => setPNum(PNum)}></TextInput>
-          <TextInput style={styles.InputStyle3} placeholder='Location'  onChangeText={Loc => setLoc(Loc)}></TextInput>
+          <TextInput 
+          
+          style={styles.InputStyle3} 
+          value={selectedValue}
+          onChangeText={(text) => getLocationsFromApi(text)}
+          placeholder="Enter your location"
+          onFocus={() => {
+            if(selectedValue)
+              setSelectedValue(undefined)
+            }}>
+
+          </TextInput>
+          {renderSug()}
+          
           <TextInput style={styles.InputStyle4} placeholder='Discord ID' onChangeText={Disc => setDisc(Disc)}></TextInput>
 
           <TouchableOpacity style={styles.Button} title='Continue' 
             onPress={
               async () => {
                 try {
-                  console.log(UName+" "+PNum+" "+Loc+" "+Disc);
                   mobileCheck(PNum);
                   discCheck(Disc);
                   if(mobileCheck(PNum) && discCheck(Disc)){
@@ -329,5 +388,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     color: "#FFFFFF"
+  },
+  LocSuggestions:{
+    position:'absolute',
+    top: 0.45 * windowHeight,
+    flexGrow: 0,
+    width: 305 / 1440 * windowWidth,
+    backgroundColor: 'rgba(255, 255, 255,1)',
+    zIndex:1,
+  },
+  itemText: {
+    fontSize: 15,
+    paddingLeft: 10
+  },
+  item: {
+    width: 305 / 1440 * windowWidth,
+    paddingTop:10
   },
 });
