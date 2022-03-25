@@ -143,13 +143,29 @@ return(
             style = {styles.menuBar} />
 
         {/*Search Result*/}
-        <Text style={styles.playersearchText} >Player Search Result:</Text>
+        <Text style={styles.playersearchText} >Search Result:</Text>
 
         <ScrollView style = {styles.scrollContainer1} showsVerticalScrollIndicator={false} contentContainerStyle= {{justifyContent:'space-around'}}>
-        {userInfo.map((profile, index) => {
-            if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase())){
+
+        {searchedGame.map((game, index) => {
+            if(game.Name.toString().toLowerCase().includes(textInputValue.toString().toLowerCase()) || textInputValue == ""){
             return (
-                <View key={index} style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight, flex: 1, marginVertical:35}}>
+                <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35}}>
+                    {console.log(game.Code)}
+                    <TouchableOpacity onPress={() => navigation.navigate("Game",{ GameCode: game.Code })}>
+                        <Image source={game.Image} style = {styles.profileimg}/>
+                        <Text style={styles.profilename}>{game.Name}</Text>
+                        {/* <Text style={styles.profilename}>{game.Tags}</Text> */}
+                    </TouchableOpacity>
+                </View>
+            )
+            }
+        })}
+
+        {userInfo.map((profile, index) => {
+            if(profile.Name.toString().toLowerCase().includes(textInputValue.toString().toLowerCase()) || textInputValue == ""){
+            return (
+                <View key={index} style={{"left": 0/1440 * windowWidth, "top": -200/1024 * windowHeight, flex: 1, marginVertical:35}}>
                     <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", profile.uid)}>
                         <Image source={profile.DisplayPicture} style = {styles.profileimg}/>
                         <Text style={styles.profilename}>{profile.Name}</Text>
@@ -158,19 +174,7 @@ return(
             )
             }
         })}
-        {searchedGame.map((game, index) => {
-            if(game.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
-            return (
-                <View key={index} style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight, flex: 1, marginVertical:35}}>
-                    {console.log(game.Code)}
-                    <TouchableOpacity onPress={() => navigation.navigate("Game",{ GameCode: game.Code })}>
-                        <Image source={game.Image} style = {styles.profileimg}/>
-                        <Text style={styles.profilename}>{game.Name}</Text>
-                    </TouchableOpacity>
-                </View>
-            )
-            }
-        })}
+        
         </ScrollView>
         
         {/* NavBar Buttons     */}
@@ -338,8 +342,9 @@ const styles = StyleSheet.create({
         flexGrow: 0.1,
         width: 0.3*windowWidth,
         height : 0.7*windowHeight,
-        top : 0.1*windowHeight,
-        left : 0.016*windowWidth
+        top : 0.25*windowHeight,
+        left : 0.016*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.7)",
     },
 
     scrollContainer:{
@@ -395,7 +400,7 @@ const styles = StyleSheet.create({
         "fontWeight": "500",
         "fontSize": 35,
         top: 170/1024*windowHeight,
-        left: 540/1440*windowWidth,
+        left: 600/1440*windowWidth,
         "color": "#FFFFFF"
        },
 

@@ -56,7 +56,6 @@ export default function homepage({ navigation, route }) {
                     style={styles.background} >
                 <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
                 {/* <View style={styles.loading}>
-
                 </View> */}
             </LinearGradient>
             )
@@ -126,7 +125,8 @@ export default function homepage({ navigation, route }) {
                     <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
                     <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
                     <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
-                    style={styles.friendscroll}>
+                    style={styles.friendscroll} 
+                    showsVerticalScrollIndicator={false}>
                     {friendNames.map((profile,index)=>
                         {
                            { console.log("WORKS")} 
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
         "fontSize": 18,
         "color": "#FFFFFF",
         position:'absolute',
-        top:0.21*windowHeight,
+        top:0.01*windowHeight,
         left:0.02*windowWidth
     },
 
@@ -231,9 +231,12 @@ const styles = StyleSheet.create({
 
     friendscroll:{
         flexGrow: 0.1,
-        width: 250 / 1440 * windowWidth,
+        width: 275 / 1440 * windowWidth,
+        left: 5 / 1440 * windowWidth,
         height: 592 / 1024 * windowHeight,
+        top: 195 / 1024 * windowHeight,
         borderRadius: 10,
+        // backgroundColor: "rgba(255, 255, 255, 0.7)",
     },
 
     friendbox:{
@@ -243,8 +246,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         left:0.05*windowWidth,
         height:0.08 * windowHeight,
-        width: 0.013*windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        width: 0.015*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 1)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
@@ -298,7 +301,7 @@ const styles = StyleSheet.create({
 
     dpview:{
         position: "absolute",
-        top: 0.2 * windowHeight,
+        top: 0 * windowHeight,
         left:-0.02*windowWidth,
         width: 0.05 * windowHeight,
         height: 0.05 * windowHeight,
