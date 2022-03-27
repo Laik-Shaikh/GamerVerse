@@ -28,9 +28,11 @@ export default function homepage({ navigation }) {
     const [gamesCode, setGamesCode] = React.useState([]);
     const [description, setDescription] = useState(null)
     const [userName, setUserName] = useState(null);
+    const [userUid, setUserUid] = useState(null);
     const [postNumber, setPostNumber] = React.useState([]);
     const [postImage, setPostImage] = React.useState([]);
     const [selectGameCode, setSelectGameCode] = useState(null);
+    const [profileImage, setProfileImage] = React.useState([]);
 
     const storage = getStorage();
     const metadata = {
@@ -40,10 +42,12 @@ export default function homepage({ navigation }) {
     const GameRef = query(ref(db,'games'))
     const UserRef = query(ref(db,'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/Games'))
     const UserName = query(ref(db,'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/Name'))
+    const UidRef = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/uid'))
     const PostCounter = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/PostCount'));
     const PostCounter1 = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2'));
     const PostCounter3 = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/PostCount'));
-    const PostRef = query(ref(db,'posts'))
+    const PostRef = query(ref(db,'posts'));
+    const ProfileRef = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/DisplayPicture'));
     
     var userid = 'aoPtWnacOEccgqqvesjmC17Gibu2'
     // const dbRef = ref(db,'posts/Post1')
@@ -76,6 +80,13 @@ export default function homepage({ navigation }) {
             }
         )
 
+        onValue(UidRef, (snapshot) => {
+            const id = snapshot.val();
+            setUserUid(id)
+            console.log(id)
+            }
+        )
+
         onValue(PostCounter3, (snapshot) => {
             const data4 = snapshot.val();
             setPostNumber(data4)
@@ -88,6 +99,13 @@ export default function homepage({ navigation }) {
             // setPostImage(Object.values(data5[0]))
             // console.log(Object.values(data5[0]))
             setPostImage(data5)
+            }
+        )
+
+        onValue(ProfileRef, (snapshot) => {
+            const data6 = snapshot.val();
+            setProfileImage(data6)
+            console.log(data6)
             }
         )
     },[])
@@ -126,13 +144,14 @@ export default function homepage({ navigation }) {
             data3 = data3 + 1;
             console.log(data3)
             var storageRef = strRef(storage, 'Post/'+ userid + '_' + data3 + '.jpg');
-            const dbRef = ref(db,'posts/' + userName + '/Post' + postNumber)
+            const dbRef = ref(db,'posts/' + userUid + '/Post' + postNumber)
             uploadBytes(storageRef, blob, metadata).then((snapshot) => {
                 getDownloadURL(storageRef).then((url)=>{
                     set(dbRef,{
                         Description : description,
                         GameName: selectGameName,
                         GameCode: selectGameCode,
+                        DisplayProfile: profileImage,
                         Image: url,
                         Likes: 0,
                         User: userName
@@ -213,10 +232,13 @@ export default function homepage({ navigation }) {
                                             console.log(newItem.GameCode)
                                         if(gamesCode.includes(newItem.GameCode)){
                                             return(
-                                                <View>
+                                                <View style={styles.allPost}>
                                                     <Image source={newItem.Image} style={styles.post} />
                                                     <Text style={styles.profileName}>{newItem.User}</Text>
+                                                    <Image source={newItem.DisplayProfile} style={styles.profile} />
                                                     <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                    
+                                                    {console.log(newItem.DisplayProfile)}
                                                 </View>
                                             )
                                         }
@@ -684,30 +706,53 @@ const styles = StyleSheet.create({
         height: 0.73*windowHeight,
         top: 0.23*windowHeight,
         left: 0.21*windowWidth,
-        // backgroundColor: 'red'
+        backgroundColor: 'red',
         flexGrow: 0.1
+    },
+
+    allPost:{
+        // position: 'absolute',
+        width: 0.55*windowWidth,
+        height: 0.62*windowHeight,
+        marginTop: '10px',
+        backgroundColor: 'cyan',
+        left: 0.01*windowWidth,
+        flexGrow: 0.1
+        // width: '100%',
+        // height: '100%',
     },
 
     post:{
         // position: 'absolute',
         resizeMode: 'contain',
-        width: 0.45*windowWidth,
-        height: 0.58*windowHeight,
-        // marginTop: '50px',
-        paddingLeft: '25px',
-        paddingTop: '20px',
-        // flexGrow: 0.1
+        width: 0.52*windowWidth,
+        height: 0.52*windowHeight,
+        left: 0.01*windowWidth,
+        marginTop: 0.06*windowHeight,
+        // width: '100%',
+        // height: '100%',
+        // flex: 1
+        
     },
 
+    profile:{
+        position: 'absolute',
+        resizeMode: 'contain',
+        width: 0.05 * windowHeight,
+        height: 0.05 * windowHeight,
+        borderRadius: 0.075 * windowHeight,
+        top: 0.01*windowHeight,
+        left: 0.01*windowWidth,
+    },
 
     profileName:{
         position: 'absolute',
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
-        fontSize: 20,
-        paddingLeft: '20px',
-        marginBottom: '15px'
+        fontSize: 22,
+        left: 0.04*windowWidth,
+        top: 0.015*windowHeight
     },
 
     displayDescription:{
@@ -717,9 +762,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 18,
         paddingLeft: '20px',
-        marginTop: '15px',
-        top: 0.5*windowHeight
-    }
+        // marginTop: '15px',
+        bottom: 0.01*windowHeight,
+        flexGrow: 0.1
+    },
+
+
+
+
 
 
 
