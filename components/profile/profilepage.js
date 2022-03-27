@@ -18,7 +18,7 @@ const windowHeight = Dimensions.get('screen').height;
 export default function profilepage({ navigation, route }) {
     const auth = getAuth();
     var nowEditable = route.params
-    var profileUid = 'XiGQXV91vqS1TpJ5JFEB991Ua6V2';
+    var profileUid = auth.currentUser.uid;
     const [image, setImage] = useState(null);
     var [newName, setNewName] = React.useState()
     var [newPhone, setNewPhone] = React.useState()
