@@ -81,7 +81,7 @@ export default function GameHubPage({ navigation, route }) {
                             return (
                                 <View key={index} >   
                                      {console.log(item.Code)}
-                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
+                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                     </TouchableOpacity>
@@ -110,7 +110,7 @@ export default function GameHubPage({ navigation, route }) {
                         if(mobile === "M"){
                             return(<View key = {index}>
                                 {console.log(item.Code)}
-                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
+                                <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                     style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                 </TouchableOpacity>
@@ -132,7 +132,7 @@ export default function GameHubPage({ navigation, route }) {
                         {
                             return(
                                 <View>
-                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.navigate("Game", { GameCode: item.Code })}>
+                                    <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                         <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                     </TouchableOpacity>
