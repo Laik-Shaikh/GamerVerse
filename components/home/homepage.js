@@ -1,12 +1,22 @@
-import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, ScrollView} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, Modal, Alert, ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import * as ImagePicker from 'expo-image-picker';
+// import fire from '../firebase';
+// import uuid from 'uuid';
+import { getStorage, ref as strRef, uploadBytes, getDownloadURL} from "firebase/storage";
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue,get,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
+import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, push, get } from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
+
+
+// import fire from '../firebase';
+// import 'firebase/database'
+// import { getDatabase, onValue,get,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
+// import 'firebase/auth';
+// import { getAuth } from "firebase/auth";
 
 
 const windowWidth = Dimensions.get('screen').width;
@@ -14,6 +24,26 @@ const windowHeight = Dimensions.get('screen').height;
 
 export default function homepage({ navigation, route }) {
     const auth = getAuth();
+    const db = getDatabase();
+
+    const storage = getStorage();
+    const metadata = {
+      contentType: 'image/jpg',
+    };
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [image, setImage] = useState(null);
+    const [games, setGames] = React.useState(null);
+    const [selectGameName, setSelectGameName] = useState(null);
+    const [gamesCode, setGamesCode] = React.useState([]);
+    const [description, setDescription] = useState(null)
+    const [userName, setUserName] = useState(null);
+    const [userUid, setUserUid] = useState(null);
+    const [postNumber, setPostNumber] = React.useState([]);
+    const [postImage, setPostImage] = React.useState([]);
+    const [selectGameCode, setSelectGameCode] = useState(null);
+    const [profileImage, setProfileImage] = React.useState([]);
+
     const [textInputValue, setTextInputValue] = React.useState('');
     var [IncomingRequests, setIncomingRequests] = React.useState(null);
     var [friendIncomingRequests, setFriendIncomingRequests] = React.useState(null);
@@ -27,7 +57,17 @@ export default function homepage({ navigation, route }) {
     var friendUid = [];
     var acceptedProfiles =[];
     var rejectedProfiles =[];
-    const db = getDatabase();
+
+    const GameRef = query(ref(db,'games'))
+    const UserRef1 = query(ref(db,'users/' + auth.currentUser.uid + '/Games'))
+    const UserName = query(ref(db,'users/' + auth.currentUser.uid + '/Name'))
+    // const UidRef = query(ref(db, 'users/' + auth.currentUser.uid + '/uid'))
+    const PostCounter = query(ref(db, 'users/' + auth.currentUser.uid+ '/PostCount'));
+    const PostCounter1 = query(ref(db, 'users/' + auth.currentUser.uid));
+    const PostCounter3 = query(ref(db, 'users/' + auth.currentUser.uid + '/PostCount'));
+    const PostRef = query(ref(db,'posts'));
+    const ProfileRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/DisplayPicture'));
+    
     const UserRef = query(ref(db,'users/' + auth.currentUser.uid + '/RequestedProfiles'))
     const ConfirmedProfilesRef = query(ref(db,'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
     const ThisProfileRef = query(ref(db,'users/' + auth.currentUser.uid))
@@ -49,6 +89,55 @@ export default function homepage({ navigation, route }) {
             const data2 = Object.values(snapshot.val());
             setFriends(data2)
             // console.log(data1)
+            }
+        )
+
+        onValue(GameRef, (snapshot) => {
+            const info = Object.values(snapshot.val());
+            setGames(info)
+            console.log(info)
+        })
+
+        onValue(UserRef1, (snapshot) => {
+            const info1 = Object.values(snapshot.val());
+            setGamesCode(info1)
+            console.log(info1)
+            }
+        )
+
+        onValue(UserName, (snapshot) => {
+            const info2 = snapshot.val();
+            setUserName(info2)
+            console.log(info2)
+            }
+        )
+
+        // onValue(UidRef, (snapshot) => {
+        //     const id = snapshot.val();
+        //     setUserUid(id)
+        //     console.log(id)
+        //     }
+        // )
+
+        onValue(PostCounter3, (snapshot) => {
+            const info4 = snapshot.val();
+            setPostNumber(info4)
+            console.log(info4)
+            }
+        )
+
+        onValue(PostRef, (snapshot) => {
+            const info5 = Object.values(snapshot.val());
+            // setPostImage(Object.values(data5[0]))
+            // console.log(Object.values(data5[0]))
+            setPostImage(info5)
+            }
+        )
+
+        onValue(ProfileRef1, (snapshot) => {
+            const info6 = snapshot.val();
+            setProfileImage(info6)
+            console.log(info6)
             }
         )
     },[])
@@ -139,6 +228,87 @@ if(users && IncomingRequests)
         console.log(friendNames)
         }
         
+
+    // const auth = getAuth();
+    // const db = getDatabase();
+
+    
+    
+    // var userid = ''
+    // const dbRef = ref(db,'posts/Post1')
+  
+    console.log(UserName)
+    console.log(PostCounter3)
+    console.log(GameRef)
+    console.log(UserRef1)
+    console.log(PostRef)
+    
+
+   
+
+    console.log(gamesCode);
+    console.log(userName);
+    console.log(postNumber);
+    console.log(PostRef);
+    console.log(postImage);
+
+  
+    
+    
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.cancelled) {
+          setImage(result.uri);
+        }
+      };
+
+    async function uploadPost(){
+        const response = await fetch(image);
+        const blob = await response.blob();
+       
+          get(PostCounter).then((snapshot) =>  {
+            var upl3 = snapshot.val();
+            upl3 = upl3 + 1;
+            console.log(upl3)
+            var storageRef = strRef(storage, 'Post/'+ auth.currentUser.uid + '_' + upl3 + '.jpg');
+            const dbRef = ref(db,'posts/' + auth.currentUser.uid + '/Post' + postNumber)
+            uploadBytes(storageRef, blob, metadata).then((snapshot) => {
+                getDownloadURL(storageRef).then((url)=>{
+                    set(dbRef,{
+                        Description : description,
+                        GameName: selectGameName,
+                        GameCode: selectGameCode,
+                        DisplayProfile: profileImage,
+                        Image: url,
+                        Likes: 0,
+                        User: userName
+                      })
+                      })
+               
+                console.log('Uploaded a blob or file!');
+          });
+            console.log(upl3)
+            update(PostCounter1, {
+                PostCount: upl3,
+              }); 
+            }
+        )
+        
+
+    }
+
+    if(!games){
+        return (<Text>Rukavat ke liye khed hai</Text>)
+    }
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -234,7 +404,7 @@ if(users && IncomingRequests)
                     }
                     </ScrollView>
                     </View>
-                    <Image source={require('./homeAssets/post2.png')} style={styles.posts} />
+                    {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
                     <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
                     style={styles.friendscroll}>
                     {friendNames.map((profile,index)=>
@@ -250,15 +420,164 @@ if(users && IncomingRequests)
                     })
                     }
                     </ScrollView>
-                    <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} />
+                    {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
+                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
+                    <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                    <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
+                    {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
+                    {/* <Text style={styles.nametxt}>Danny Devadiga</Text> */}
+                    {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
+                    <Image source={require('./homeAssets/dp.png')} style={styles.dpview} />
+                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
                     <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
                     <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
+
+                    {/* {games.map((item, index) => {
+                        if(gamesCode.includes(item.Code))
+                        {
+                            setGameNames(item.Name)
+                        }
+                    })} */}
+
+                    
+
+                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={styles.postContainer}>
+                        {postImage.map((item, index) => {
+                            console.log(postImage);
+                            console.log(item)
+                            
+                            
+                        
+                            return(
+                                <View key={index}>
+                                    {
+                                         Object.values(item).map((newItem, newIndex) => {
+                                            console.log(postImage);
+                                            console.log(newItem)
+                                            console.log(newItem.GameName)
+                                            console.log(gamesCode)
+                                            console.log(newItem.GameCode)
+                                        if(gamesCode.includes(newItem.GameCode)){
+                                            return(
+                                                <View style={styles.allPost}>
+                                                    <Image source={newItem.Image} style={styles.post} />
+                                                    <Text style={styles.profileName}>{newItem.User}</Text>
+                                                    <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                    <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                    
+                                                    {console.log(newItem.DisplayProfile)}
+                                                </View>
+                                            )
+                                        }
+                                        })
+                                    }
+                                </View>
+                            )
+                                
+                            })}
+                    </ScrollView>
+
+
+                    <TouchableOpacity style={styles.upload} onPress={()=>setModalVisible(true)}>
+                        <Text style={styles.uploadText}>Upload a Post</Text>
+                    </TouchableOpacity>
+
+                    <Modal
+                        animationType='slide'
+                        visible={modalVisible}  
+                        transparent={true}
+                        onRequestClose={()=>{
+                            Alert.alert("Post Uploaded Successfully.");
+                            setModalVisible(!modalVisible);
+                        }}                  
+                    >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            {/* <View> */}
+                                <TextInput placeholder='Enter the Discription' 
+                                    style={styles.textInput} onChangeText={description => setDescription(description)}
+                                />
+                                {console.log(description)}
+                            {/* </View> */}
+                            {/* <Image source={require('./homeAssets/divider.png')} style={styles.divider1} /> */}
+                            <TouchableOpacity style={styles.button, styles.buttonClose}
+                                onPress={() => {
+                                    setModalVisible(!modalVisible)
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Cancel</Text>
+                            </TouchableOpacity>
+
+                          {/* Upload to FireBase       */}
+
+                            <TouchableOpacity style={styles.button, styles.uploadButton}
+                                onPress={
+                                    async () => {
+                                        try {
+                                            uploadPost();
+                                            alert("Uploaded Successfully");
+                                            setModalVisible(!modalVisible);
+                                            
+                                        } catch (error) {
+                                            console.log('error');
+                                            alert('Error')
+                                        }
+                                    }
+                                }
+                                 >
+                                <Text style={styles.textStyle}>Upload</Text>
+                            </TouchableOpacity>
+
+                            {/* Choose Image */}
+
+                            <TouchableOpacity style={styles.button, styles.chooseButton}
+                                onPress={pickImage}
+                            >
+                                <Text style={styles.textStyle}>Choose Image</Text>
+                                {image && <Image source={{ uri:image }} style={styles.selectedImage} />}
+                            </TouchableOpacity>
+
+                            <View style={styles.name}>
+                                <Text style={styles.text1}>This Post is Related to : </Text>
+                            </View>
+
+                            <ScrollView style={styles.gameScrollContainer} vertical={true}>
+                                {games.map((item, index) => {
+                                    console.log(item.Code)
+                                    if(gamesCode.includes(item.Code)){
+                                        
+                                        return(
+                                            <View key={index}>
+                                                <TouchableOpacity style={styles.gameName} 
+                                                   onPress={ () => {
+                                                       setSelectGameName(item.Name)
+                                                       setSelectGameCode(item.Code)
+                                                       console.log(selectGameName)
+                                                    //    console.log(item.Name)
+                                                       }} >
+                                                <Text style={styles.gameText}>{item.Name}</Text>
+                                                {console.log(item.Name)}
+                                                {/* {setGameNames(item.Name)} */}
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    }
+                                }
+   
+                                )}
+                            </ScrollView>
+            
+                        </View>
+                    </View>
+                    </Modal>
                     </LinearGradient>
             </View>
     );
-                }              
+                            
 }
+}
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -439,6 +758,15 @@ const styles = StyleSheet.create({
         width: "3px",
     },
 
+    // divider1:{
+    //     position:"absolute",
+    //     top:0.2*windowHeight,
+    //     left:0.02*windowWidth,
+    //     resizeMode:'contain',
+    //     height: 0.3*windowHeight,
+    //     width: 0.01*windowWidth,
+    // },
+
     searchIcon:{
         position:"absolute",
         resizeMode:'contain',
@@ -506,5 +834,238 @@ const styles = StyleSheet.create({
         resizeMode:'contain',
         height: 0.2*windowHeight,
         width:0.15* windowWidth,
-    }
+    },
+
+    upload:{
+        position: 'absolute',
+        width: 0.09*windowWidth,
+        height: 0.03*windowHeight,
+        top: 0.17*windowHeight,
+        left: 0.7*windowWidth,
+        backgroundColor: 'green',
+        textAlign: 'center'
+    },
+
+    uploadText:{
+        "fontStyle" : 'normal',
+        "fontSize": 16,
+        "fontWeight": 'bold',
+        "color": '#ffffff'
+    },
+
+    gameText:{
+        "fontStyle" : 'normal',
+        "fontSize": 16,
+        "fontWeight": '700',
+        "color": '#000000',
+        // paddingLeft: '10px',
+        margin: '5px', 
+        textAlign: 'center'
+        
+    },
+
+    gameName:{
+        // position: 'absolute',
+        // borderTopRightRadius:  60,
+        // borderBottomRightRadius:  60,
+        borderWidth: '2px',
+        borderStyle: 'solid',
+        borderColor: '#006400',
+        alignItems: 'center',
+        paddingTop: '5px',
+        paddingBottom: '5px'
+    },
+
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+      },
+
+      modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        width: 0.6*windowWidth,
+        height: 0.6*windowHeight,
+        // width: '50%',
+        // height: '70%',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
+
+      modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+      },
+
+      button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+      },
+
+      uploadButton:{
+        backgroundColor: 'green',
+        height: 0.05*windowHeight,
+        width: 0.15*windowWidth,
+        left: -0.18*windowWidth,
+        top: 0.43*windowHeight,
+      
+      },
+
+      chooseButton:{
+        backgroundColor: '#0000cd',
+        height: 0.05*windowHeight,
+        width: 0.15*windowWidth,
+        // left: 0.05*windowWidth,
+        top: 0.38*windowHeight,
+        alignContent: 'center',
+        alignItems: 'center'
+      },
+
+      buttonClose: {
+        backgroundColor: 'red',
+        // height: '80px',
+        // width: '100px',
+        height: 0.05*windowHeight,
+        width: 0.15*windowWidth,
+        left: 0.18*windowWidth,
+        top: 0.48*windowHeight,
+        
+      },
+
+      textStyle: {
+        marginTop: '10px',
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 20,
+        marginBottom: '15px'
+      },
+
+    selectedImage:{
+        position: 'absolute',
+        resizeMode: 'contain',
+        width: 0.38*windowWidth,
+        height: 0.38*windowHeight,
+        bottom: 0.07*windowHeight,
+        left: -0.02*windowWidth,
+    },
+
+    textInput:{
+        position: 'absolute',
+        width: 0.54*windowWidth,
+        height: 0.08*windowHeight,
+        paddingLeft: '15px',
+        top: '20px',
+        backgroundColor: 'cyan'
+    },
+
+    name:{
+        position: 'absolute',
+        // width: 0.15*windowWidth,
+        // height: 0.*windowHeight,
+        left : 0.02*windowWidth,
+        top: 0.14*windowHeight
+    },
+
+    gameScrollContainer:{
+        position: 'absolute',
+        width: 0.15*windowWidth,
+        height: 0.3*windowHeight,
+        left : 0.02*windowWidth,
+        top: 0.19*windowHeight,
+        // flexGrow: 0.1,
+        // justifyContent: 'space-between',
+        // backgroundColor: 'cyan'
+    },
+
+    postContainer:{
+        position: 'absolute',
+        width: 0.58*windowWidth,
+        height: 0.73*windowHeight,
+        top: 0.23*windowHeight,
+        left: 0.21*windowWidth,
+        backgroundColor: 'red',
+        flexGrow: 0.1
+    },
+
+    allPost:{
+        // position: 'absolute',
+        width: 0.55*windowWidth,
+        height: 0.62*windowHeight,
+        marginTop: '10px',
+        backgroundColor: 'cyan',
+        left: 0.01*windowWidth,
+        flexGrow: 0.1
+        // width: '100%',
+        // height: '100%',
+    },
+
+    post:{
+        // position: 'absolute',
+        resizeMode: 'contain',
+        width: 0.52*windowWidth,
+        height: 0.52*windowHeight,
+        left: 0.01*windowWidth,
+        marginTop: 0.06*windowHeight,
+        // width: '100%',
+        // height: '100%',
+        // flex: 1
+        
+    },
+
+    profile:{
+        position: 'absolute',
+        resizeMode: 'contain',
+        width: 0.05 * windowHeight,
+        height: 0.05 * windowHeight,
+        borderRadius: 0.075 * windowHeight,
+        top: 0.01*windowHeight,
+        left: 0.01*windowWidth,
+    },
+
+    profileName:{
+        position: 'absolute',
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 22,
+        left: 0.04*windowWidth,
+        top: 0.015*windowHeight
+    },
+
+    displayDescription:{
+        position: 'absolute',
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 18,
+        paddingLeft: '20px',
+        // marginTop: '15px',
+        bottom: 0.01*windowHeight,
+        flexGrow: 0.1
+    },
+
+
+
+
+
+
+
+
+
+
+
+
 });
