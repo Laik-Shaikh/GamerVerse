@@ -15,6 +15,7 @@ import searchpagename from './components/search/searchpagename';
 import searchpagegame from './components/search/searchpagegame';
 import searchprofilepage from './components/profile/searchProfilePage';
 
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
         <Stack.Screen name='SearchGame' component={searchpagegame} options={{ headerShown: false }} />
         <Stack.Screen name='SearchProfile' component={searchprofilepage} options={{ headerShown: false }} />
       </Stack.Navigator>
+      
     </NavigationContainer>
   )
 }
