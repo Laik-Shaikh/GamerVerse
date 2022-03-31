@@ -14,7 +14,9 @@ export default function Login({ navigation }) {
   const [PWord, setPWord] = React.useState();
   const unamekeeper = React.createRef();
   const auth = getAuth();
-
+if (auth.currentUser) {
+  navigation.navigate("Home")
+}
     return(
         <View style={styles.container}>
         <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
@@ -86,7 +88,6 @@ Find all sorts of players over all of platforms with just a few simple steps!</T
         </View>
     )
 }
-
 const styles = StyleSheet.create({
     container: {
         position: "relative",
