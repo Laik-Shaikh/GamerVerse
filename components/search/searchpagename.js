@@ -66,11 +66,14 @@ export default function searchpagename ({ navigation, route }){
       locInfo.map((profile, index) => {
         if(profile.Location.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
         return (
-            <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10}}>
+            <View>
+        {/* <Text style={[styles.playersearchText,{top: -250/1024*windowHeight,}]}>Players</Text> */}
+            <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10, left: 0.05 * windowWidth,}}>
                 <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", profile.uid)}>
                     <Image source={profile.DisplayPicture} style = {styles.profileimg}/>
                     <Text style={styles.profilename}>{profile.Name}</Text>
                 </TouchableOpacity>
+            </View>
             </View>
         )
         }
@@ -83,7 +86,7 @@ export default function searchpagename ({ navigation, route }){
     userInfo.map((profile, index) => {
         if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
         return (
-            <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10}}>
+            <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10, left: 0.05 * windowWidth,}}>
                 <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", profile.uid)}>
                     <Image source={profile.DisplayPicture} style = {styles.profileimg}/>
                     <Text style={styles.profilename}>{profile.Name}</Text>
@@ -100,12 +103,15 @@ function renderGame(){
     searchedGame.map((game, index) => {
         if(game.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
         return (
-            <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10}}>
+            <View key={index} style={{"left": 0/1440 * windowWidth, "top": -50/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 170}}>
+                <View style={styles.infoContainer}>
                 {console.log(game.Code)}
                 <TouchableOpacity onPress={() => navigation.navigate("Game",{ GameCode: game.Code })}>
                     <Image source={game.Image} style = {styles.gameLogo}/>
                     <Text style={styles.gameNameTitle}>{game.Name}</Text>
+                    <Text style={styles.gameDescription}>{game.Description}</Text>
                 </TouchableOpacity>
+                </View>
             </View>
         )
         }
@@ -158,7 +164,7 @@ function renderGame(){
                     ></TextInput>
 
             {/*Search Result*/}
-            <Text style={styles.playersearchText} >Player Search Result:</Text>
+            <Text style={styles.playersearchText} >Search Result:</Text>
 
             <ScrollView style = {styles.scrollContainer} showsVerticalScrollIndicator={false}>
                 <Image source={require('./searchAssets/frown.png')} style = {styles.frown}></Image>
@@ -170,7 +176,7 @@ function renderGame(){
 }
 
 return(
-    <View style={styles.container}>
+    <View style={styles.container} showsHorizontalScrollIndicator={false}>
         <LinearGradient
             start = {{x:0, y:1}}
             end = {{x:0, y:-1}}
@@ -321,13 +327,23 @@ const styles = StyleSheet.create({
         "color": "#FFFFFF"
     },
 
+    infoContainer: {
+        position: "absolute",
+        // top:0.3*windowHeight,
+        width: 0.9 * windowWidth,
+        height: 0.25 * windowHeight,
+        left: 0.05 * windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        // transform: "matrix(1, 0, 0, 1, 0, 0)"
+    },
+   
     gameLogo:{
         position: 'absolute',
         resizeMode: 'contain',
         width: 0.45 * windowWidth,
         height: 0.25 * windowHeight,
         top: 0 * windowHeight,
-        left: -0.1537 *windowWidth
+        left: -0.16 *windowWidth
     },
    
     homebtn:{
@@ -369,7 +385,7 @@ const styles = StyleSheet.create({
     scrollContainer1:{
         position: 'absolute',
         flexGrow: 0.1,
-        width: 0.7*windowWidth,
+        width: 0.9*windowWidth,
         height : 0.7*windowHeight,
         top : 0.25*windowHeight,
         left : 0.016*windowWidth,
@@ -423,10 +439,22 @@ const styles = StyleSheet.create({
         "color": "#FFFFFF"
        },
 
+       gameDescription:{ 
+        position: "absolute",
+        width: 0.65*windowWidth,
+        left:0.15*windowWidth,
+        top:0.077*windowHeight,
+        textAlign: 'justify',
+        "fontStyle": "normal",
+        "fontWeight": "200",
+        "fontSize": 20,
+        "color": "#FFFFFF"
+    },
+
        gameNameTitle:{ 
            position: "absolute",
-           left:0.07*windowWidth,
-           top:0.255*windowHeight,
+           left:0.15*windowWidth,
+           top:0.028*windowHeight,
            "fontStyle": "normal",
            "fontWeight": "500",
            "fontSize": 27,
@@ -488,20 +516,4 @@ const styles = StyleSheet.create({
     top: 0*windowHeight,
     "color": "#FFFFFF"
    },
-   
-    valo:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.35*windowWidth,
-        height: 0.21*windowHeight,
-        top: 0*windowHeight,
-        left: -0.12*windowWidth
-    },
-
-    valoContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.13*windowWidth,
-        top: 0.01*windowHeight
-    },
 });
