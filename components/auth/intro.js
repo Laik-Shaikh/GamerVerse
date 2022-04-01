@@ -21,7 +21,7 @@ return (
                         }
                        }
                      } >
-                <Text>Rukavat ke liye khed hai</Text>
+                <Text>Press Me</Text>
                   </TouchableOpacity>
                   </View>)
 }
