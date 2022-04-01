@@ -347,12 +347,12 @@ export default function profilepage({ navigation, route }) {
                     <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.navigate("Profile")}>
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.navigate("")}>
+                    
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.navigate("")}>
+                    
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
 

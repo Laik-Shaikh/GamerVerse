@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
-export default function searchpagegame(){
+export default function searchpagegame({ navigation, route }){
 
     return(
         <View style={styles.container}>
@@ -41,11 +41,11 @@ export default function searchpagegame(){
             </TouchableOpacity>
 
             <Image source={require('./searchAssets/searchIcon.png')} style={styles.searchIcon} />
-            <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+            <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or location'></TextInput>
 
-            <TouchableOpacity>
-                <Image source={require('./searchAssets/Rectangle 51.png')} style={styles.rectangleBox}  />
-                <View>
+            <TouchableOpacity style={{position: 'absolute', top: 0.2*windowHeight,}}>
+            <View style={[styles.infoContainer,{top: 0*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <Text style={styles.gameNameTitle}>Game: Valorant</Text>
                     <Image source={require('./searchAssets/ValoLogo.png')} style={styles.gameLogo} />
                 </View>
             </TouchableOpacity>
@@ -67,7 +67,7 @@ export default function searchpagegame(){
 
 
             <ScrollView style={styles.scrollContainer2}>
-                <Text style={styles.robototxt2}>Most Famous Players</Text>
+                <Text style={styles.robototxt2}>Players playing your games</Text>
                 <View style={styles.profileContainer}>
                     <TouchableOpacity>
                     <Image source={require('./searchAssets/Display Image.png')} style={styles.profileImage} />
@@ -162,6 +162,16 @@ const styles = StyleSheet.create({
         "color": "#FFFFFF"
     },
 
+    gameNameTitle:{ 
+        position: "absolute",
+        left:0.17*windowWidth,
+        top:0.02*windowHeight,
+        "fontStyle": "normal",
+        "fontWeight": "500",
+        "fontSize": 27,
+        "color": "#FFFFFF"
+    },
+
     robototxt2:{ 
         "fontStyle": "normal",
         "fontWeight": "500",
@@ -176,6 +186,16 @@ const styles = StyleSheet.create({
         borderBottomColor: "#FFFFFF",
         borderBottomWidth: 1,
         "color": "#FFFFFF"
+    },
+
+    infoContainer: {
+        position: "absolute",
+        top:0.3*windowHeight,
+        width: 0.75 * windowWidth,
+        height: 0.25 * windowHeight,
+        left: 0.12 * windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        // transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
    
     homebtn:{
@@ -215,22 +235,13 @@ const styles = StyleSheet.create({
         width: 0.25*windowWidth,
     },
 
-    rectangleBox:{
-        position: 'absolute',
-        resizeMode: 'contain',
-        width: 0.8*windowWidth,
-        height: 0.2*windowHeight,
-        top: -0.8*windowHeight,
-        left: 0.09*windowWidth
-    },
-
     gameLogo:{
         position: 'absolute',
         resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.2*windowHeight,
-        top: -0.8*windowHeight,
-        left: 0.049*windowWidth
+        width: 0.45 * windowWidth,
+        height: 0.25 * windowHeight,
+        top: 0 * windowHeight,
+        left: -0.1537 *windowWidth
     },
 
     horiLine:{
@@ -238,7 +249,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: windowWidth,
         height : 0.004 * windowHeight,
-        top : 0.43 * windowHeight  
+        top : 0.5 * windowHeight  
     },
 
     scrollContainer1:{
@@ -246,7 +257,7 @@ const styles = StyleSheet.create({
         width: 0.3*windowWidth,
         height: 0.46*windowHeight,
         left: 0.17*windowWidth,
-        top: 0.5*windowHeight
+        top: 0.55*windowHeight
     },
 
     scrollContainer2:{
@@ -254,7 +265,7 @@ const styles = StyleSheet.create({
         width: 0.3*windowWidth,
         height: 0.46*windowHeight,
         left: 0.60*windowWidth,
-        top: 0.5*windowHeight
+        top: 0.55*windowHeight
     },
 
     profileImage:{
@@ -269,8 +280,8 @@ const styles = StyleSheet.create({
     profileContainer:{
         position: 'relative',
         // paddingTop: 0.08*windowHeight,
-        left: 0.02*windowWidth,
-        marginTop: 0.02*windowHeight
+        left: 0.007*windowWidth,
+        marginTop: 0.01*windowHeight
    
     },
 
@@ -283,6 +294,7 @@ const styles = StyleSheet.create({
     },
 
     displayText:{ 
+        marginTop: 0.01*windowHeight,
         "fontStyle": "normal",
         "fontWeight": "500",
         "fontSize": 18,

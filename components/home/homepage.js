@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, Modal, Alert, ScrollView} from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, Modal, Alert, ScrollView, FlatList, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL} from "firebase/storage";
@@ -12,6 +12,13 @@ import { getAuth } from "firebase/auth";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
+
+// const createExpoWebpackConfigAsync = require('@expo/webpack-config');
+// module.exports = async function(env, argv) {
+//   const config = await createExpoWebpackConfigAsync(env, argv);
+//   config.resolve.alias['lottie-react-native'] = 'react-native-web-lottie';
+//   return config;
+// };
 
 export default function homepage({ navigation, route }) {
     const auth = getAuth();
@@ -35,7 +42,15 @@ export default function homepage({ navigation, route }) {
     const [selectGameCode, setSelectGameCode] = useState(null);
     const [profileImage, setProfileImage] = React.useState([]);
 
+    var profileUid = auth.currentUser.uid;
     const [textInputValue, setTextInputValue] = React.useState('');
+    var [friends, setFriends] = React.useState(null);
+   
+    console.log(users)
+    console.log(friends)
+
+
+    
     var [IncomingRequests, setIncomingRequests] = React.useState(null);
     var [friendIncomingRequests, setFriendIncomingRequests] = React.useState(null);
     var [friends, setFriends] = React.useState(null);
@@ -63,6 +78,9 @@ export default function homepage({ navigation, route }) {
     const ConfirmedProfilesRef = query(ref(db,'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
     const ThisProfileRef = query(ref(db,'users/' + auth.currentUser.uid))
     const ProfileRef = query(ref(db,'users'))
+    // const [users, setUsers] = React.useState(null);
+    const [location, setLocation] = React.useState(null);
+    const [selectedValue, setSelectedValue] = React.useState()
     React.useEffect(() => {
         onValue(UserRef, (snapshot) => {
             const data = Object.values(snapshot.val());
@@ -310,7 +328,29 @@ if(users && IncomingRequests)
     if(!games){
         return (<Text>Rukavat ke liye khed hai</Text>)
     }
-    return (
+    if (!users) {
+        return (
+            <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+                {/* <View style={styles.loading}>
+                </View> */}
+            </LinearGradient>
+            )
+    }
+
+        
+  var handleSearch = (e) => {
+      if (e.nativeEvent.key == 'Enter') {
+        navigation.navigate("SearchName", {textInputValue})
+        console.log('search started')
+    }
+  }
+
+    if (users)
+        return (
             <View style={styles.container} >
                 <LinearGradient
                     start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
@@ -523,6 +563,13 @@ const styles = StyleSheet.create({
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
+    loading:{
+        minHeight: 100/1024*windowHeight,
+        display: "flex",
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
     InputStyle1:{
         "position": "absolute",
         top: 107/1024*windowHeight,
@@ -570,8 +617,10 @@ const styles = StyleSheet.create({
         "fontSize": 18,
         "color": "#FFFFFF",
         position:'absolute',
-        top:0.21*windowHeight,
-        left:0.05*windowWidth
+        // top:0.21*windowHeight,
+        // left:0.05*windowWidth
+        top:0.01*windowHeight,
+        left:0.02*windowWidth
     },
 
     posttxt:{ 
@@ -595,6 +644,28 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+
+    friendscroll:{
+        flexGrow: 0.1,
+        width: 275 / 1440 * windowWidth,
+        left: 5 / 1440 * windowWidth,
+        height: 592 / 1024 * windowHeight,
+        top: 195 / 1024 * windowHeight,
+        borderRadius: 10,
+        // backgroundColor: "rgba(255, 255, 255, 0.7)",
+    },
+
+    friendbox:{
+        flex:1, 
+        flexDirection:"column",
+        marginVertical:30,
+        alignItems: "center",
+        left:0.05*windowWidth,
+        height:0.08 * windowHeight,
+        width: 0.015*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 1)",
+        transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
     homebtn:{
@@ -644,14 +715,23 @@ const styles = StyleSheet.create({
         height: 0.60*windowHeight,
         width: 0.50*windowWidth,
     },
-
+    
     dpview:{
-        position:"absolute",
-        top:0.2*windowHeight,
-        resizeMode:'contain',
-        height: 0.06*windowHeight,
-        width: 0.05*windowWidth,
+        position: "absolute",
+        top: 0 * windowHeight,
+        left:-0.02*windowWidth,
+        width: 0.05 * windowHeight,
+        height: 0.05 * windowHeight,
+        borderRadius: 0.065 * windowHeight,
     },
+
+    // dpview:{
+    //     position:"absolute",
+    //     top:0.2*windowHeight,
+    //     resizeMode:'contain',
+    //     height: 0.06*windowHeight,
+    //     width: 0.05*windowWidth,
+    // },
 
     dppostview:{
         position:"absolute",
