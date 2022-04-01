@@ -101,7 +101,6 @@ Find all sorts of players over all of platforms with just a few simple steps!</T
         </View>
     )
 }
-
 const styles = StyleSheet.create({
     container: {
         position: "relative",

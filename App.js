@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import homepage from './components/home/homepage';
 import profilepage from './components/profile/profilepage';
 import login from './components/auth/Login';
+import intro from './components/auth/intro';
 import register from './components/auth/Register';
 import createprofilepage from './components/createprofile/createprofilepage';
 import MyGamesPage from './components/myGames/MyGamesPage';
@@ -21,9 +22,10 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
+      <Stack.Navigator initialRouteName='Intro'>
         <Stack.Screen name='Register' component={register} options={{ headerShown: false }} />
         <Stack.Screen name='Login' component={login} options={{ headerShown: false }} />
+        <Stack.Screen name='Intro' component={intro} options={{ headerShown: false }} />
         <Stack.Screen name='Home' component={homepage} options={{ headerShown: false }} />
         <Stack.Screen name='Profile' component={profilepage} options={{ headerShown: false }} />
         <Stack.Screen name='CreateProfile' component={createprofilepage} options={{ headerShown: false }} />

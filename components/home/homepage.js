@@ -2,21 +2,12 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Image, Dimensions,ImageBackground,TouchableOpacity,Text,TextInput, Modal, Alert, ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
-// import fire from '../firebase';
-// import uuid from 'uuid';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL} from "firebase/storage";
 import fire from '../firebase';
 import 'firebase/database'
 import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, push, get } from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
-
-
-// import fire from '../firebase';
-// import 'firebase/database'
-// import { getDatabase, onValue,get,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
-// import 'firebase/auth';
-// import { getAuth } from "firebase/auth";
 
 
 const windowWidth = Dimensions.get('screen').width;
@@ -306,6 +297,16 @@ if(users && IncomingRequests)
 
     }
 
+        const signOutUser = async () => {
+            try{
+                await auth.signOut();
+                navigation.navigate("Login");
+                
+            }catch(e){
+                Alert.alert("Could not Logout");
+                console.log(e)
+            }
+        }
     if(!games){
         return (<Text>Rukavat ke liye khed hai</Text>)
     }
@@ -317,6 +318,9 @@ if(users && IncomingRequests)
                     style={styles.background} >
                     <ImageBackground source={require('./homeAssets/designspikes1.png')} style={styles.spike1} />
                     <Image source={require('./homeAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")}/>
+                    <TouchableOpacity style={styles.logout} onPress={()=>signOutUser()}>
+                        <Text style={styles.uploadText}>Log Out</Text>
+                    </TouchableOpacity>
                     <ImageBackground source={require('./homeAssets/menubar.png')} style={styles.menu} />
                     <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
                     <Text style={styles.highlighttxt}>Home</Text>
@@ -331,97 +335,6 @@ if(users && IncomingRequests)
                     <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     <Image source={require('./homeAssets/searchIcon.png')} style={styles.searchIcon} />
-                    <TextInput 
-                    style={styles.InputStyle1} 
-                    placeholder='Search for friends, games or location'
-                    onChangeText={(text) => setTextInputValue(text)}
-                    value={textInputValue}
-                    onKeyPress={e => handleSearch(e)}
-                    ></TextInput>
-                    <View style={styles.notif}>
-                        <Image style={{position:'absolute', 
-                        resizeMode: 'contain',
-                        top:0.01*windowHeight,
-                        left:0.015*windowWidth,
-                        width:0.03*windowWidth,
-                        height:0.03*windowHeight,
-                        transform: [{ rotate: '20deg' }]
-                    }} source={require('./homeAssets/Bell.png')}/>
-                    <Text style ={{  position: 'absolute',
-                    left: 0.045*windowWidth,
-                    top:0.015 *windowHeight,
-                    color: 'white',
-                    fontWeight: 'bold'}}>Notifications</Text>
-                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
-                    style={styles.notifscroll}>
-                    {requestNames.map((profile,index)=>
-                        {
-                           { console.log("WORKS")
-                        console.log(profile)
-                        console.log(requestImages[index])} 
-                        return(
-                        <View  key={index} style={styles.notifbox}>
-                            {/* <Text style={{
-                                position: 'relative',
-                                "color": "#FFFFFF",
-                                }}>
-                                Friend Request by:</Text> */}
-                            <View style={{position:'relative',flex:1, flexDirection:'row'}}>
-                            <Image source={requestImages[index]} style={{
-                        position: "absolute",
-                        top: 0 * windowHeight,
-                        left: 0*windowWidth,
-                        width: 0.05 * windowHeight,
-                        height: 0.05 * windowHeight,
-                        borderRadius: 0.065 * windowHeight,}} />
-                            <Text style={{
-                                position: 'absolute',
-                                left:0.045*windowWidth,
-                                width: 0.07*windowWidth,
-                                "color": "#FFFFFF",
-                                }}>{profile} sent a friend request!</Text>                            
-                            </View> 
-                            <View style={styles.notifdecisionbox}>
-                        <TouchableOpacity  onPress={() => 
-                {
-                    if (requestAccepted(requestUID[index]));
-                    update(ThisProfileRef, {
-                        ConfirmedProfiles: friends,
-                      }); 
-                }} ><Text style={[styles.decisionbutton,{backgroundColor: "rgba(3, 184, 21, 1)"}]}>Accept</Text></TouchableOpacity>
-                        <TouchableOpacity 
-                         onPress={() => 
-                            {
-                                if (IncomingRequests.includes(requestUID[index])) requestDenied(requestUID[index]);
-                                update(ThisProfileRef, {
-                                    RequestedProfiles: IncomingRequests,
-                                  }); 
-                            }}><Text style={[styles.decisionbutton,{backgroundColor: "rgba(255, 255, 255, 0.25)"},{left: -0.03*windowWidth}]}>Decline</Text></TouchableOpacity>
-                        </View>
-                        </View>
-                        )
-                    })
-                    }
-                    </ScrollView>
-                    </View>
-                    {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
-                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
-                    style={styles.friendscroll}>
-                    {friendNames.map((profile,index)=>
-                        {
-                        return(
-                        <View  key={index} style={styles.friendbox}>
-                            <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", friendUid[index])}>
-                                <Image source={friendImages[index]} style={styles.dpview}/>
-                                <Text style={styles.nametxt}>{profile}</Text>
-                            </TouchableOpacity> 
-                        </View>
-                        )
-                    })
-                    }
-                    </ScrollView>
-                    {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
                     <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
                     <ImageBackground source={require('./homeAssets/notificationbar.png')} style={styles.notif} />
                     {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
@@ -482,6 +395,7 @@ if(users && IncomingRequests)
                         <Text style={styles.uploadText}>Upload a Post</Text>
                     </TouchableOpacity>
 
+
                     <Modal
                         animationType='slide'
                         visible={modalVisible}  
@@ -494,7 +408,7 @@ if(users && IncomingRequests)
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             {/* <View> */}
-                                <TextInput placeholder='Enter the Discription' 
+                                <TextInput placeholder='Enter the Description' 
                                     style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
                                 {console.log(description)}
@@ -573,10 +487,9 @@ if(users && IncomingRequests)
                     </LinearGradient>
             </View>
     );
-                            
-}
 }
 
+}
 
 
 const styles = StyleSheet.create({
@@ -629,7 +542,7 @@ const styles = StyleSheet.create({
 
     title:{
         position:"absolute",
-        left:0.35*windowWidth,
+        left:0.3*windowWidth,
         resizeMode:'contain',
         height: 0.1*windowHeight,
         width: 0.35*windowWidth,
@@ -845,7 +758,15 @@ const styles = StyleSheet.create({
         backgroundColor: 'green',
         textAlign: 'center'
     },
-
+    logout:{
+        position: 'absolute',
+        width: 0.09*windowWidth,
+        height: 0.03*windowHeight,
+        top: 0.05*windowHeight,
+        left: 0.9*windowWidth,
+        backgroundColor: 'green',
+        textAlign: 'center'
+    },
     uploadText:{
         "fontStyle" : 'normal',
         "fontSize": 16,
@@ -1056,16 +977,4 @@ const styles = StyleSheet.create({
         bottom: 0.01*windowHeight,
         flexGrow: 0.1
     },
-
-
-
-
-
-
-
-
-
-
-
-
 });
