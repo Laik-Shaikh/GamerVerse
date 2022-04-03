@@ -101,14 +101,14 @@ export default function GameHubPage({ navigation, route }) {
             
                 <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
                     style={styles.scrollContainer2} horizontal={true} 
-                    showsHorizontalScrollIndicator={false}>
+                    showsHorizontalScrollIndicator={true}>
                     {games.map((item, index) => {
                         let mobile;
                         mobile = item.Code.charAt(0);
                         console.log(mobile.Code)
                         
                         if(mobile === "M"){
-                            return(<View key = {index}>
+                            return(<View key = {index} style={{ paddingLeft: 5, paddingRight: 5, }}>
                                 {console.log(item.Code)}
                                 <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
@@ -338,12 +338,15 @@ const styles = StyleSheet.create({
     },
 
     scrollContainer2: {
+        // paddingLeft: 15,
+        // paddingRight: 15,
         position: 'absolute',
-        width: 0.8 * windowWidth,
-        height: 0.34 * windowHeight,
+        width: 0.78 * windowWidth,
+        height: 0.25 * windowHeight,
         left: 0.19 * windowWidth,
         top: 0.44 * windowHeight,
-        flexGrow: 0.1
+        flexGrow: 0.1,
+        // backgroundColor: "rgba(255, 255, 255, 0.7)",
     },
 
     scrollContainer3: {
@@ -356,8 +359,6 @@ const styles = StyleSheet.create({
     },
 
     apexLogo: {
-        paddingLeft: 10,
-        paddingRight: 10,
         width: 0.13 * windowWidth,
         height: 0.24 * windowHeight,
     },
