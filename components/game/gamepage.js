@@ -110,6 +110,7 @@ if(!gameInfo)
         </View>
 );
     }
+    const rating = gameInfo.Rating
     if (gameInfo){
     return (
         <View style={styles.container} >
@@ -135,7 +136,8 @@ if(!gameInfo)
                 <Image source={require('./gameAssets/searchIcon.png')} style={styles.searchIcon} />
                 <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
                 <View style={styles.ratingContainer}>
-                    <Text style={styles.ratingTxt}>Rating{gameInfo.Rating}</Text>
+                    <Text style={styles.ratingTxt}>Rating</Text>
+                    <Image source={require('./gameAssets/dark.png')} style={styles.defaultStar}></Image>
                 </View>
                 <View style={styles.desclabContainer}>
                     <Text style={styles.ratingTxt}>Description</Text>
@@ -262,6 +264,16 @@ const styles = StyleSheet.create({
         borderBottomColor: "#FFFFFF",
         borderBottomWidth: 1,
         "color": "#FFFFFF"
+    },
+
+    defaultStar:{
+    position: "absolute",
+    width: 275 / 1440 * windowWidth,
+    height: 50 / 1024 * windowHeight,
+    left: 75 / 1440 * windowWidth,
+    top: 200 / 1024 * windowHeight,
+    justifyContent: 'center',
+    alignItems: 'center'
     },
 
     Button:
