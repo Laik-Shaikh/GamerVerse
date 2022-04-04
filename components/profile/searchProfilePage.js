@@ -81,6 +81,12 @@ export default function searchProfilePage ({ navigation, route }){
             if (profileUid==myfriends[j]) return j;
         }
     }
+    function friendrequestRemover(){
+        for(var k = 0; k < requests.length; k++)
+        {
+            if (auth.currentUser.uid==requests[k]) return k;
+        }
+    }
   if (!profileInfo) {
     return (<Text>Rukavat ke liye khed hai</Text>)
 }
@@ -231,11 +237,11 @@ export default function searchProfilePage ({ navigation, route }){
                     <TouchableOpacity style={styles.Button} title='Edit'
                     onPress={() => 
                         {
-                            if (userFollowCheck(auth.currentUser.uid)) requests.push(auth.currentUser.uid);
-                            console.log(requests);
-                            update(UserRef, {
-                                RequestedProfiles: requests,
-                              });   
+                                var reqindex = friendrequestRemover()
+                                delete requests[reqindex];
+                                update(UserRef, {
+                                    RequestedProfiles: requests,
+                                  });  
                         }}>
                         <Text style={styles.ButtonText}>Requested</Text>
                     </TouchableOpacity>
