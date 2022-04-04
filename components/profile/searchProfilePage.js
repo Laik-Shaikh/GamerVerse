@@ -23,7 +23,10 @@ export default function searchProfilePage ({ navigation, route }){
       const auth = getAuth();
       var requests = [ "YY" ];
       var friends = [ "YY" ];
+      var myfriends = [ "YY" ];
+      var status=1;
       const UserRef = query(ref(db,'users/'+ profileUid))
+      const UserRef2 = query(ref(db,'users/'+ auth.currentUser.uid))
       const profileRef = query(ref(db,'users'),orderByChild('uid'),equalTo(profileUid))
       const GetUserRef = query(ref(db,'users'),orderByChild('uid'),equalTo( auth.currentUser.uid))
       console.log(profileRef)
@@ -43,10 +46,22 @@ export default function searchProfilePage ({ navigation, route }){
   console.log(profileInfo)
   if(profileInfo && userInfo){
     requests = profileInfo.RequestedProfiles;
-    friends = userInfo.ConfirmedProfiles;
+    friends = profileInfo.ConfirmedProfiles;
+    myfriends = userInfo.ConfirmedProfiles;
+    var maxo = 0;
+    if (friends.length>requests.length) maxo = friends.length;
+    else maxo = requests.length;
+    for(var i = 0; i < maxo; i++)
+        {
+    if (auth.currentUser.uid==requests[i]) status =2;
+    if (auth.currentUser.uid==friends[i]) status= 3 ;
+}
     }
     function userFollowCheck(GameCode){
-        for(var i = 0; i < requests.length; i++)
+        var maxo = 0;
+        if (friends.length>requests.length) maxo = friends.length;
+        else maxo = requests.length;
+        for(var i = 0; i < maxo; i++)
         {
             if (auth.currentUser.uid==requests[i]) return false;
             if (auth.currentUser.uid==friends[i]) return false;
@@ -54,11 +69,23 @@ export default function searchProfilePage ({ navigation, route }){
         return true
     }
 
+    function friendRemover(){
+        for(var i = 0; i < friends.length; i++)
+        {
+            if (auth.currentUser.uid==friends[i]) return i;
+        }
+    }
+    function friendRemover2(){
+        for(var j = 0; j < myfriends.length; j++)
+        {
+            if (profileUid==myfriends[j]) return j;
+        }
+    }
   if (!profileInfo) {
     return (<Text>Rukavat ke liye khed hai</Text>)
 }
 
-  if (profileInfo){
+  if (profileInfo && status ==3 ){
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -97,7 +124,201 @@ export default function searchProfilePage ({ navigation, route }){
                     
                     <View style={styles.aboutMeContainer}>
                         <Text style={styles.headTxt}>About Me</Text>
-                        <Text style={styles.aboutMeTxt}>{profileInfo.Name}</Text>
+                        <Text style={styles.aboutMeTxt}>{profileInfo.aboutMe}</Text>
+                    </View>
+                    
+                    <TouchableOpacity style={styles.Button} title='Edit'
+                    onPress={() => 
+                        {
+                            if (!userFollowCheck(auth.currentUser.uid))
+                            {
+                                var friendindex = friendRemover()
+                                delete friends[friendindex];
+                                var friendindex2 = friendRemover2()
+                                delete myfriends[friendindex2];
+                                update(UserRef2, {
+                                    ConfirmedProfiles: myfriends,
+                                  });  
+                                }
+                                update(UserRef, {
+                                    ConfirmedProfiles: friends,
+                                  });  
+                        }}>
+                        <Text style={styles.ButtonText}>Unfollow</Text>
+                    </TouchableOpacity>
+                    
+                    <View style={styles.divider1}/>
+                    {console.log(profileInfo.Name)}
+                    <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                        <Text style={styles.infoHeadTxt}>Name</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Name}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
+                        <Text style={styles.infoHeadTxt}>Location</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Location}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                        <Text style={styles.infoHeadTxt}>Phone Number</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 {profileInfo.PhoneNumber}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
+                        <Text style={styles.infoHeadTxt}>Email</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Email}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                        <Text style={styles.infoHeadTxt}>Discord Id</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.DiscordId}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
+                        <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
+                        <Image source={require('./profileAssets/GameImage.jpg')} style={styles.gameImage} />
+                        <Text style={[styles.infoHeadTxt,{top: 0.18*windowHeight,left:0.192*windowWidth}]}>Spider-man</Text>
+                    </View>
+                    
+                    <View style={styles.divider2}/>
+                    
+                    </LinearGradient>
+            </View>
+    );
+  }
+  if (profileInfo && status ==  2){
+    return (
+            <View style={styles.container} >
+                <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                    <ImageBackground source={require('./profileAssets/designspikes1.png')} style={styles.spike1} />
+                    <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")}/>
+                    <ImageBackground source={require('./profileAssets/menubar.png')} style={styles.menu} />
+                    
+                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                    <   Text style={styles.robototxt}>Home</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                        <Text style={styles.highlighttxt}>Profile</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                        <Text style={styles.robototxt}>My Games</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                        <Text style={styles.robototxt}>Game Hub</Text>
+                    </TouchableOpacity>
+                    
+                    <Image source={require('./profileAssets/searchIcon.png')} style={styles.searchIcon} />
+                    <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                    <ImageBackground source={require('./profileAssets/designspikes.png')} style={styles.spike2} />
+                    
+                    
+                    <View style={styles.photoContainer}>
+                        <Text style={styles.headTxt}>My Photo</Text>
+                        <Image source={profileInfo.DisplayPicture} style = {styles.dpicture}/>
+                    </View>
+                    
+                    <View style={styles.aboutMeContainer}>
+                        <Text style={styles.headTxt}>About Me</Text>
+                        <Text style={styles.aboutMeTxt}>{profileInfo.aboutMe}</Text>
+                    </View>
+                    
+                    <TouchableOpacity style={styles.Button} title='Edit'
+                    onPress={() => 
+                        {
+                            if (userFollowCheck(auth.currentUser.uid)) requests.push(auth.currentUser.uid);
+                            console.log(requests);
+                            update(UserRef, {
+                                RequestedProfiles: requests,
+                              });   
+                        }}>
+                        <Text style={styles.ButtonText}>Requested</Text>
+                    </TouchableOpacity>
+                    
+                    <View style={styles.divider1}/>
+                    {console.log(profileInfo.Name)}
+                    <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                        <Text style={styles.infoHeadTxt}>Name</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Name}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
+                        <Text style={styles.infoHeadTxt}>Location</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Location}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                        <Text style={styles.infoHeadTxt}>Phone Number</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 {profileInfo.PhoneNumber}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
+                        <Text style={styles.infoHeadTxt}>Email</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Email}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                        <Text style={styles.infoHeadTxt}>Discord Id</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.DiscordId}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
+                        <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
+                        <Image source={require('./profileAssets/GameImage.jpg')} style={styles.gameImage} />
+                        <Text style={[styles.infoHeadTxt,{top: 0.18*windowHeight,left:0.192*windowWidth}]}>Spider-man</Text>
+                    </View>
+                    
+                    <View style={styles.divider2}/>
+                    
+                    </LinearGradient>
+            </View>
+    );
+  }
+  if (profileInfo && status ==1 ){
+    return (
+            <View style={styles.container} >
+                <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                    <ImageBackground source={require('./profileAssets/designspikes1.png')} style={styles.spike1} />
+                    <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")}/>
+                    <ImageBackground source={require('./profileAssets/menubar.png')} style={styles.menu} />
+                    
+                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                    <   Text style={styles.robototxt}>Home</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                        <Text style={styles.highlighttxt}>Profile</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                        <Text style={styles.robototxt}>My Games</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                        <Text style={styles.robototxt}>Game Hub</Text>
+                    </TouchableOpacity>
+                    
+                    <Image source={require('./profileAssets/searchIcon.png')} style={styles.searchIcon} />
+                    <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                    <ImageBackground source={require('./profileAssets/designspikes.png')} style={styles.spike2} />
+                    
+                    
+                    <View style={styles.photoContainer}>
+                        <Text style={styles.headTxt}>My Photo</Text>
+                        <Image source={profileInfo.DisplayPicture} style = {styles.dpicture}/>
+                    </View>
+                    
+                    <View style={styles.aboutMeContainer}>
+                        <Text style={styles.headTxt}>About Me</Text>
+                        <Text style={styles.aboutMeTxt}>{profileInfo.aboutMe}</Text>
                     </View>
                     
                     <TouchableOpacity style={styles.Button} title='Edit'
