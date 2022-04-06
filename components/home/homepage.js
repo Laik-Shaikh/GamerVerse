@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL} from "firebase/storage";
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, push, get } from "firebase/database";
+import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, push, get, onChildAdded } from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
@@ -28,11 +28,12 @@ export default function homepage({ navigation }) {
     const [gamesCode, setGamesCode] = React.useState([]);
     const [description, setDescription] = useState(null)
     const [userName, setUserName] = useState(null);
-    const [userUid, setUserUid] = useState(null);
+  
     const [postNumber, setPostNumber] = React.useState([]);
     const [postImage, setPostImage] = React.useState([]);
     const [selectGameCode, setSelectGameCode] = useState(null);
     const [profileImage, setProfileImage] = React.useState([]);
+    const [likesArray, setLikesArray] = useState();
 
     const storage = getStorage();
     const metadata = {
@@ -42,7 +43,7 @@ export default function homepage({ navigation }) {
     const GameRef = query(ref(db,'games'))
     const UserRef = query(ref(db,'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/Games'))
     const UserName = query(ref(db,'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/Name'))
-    const UidRef = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/uid'))
+   
     const PostCounter = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/PostCount'));
     const PostCounter1 = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2'));
     const PostCounter3 = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/PostCount'));
@@ -50,15 +51,10 @@ export default function homepage({ navigation }) {
     const ProfileRef = query(ref(db, 'users/aoPtWnacOEccgqqvesjmC17Gibu2' + '/DisplayPicture'));
     
     var userid = 'aoPtWnacOEccgqqvesjmC17Gibu2'
-    // const dbRef = ref(db,'posts/Post1')
-  
-    console.log(UserName)
-    console.log(PostCounter3)
-    console.log(GameRef)
-    console.log(UserRef)
-    console.log(PostRef)
-    
 
+    var likes = ["YY"]
+    
+    
     React.useEffect(() => {
         onValue(GameRef, (snapshot) => {
             const data = Object.values(snapshot.val());
@@ -80,13 +76,6 @@ export default function homepage({ navigation }) {
             }
         )
 
-        onValue(UidRef, (snapshot) => {
-            const id = snapshot.val();
-            setUserUid(id)
-            console.log(id)
-            }
-        )
-
         onValue(PostCounter3, (snapshot) => {
             const data4 = snapshot.val();
             setPostNumber(data4)
@@ -99,6 +88,7 @@ export default function homepage({ navigation }) {
             // setPostImage(Object.values(data5[0]))
             // console.log(Object.values(data5[0]))
             setPostImage(data5)
+            console.log(data5)
             }
         )
 
@@ -108,16 +98,20 @@ export default function homepage({ navigation }) {
             console.log(data6)
             }
         )
+        
+        
     },[])
 
-    console.log(gamesCode);
-    console.log(userName);
-    console.log(postNumber);
-    console.log(PostRef);
-    console.log(postImage);
+    
+
+    // console.log(gamesCode);
+    // console.log(userName);
+    // console.log(postNumber);
+    // console.log(PostRef);
+    // console.log(postImage);
 
   
-    
+    const likePhoto = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Post%2FLike.png?alt=media&token=bfce5738-8e63-4bb3-8841-212c7fef39d6'
     
 
     const pickImage = async () => {
@@ -144,7 +138,7 @@ export default function homepage({ navigation }) {
             data3 = data3 + 1;
             console.log(data3)
             var storageRef = strRef(storage, 'Post/'+ userid + '_' + data3 + '.jpg');
-            const dbRef = ref(db,'posts/' + userUid + '/Post' + postNumber)
+            const dbRef = ref(db,'posts/' + userid + '/Post' + postNumber)
             uploadBytes(storageRef, blob, metadata).then((snapshot) => {
                 getDownloadURL(storageRef).then((url)=>{
                     set(dbRef,{
@@ -153,8 +147,11 @@ export default function homepage({ navigation }) {
                         GameCode: selectGameCode,
                         DisplayProfile: profileImage,
                         Image: url,
-                        Likes: 0,
-                        User: userName
+                        LikeImage: likePhoto ,
+                        Likes: ['XX'],
+                        User: userName,
+                        PostNumber : postNumber,
+                        uid: userid
                       })
                       })
                
@@ -169,6 +166,12 @@ export default function homepage({ navigation }) {
         
 
     }
+
+    // const pressedLike = () =>{
+ 
+        
+
+    // }
 
     if(!games){
         return (<Text>Rukavat ke liye khed hai</Text>)
@@ -216,9 +219,8 @@ export default function homepage({ navigation }) {
 
                     <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={styles.postContainer}>
                         {postImage.map((item, index) => {
-                            console.log(postImage);
-                            console.log(item)
-                            
+                            // console.log(postImage);
+                            // console.log(item)
                             
                         
                             return(
@@ -231,14 +233,67 @@ export default function homepage({ navigation }) {
                                             console.log(gamesCode)
                                             console.log(newItem.GameCode)
                                         if(gamesCode.includes(newItem.GameCode)){
+                                            var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes' ))
+                                            var likeData;
+                                            onValue(LikeRef, (snapshot) =>
+                                            {
+                                                console.log(LikeRef)
+                                                likeData = Object.values(snapshot.val());
+                                               
+                                                console.log(likeData)
+                                                
+                                            }
+                                            );
+                                        
+                                       
+                                            function checkLikes (userid) {
+                                                // console.log(likes.length)
+                                                for(var i=0; i<likeData.length; i++)
+                                                {
+                                                    if(userid==likes[i]) return false;
+                                                }
+                                                return true;
+                                            }
+                                        
                                             return(
                                                 <View style={styles.allPost}>
                                                     <Image source={newItem.Image} style={styles.post} />
                                                     <Text style={styles.profileName}>{newItem.User}</Text>
                                                     <Image source={newItem.DisplayProfile} style={styles.profile} />
                                                     <Text style={styles.displayDescription}>{newItem.Description}</Text>
-                                                    
+                                                    {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    <TouchableOpacity 
+                                                        style={{position: 'absolute',
+                                                                width: 0.053*windowWidth,
+                                                                height: 0.053*windowHeight,
+                                                                top: 0.52*windowHeight,
+                                                                left: 0.006*windowWidth
+                                                                }}
+                                                        onPress={  () => {
+                                                            // console.log(likes)
+                                                            if(!newItem.Likes.includes(userid))
+                                                            {
+                                                                if(checkLikes(userid)) likeData.push(userid);
+
+                                                                update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber )), {
+                                                                    Likes: likeData
+                                                                })
+                                                                console.log('hello')
+                                                            }
+                                                            else
+                                                            {
+                                                                var ind = likeData.indexOf(userid)
+                                                                likeData.splice(ind,1)
+                                                                update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber )), {
+                                                                    Likes: likeData
+                                                                })
+                                                            }
+                                                        }}        
+                                                                >
+                                                        <Image source={newItem.LikeImage} style={styles.likeImage} />
+                                                    </TouchableOpacity>
                                                     {console.log(newItem.DisplayProfile)}
+                                                    <Text style={styles.likestext}>{newItem.Likes.length -1}</Text>
                                                 </View>
                                             )
                                         }
@@ -706,7 +761,7 @@ const styles = StyleSheet.create({
         height: 0.73*windowHeight,
         top: 0.23*windowHeight,
         left: 0.21*windowWidth,
-        backgroundColor: 'red',
+       // backgroundColor: 'red',
         flexGrow: 0.1
     },
 
@@ -715,7 +770,7 @@ const styles = StyleSheet.create({
         width: 0.55*windowWidth,
         height: 0.62*windowHeight,
         marginTop: '10px',
-        backgroundColor: 'cyan',
+        //backgroundColor: 'cyan',
         left: 0.01*windowWidth,
         flexGrow: 0.1
         // width: '100%',
@@ -733,6 +788,13 @@ const styles = StyleSheet.create({
         // height: '100%',
         // flex: 1
         
+    },
+
+    likeImage:{
+        position: 'absolute',
+        resizeMode: 'contain',
+        width: '100%',
+        height: '100%'
     },
 
     profile:{
@@ -765,6 +827,16 @@ const styles = StyleSheet.create({
         // marginTop: '15px',
         bottom: 0.01*windowHeight,
         flexGrow: 0.1
+    },
+
+    likestext:{
+        position: 'absolute',
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 26,
+        top: 0.52*windowHeight,
+        left: 0.05*windowWidth                                                        
     },
 
 
