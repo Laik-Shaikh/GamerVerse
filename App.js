@@ -8,7 +8,7 @@ import login from './components/auth/Login';
 import intro from './components/auth/intro';
 import register from './components/auth/Register';
 import createprofilepage from './components/createprofile/createprofilepage';
-import MyGamesPage from './components/mygames/MyGamesPage';
+import MyGamesPage from './components/myGames/MyGamesPage';
 import GameHubPage from './components/gamehub/GameHubPage';
 import gamepage from './components/game/gamepage';
 import searchpagelocation from './components/search/searchpagelocation';
