@@ -138,6 +138,9 @@ if(!gameInfo)
                 <View style={styles.ratingContainer}>
                     <Text style={styles.ratingTxt}>Rating</Text>
                     <Image source={require('./gameAssets/dark.png')} style={styles.defaultStar}></Image>
+                    <View style={[styles.lightStarContainer,{width: ((3.5 * rating  ) / (0.302*windowWidth)) * 5 * windowWidth,}]}>
+                        <Image source={require('./gameAssets/light.png')} style={styles.lightStar}></Image>
+                    </View>
                 </View>
                 <View style={styles.desclabContainer}>
                     <Text style={styles.ratingTxt}>Description</Text>
@@ -275,6 +278,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
     },
+
+    lightStar:{
+        // position: "absolute",
+        width: 275 / 1440 * windowWidth,
+        height: 50 / 1024 * windowHeight,
+        left: 0 * windowWidth,
+        top: 0 * windowHeight,
+        },
+
+    lightStarContainer:{
+        position: "absolute",
+        // backgroundColor: "rgba(255, 255, 255, 0.95)",
+        height: 50 / 1024 * windowHeight,
+        left: 75 / 1440 * windowWidth,
+        top: 200 / 1024 * windowHeight,
+        overflow: 'hidden',
+        },
 
     Button:
   {
