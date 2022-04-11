@@ -93,16 +93,16 @@ if(!gameInfo)
                 <ImageBackground source={require('./gameAssets/designspikes1.png')} style={styles.spike1} />
                 <Image source={require('./gameAssets/gamerversetitle.png')} style={styles.title} />
                 <ImageBackground source={require('./gameAssets/menubar.png')} style={styles.menu} />
-                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                 <Text style={styles.robototxt}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                 <Text style={styles.robototxt}>Profile</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                 <Text style={styles.robototxt}>My Games</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                 <Text style={styles.highlighttxt}>Game Hub</Text>
                 </TouchableOpacity>
                 <Image source={require('./gameAssets/searchIcon.png')} style={styles.searchIcon} />
@@ -182,16 +182,16 @@ else{
                 <ImageBackground source={require('./gameAssets/designspikes1.png')} style={styles.spike1} />
                 <Image source={require('./gameAssets/gamerversetitle.png')} style={styles.title} />
                 <ImageBackground source={require('./gameAssets/menubar.png')} style={styles.menu} />
-                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                 <Text style={styles.robototxt}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                 <Text style={styles.robototxt}>Profile</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                 <Text style={styles.robototxt}>My Games</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                 <Text style={styles.highlighttxt}>Game Hub</Text>
                 </TouchableOpacity>
                 <Image source={require('./gameAssets/searchIcon.png')} style={styles.searchIcon} />

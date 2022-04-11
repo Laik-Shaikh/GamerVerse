@@ -120,22 +120,22 @@ export default function searchProfilePage ({ navigation, route }){
                     colors={['#013C00', '#000000']}
                     style={styles.background} >
                     <ImageBackground source={require('./profileAssets/designspikes1.png')} style={styles.spike1} />
-                    <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")}/>
+                    <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.push("Home")}/>
                     <ImageBackground source={require('./profileAssets/menubar.png')} style={styles.menu} />
                     
-                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -212,7 +212,7 @@ export default function searchProfilePage ({ navigation, route }){
                                     if (myGames.includes(gameData[index].Code)) {
                                         return (
                                             <View key={index}>
-                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.navigate("Game", { GameCode: game.Code })}>
+                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
                                                     <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                                     <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
                                                 </TouchableOpacity>
@@ -240,22 +240,22 @@ export default function searchProfilePage ({ navigation, route }){
                     colors={['#013C00', '#000000']}
                     style={styles.background} >
                     <ImageBackground source={require('./profileAssets/designspikes1.png')} style={styles.spike1} />
-                    <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")}/>
+                    <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.push("Home")}/>
                     <ImageBackground source={require('./profileAssets/menubar.png')} style={styles.menu} />
                     
-                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -324,7 +324,7 @@ export default function searchProfilePage ({ navigation, route }){
                                     if (myGames.includes(gameData[index].Code)) {
                                         return (
                                             <View key={index}>
-                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.navigate("Game", { GameCode: game.Code })}>
+                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
                                                     <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                                     <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
                                                 </TouchableOpacity>
@@ -352,22 +352,22 @@ export default function searchProfilePage ({ navigation, route }){
                     colors={['#013C00', '#000000']}
                     style={styles.background} >
                     <ImageBackground source={require('./profileAssets/designspikes1.png')} style={styles.spike1} />
-                    <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")}/>
+                    <Image source={require('./profileAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.push("Home")}/>
                     <ImageBackground source={require('./profileAssets/menubar.png')} style={styles.menu} />
                     
-                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -436,7 +436,7 @@ export default function searchProfilePage ({ navigation, route }){
                                     if (myGames.includes(gameData[index].Code)) {
                                         return (
                                             <View key={index}>
-                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.navigate("Game", { GameCode: game.Code })}>
+                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
                                                     <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                                     <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
                                                 </TouchableOpacity>

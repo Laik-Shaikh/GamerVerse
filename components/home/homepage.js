@@ -259,16 +259,7 @@ export default function homepage({ navigation, route }) {
         console.log(requestUID)
     }
 
-    const signOutUser = async () => {
-        try {
-            await auth.signOut();
-            navigation.navigate("Login");
 
-        } catch (e) {
-            Alert.alert("Could not Logout");
-            console.log(e)
-        }
-    }
 
     if (!users) {
         return (
@@ -375,7 +366,6 @@ export default function homepage({ navigation, route }) {
 
 
 
-
         const signOutUser = async () => {
             try {
                 await auth.signOut();
@@ -397,30 +387,30 @@ export default function homepage({ navigation, route }) {
                 </View> */}
                 </LinearGradient>
             )
-        }
-        return (
-            <View style={styles.container} >
-                <LinearGradient
-                    start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
-                    colors={['#013C00', '#000000']}
-                    style={styles.background} >
-                    <ImageBackground source={require('./homeAssets/designspikes1.png')} style={styles.spike1} />
-                    <Image source={require('./homeAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")} />
-                    <TouchableOpacity style={styles.logout} onPress={() => signOutUser()}>
-                        <Text style={styles.uploadText}>Log Out</Text>
-                    </TouchableOpacity>
-                    <ImageBackground source={require('./homeAssets/menubar.png')} style={styles.menu} />
-                    <TouchableOpacity style={styles.homebtn} onPress={() => navigation.navigate("Home")}>
-                        <Text style={styles.highlighttxt}>Home</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.navigate("Profile")}>
-                        <Text style={styles.robototxt}>Profile</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.navigate("MyGames")}>
-                        <Text style={styles.robototxt}>My Games</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.navigate("GameHub")}>
-                        <Text style={styles.robototxt}>Game Hub</Text>
+    }
+    return (
+        <View style={styles.container} >
+            <LinearGradient
+                start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
+                colors={['#013C00', '#000000']}
+                style={styles.background} >
+                <ImageBackground source={require('./homeAssets/designspikes1.png')} style={styles.spike1} />
+                <Image source={require('./homeAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.push("Home")} />
+                <TouchableOpacity style={styles.logout} onPress={() => signOutUser()}>
+                    <Text style={styles.uploadText}>Log Out</Text>
+                </TouchableOpacity>
+                <ImageBackground source={require('./homeAssets/menubar.png')} style={styles.menu} />
+                <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
+                    <Text style={styles.highlighttxt}>Home</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
+                    <Text style={styles.robototxt}>Profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.push("MyGames")}>
+                    <Text style={styles.robototxt}>My Games</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.push("GameHub")}>
+                    <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     <Image source={require('./homeAssets/searchIcon.png')} style={styles.searchIcon} />
                     <TextInput
@@ -509,19 +499,20 @@ export default function homepage({ navigation, route }) {
                         </ScrollView>
                     </View>
                     {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
-                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
-                        style={styles.friendscroll}>
-                        {friendNames.map((profile, index) => {
-                            return (
-                                <View key={index} style={styles.friendbox}>
-                                    <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", friendUid[index])}>
-                                        <Image source={friendImages[index]} style={styles.dpview} />
-                                        <Text style={styles.nametxt}>{profile}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )
-                        })
-                        }
+                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
+                    style={styles.friendscroll}>
+                    {friendNames.map((profile,index)=>
+                        {
+                        return(
+                        <View  key={index} style={styles.friendbox}>
+                            <TouchableOpacity onPress={() => navigation.push("SearchProfile", friendUid[index])}>
+                                <Image source={friendImages[index]} style={styles.dpview}/>
+                                <Text style={styles.nametxt}>{profile}</Text>
+                            </TouchableOpacity> 
+                        </View>
+                        )
+                    })
+                    }
                     </ScrollView>
                     {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
                     <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}

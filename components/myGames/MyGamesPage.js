@@ -83,16 +83,16 @@ export default function MyGamesPage ({ navigation, route }){
                 style = {styles.menuBar} />
 
             {/* NavBar Buttons     */}
-            <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+            <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                 <Text style={styles.robototxt}>Home</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+            <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                 <Text style={styles.robototxt}>Profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+            <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                 <Text style={styles.highlighttxt}>My Games</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+            <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                 <Text style={styles.robototxt}>Game Hub</Text>
             </TouchableOpacity>
 
