@@ -32,8 +32,8 @@ export default function Login({ navigation }) {
                   <Image source={require('./authAssets/group3.png')} style={styles.img1} />
                   <Text style={styles.signinText}>Sign Up</Text>
                   <TextInput style={styles.InputStyle1} placeholder='Email ID' onChangeText={UName => setUName(UName)} ref={unamekeeper}></TextInput>
-                  <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true} onChangeText={PWord => setPWord(PWord)} secureTextEntry={true}></TextInput>
-                  <TextInput style={styles.InputStyle3} placeholder='Confirm Password' secureTextEntry={true} onChangeText={ConfirmPWord => setConfirmPWord(ConfirmPWord)} secureTextEntry={true}></TextInput>
+                  <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true} onChangeText={PWord => setPWord(PWord)}></TextInput>
+                  <TextInput style={styles.InputStyle3} placeholder='Confirm Password' onChangeText={ConfirmPWord => setConfirmPWord(ConfirmPWord)} secureTextEntry={true}></TextInput>
                   <TouchableOpacity style={styles.Button} title='Register' secureTextEntry={true}onPress={
                     async () => {
                       try {

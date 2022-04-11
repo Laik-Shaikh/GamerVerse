@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import fire from '../firebase';
 import 'firebase/auth';
-import { getAuth, signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,signInWithRedirect } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,getAdditionalUserInfo } from "firebase/auth";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -62,7 +62,13 @@ export default function Login({ navigation }) {
                       const user = result.user;
                       console.log(user)
                       console.log(token)
-                      navigation.navigate("Home")
+                      const { isNewUser } = getAdditionalUserInfo(result)
+                      console.log(isNewUser)
+                      if(isNewUser){
+                        navigation.navigate("CreateProfile")}
+                      else{
+                        navigation.navigate("Home")
+                      }
                       
                     }).catch((error) => {console.log(error)})
                   }}><Text style={styles.ButtonText}>Sign Up with google</Text></TouchableOpacity>
