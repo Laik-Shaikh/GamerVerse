@@ -708,12 +708,17 @@ const styles = StyleSheet.create({
         width: windowWidth,
         height: windowHeight,
     },
+
     friendscroll:{
         flexGrow: 0.1,
-        width: 250 / 1440 * windowWidth,
+        width: 275 / 1440 * windowWidth,
+        left: 5 / 1440 * windowWidth,
         height: 592 / 1024 * windowHeight,
+        top: 195 / 1024 * windowHeight,
         borderRadius: 10,
+        // backgroundColor: "rgba(255, 255, 255, 0.7)",
     },
+
     friendbox:{
         flex:1, 
         flexDirection:"column",
@@ -721,8 +726,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         left:0.05*windowWidth,
         height:0.08 * windowHeight,
-        width: 0.013*windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        width: 0.015*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 1)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
@@ -779,9 +784,9 @@ const styles = StyleSheet.create({
         "fontWeight": "500",
         "fontSize": 18,
         "color": "#FFFFFF",
-        position: 'absolute',
-        top: 0.21 * windowHeight,
-        left: 0.05 * windowWidth
+        position:'absolute',
+        top:0.01*windowHeight,
+        left:0.02*windowWidth
     },
 
     posttxt: {
@@ -882,12 +887,13 @@ const styles = StyleSheet.create({
         width: 0.50 * windowWidth,
     },
 
-    dpview: {
+    dpview:{
         position: "absolute",
-        top: 0.2 * windowHeight,
-        resizeMode: 'contain',
-        height: 0.06 * windowHeight,
-        width: 0.05 * windowWidth,
+        top: 0 * windowHeight,
+        left:-0.02*windowWidth,
+        width: 0.05 * windowHeight,
+        height: 0.05 * windowHeight,
+        borderRadius: 0.065 * windowHeight,
     },
 
     dppostview: {
