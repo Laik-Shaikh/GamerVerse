@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput } from 'react-native';
+import { View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput,ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
@@ -21,7 +21,16 @@ export default function GameHubPage({ navigation, route }) {
         })
     }, [])
     if (!games) {
-        return (<Text>Rukavat ke liye khed hai</Text>)
+        return (
+            <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+                {/* <View style={styles.loading}>
+                </View> */}
+            </LinearGradient>
+            )
     }
     return (
         <View style={styles.container}>

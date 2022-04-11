@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,TextInput } from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,TextInput, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
@@ -71,7 +71,16 @@ if(userInfo){
     }
 if(!gameInfo)
 {
-    return (<Text>Rukavat ke liye khed hai</Text>)
+    return (
+        <LinearGradient
+                start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                colors={['#013C00', '#000000']}
+                style={styles.background} >
+            <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+            {/* <View style={styles.loading}>
+            </View> */}
+        </LinearGradient>
+        )
     }
     if (gameInfo && notfollowStatus){
         const rating = gameInfo.Rating

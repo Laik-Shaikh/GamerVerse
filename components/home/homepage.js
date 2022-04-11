@@ -238,7 +238,16 @@ if(users && IncomingRequests)
 }
 
     if (!users) {
-        return (<Text>Rukavat ke liye khed hai</Text>)
+        return (
+            <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+                {/* <View style={styles.loading}>
+                </View> */}
+            </LinearGradient>
+            )
     }
 
     if(users)
@@ -349,7 +358,16 @@ if(users && IncomingRequests)
         }
     }
     if (!games || !latestPosts) {
-        return (<Text>Rukavat ke liye khed hai</Text>)
+        return (
+            <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+                {/* <View style={styles.loading}>
+                </View> */}
+            </LinearGradient>
+            )
     }
     return (
         <View style={styles.container} >
