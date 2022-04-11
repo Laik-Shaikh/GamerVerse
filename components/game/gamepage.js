@@ -267,9 +267,9 @@ else{
 const styles = StyleSheet.create({
     container: {
         position:"relative",
-        width: windowWidth,
-        height: windowHeight
-
+        width: "100%",
+        height: "100%",
+        overflow: 'hidden',
     },
     background: {
         position:"relative",
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
       taglabContainer:{
         position: "absolute",
         width: 0.302*windowWidth,
-        height: 0.225*windowHeight,
+        height: 0.227*windowHeight,
         top: 0.769*windowHeight,
         backgroundColor: "rgba(255, 255, 255, 0.25)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
@@ -514,7 +514,7 @@ const styles = StyleSheet.create({
       tagContainer:{
         position: "absolute",
         width: 0.698*windowWidth,
-        height: 0.225*windowHeight,
+        height: 0.227*windowHeight,
         top: 0.769*windowHeight,
         left:0.302*windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.20)",

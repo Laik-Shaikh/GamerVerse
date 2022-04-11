@@ -619,7 +619,7 @@ if(users && IncomingRequests)
                             />
                             {/* </View> */}
                             {/* <Image source={require('./homeAssets/divider.png')} style={styles.divider1} /> */}
-                            <TouchableOpacity style={styles.button, styles.buttonClose}
+                            <TouchableOpacity style={[styles.button, styles.buttonClose]}
                                 onPress={() => {
                                     setModalVisible(!modalVisible)
                                 }}
@@ -629,7 +629,7 @@ if(users && IncomingRequests)
 
                             {/* Upload to FireBase       */}
 
-                            <TouchableOpacity style={styles.button, styles.uploadButton}
+                            <TouchableOpacity style={[styles.button, styles.uploadButton]}
                                 onPress={
                                     async () => {
                                         try {
@@ -649,7 +649,7 @@ if(users && IncomingRequests)
 
                             {/* Choose Image */}
 
-                            <TouchableOpacity style={styles.button, styles.chooseButton}
+                            <TouchableOpacity style={[styles.button, styles.chooseButton]}
                                 onPress={pickImage}
                             >
                                 <Text style={styles.textStyle}>Choose Image</Text>
@@ -698,9 +698,9 @@ if(users && IncomingRequests)
 const styles = StyleSheet.create({
     container: {
         position: "relative",
-        width: windowWidth,
-        height: windowHeight,
-
+        width: "100%",
+        height: "100%",
+        overflow: 'hidden',
     },
 
     background: {

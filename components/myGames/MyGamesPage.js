@@ -201,8 +201,9 @@ export default function MyGamesPage ({ navigation, route }){
 const styles = StyleSheet.create({
     container : {
         position: 'relative',
-        width : windowWidth,
-        height : windowHeight,
+        width: "100%",
+        height: "100%",
+        overflow: 'hidden',
     },
 
     background: {
