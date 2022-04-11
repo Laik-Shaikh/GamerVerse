@@ -235,7 +235,16 @@ if(users && IncomingRequests)
 }
 
     if (!users) {
-        return (<Text>Rukavat ke liye khed hai</Text>)
+        return (
+            <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+                {/* <View style={styles.loading}>
+                </View> */}
+            </LinearGradient>
+            )
     }
 
     if(users)
@@ -335,8 +344,31 @@ if(users && IncomingRequests)
 
     }
 
-    if(!games){
-        return (<Text>Rukavat ke liye khed hai</Text>)
+
+
+
+
+    const signOutUser = async () => {
+        try {
+            await auth.signOut();
+            navigation.navigate("Login");
+
+        } catch (e) {
+            Alert.alert("Could not Logout");
+            console.log(e)
+        }
+    }
+    if (!games) {
+        return (
+            <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+                {/* <View style={styles.loading}>
+                </View> */}
+            </LinearGradient>
+            )
     }
     if (!users) {
         return (
@@ -552,7 +584,7 @@ if(users && IncomingRequests)
                                 {console.log(description)}
                             {/* </View> */}
                             {/* <Image source={require('./homeAssets/divider.png')} style={styles.divider1} /> */}
-                            <TouchableOpacity style={styles.button, styles.buttonClose}
+                            <TouchableOpacity style={[styles.button, styles.buttonClose]}
                                 onPress={() => {
                                     setModalVisible(!modalVisible)
                                 }}
@@ -562,7 +594,7 @@ if(users && IncomingRequests)
 
                           {/* Upload to FireBase       */}
 
-                            <TouchableOpacity style={styles.button, styles.uploadButton}
+                            <TouchableOpacity style={[styles.button, styles.uploadButton]}
                                 onPress={
                                     async () => {
                                         try {
@@ -582,7 +614,7 @@ if(users && IncomingRequests)
 
                             {/* Choose Image */}
 
-                            <TouchableOpacity style={styles.button, styles.chooseButton}
+                            <TouchableOpacity style={[styles.button, styles.chooseButton]}
                                 onPress={pickImage}
                             >
                                 <Text style={styles.textStyle}>Choose Image</Text>
@@ -633,10 +665,10 @@ if(users && IncomingRequests)
 
 const styles = StyleSheet.create({
     container: {
-        position:"relative",
-        width: windowWidth,
-        height: windowHeight,
-
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        overflow: 'hidden',
     },
 
     background: {
@@ -644,12 +676,17 @@ const styles = StyleSheet.create({
         width: windowWidth,
         height: windowHeight,
     },
+
     friendscroll:{
         flexGrow: 0.1,
-        width: 250 / 1440 * windowWidth,
+        width: 275 / 1440 * windowWidth,
+        left: 5 / 1440 * windowWidth,
         height: 592 / 1024 * windowHeight,
+        top: 195 / 1024 * windowHeight,
         borderRadius: 10,
+        // backgroundColor: "rgba(255, 255, 255, 0.7)",
     },
+
     friendbox:{
         flex:1, 
         flexDirection:"column",
@@ -657,8 +694,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         left:0.05*windowWidth,
         height:0.08 * windowHeight,
-        width: 0.013*windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        width: 0.015*windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 1)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
@@ -716,8 +753,6 @@ const styles = StyleSheet.create({
         "fontSize": 18,
         "color": "#FFFFFF",
         position:'absolute',
-        // top:0.21*windowHeight,
-        // left:0.05*windowWidth
         top:0.01*windowHeight,
         left:0.02*windowWidth
     },

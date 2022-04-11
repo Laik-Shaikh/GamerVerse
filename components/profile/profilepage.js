@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions, ImageBackground, Text, TouchableOpacity, FlatList, TextInput, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, Dimensions, ImageBackground, Text, TouchableOpacity, FlatList, TextInput, ScrollView ,ActivityIndicator} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
 
@@ -195,7 +195,16 @@ export default function profilepage({ navigation, route }) {
         }
     }
     if (!userInfo || !myGames || !gameData) {
-        return (<Text>Rukavat ke liye khed hai</Text>)
+        return (
+            <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+                {/* <View style={styles.loading}>
+                </View> */}
+            </LinearGradient>
+            )
     }
     if (nowEditable) {
         return (
@@ -444,8 +453,8 @@ const styles = StyleSheet.create({
     container: {
         position: "relative",
         width: "100%",
-        height: "100%"
-
+        height: "100%",
+        overflow: 'hidden',
     },
     background: {
         position: "relative",
