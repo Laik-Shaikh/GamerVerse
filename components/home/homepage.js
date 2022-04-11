@@ -203,7 +203,7 @@ IncomingRequests.splice(index, 1);
 
 var handleSearch = (e) => {
 if (e.nativeEvent.key == 'Enter') {
-navigation.navigate("SearchName", {textInputValue})
+navigation.push("SearchName", {textInputValue})
 console.log('search started')
 }
 }
@@ -229,7 +229,7 @@ if(users && IncomingRequests)
   const signOutUser = async () => {
     try{
         await auth.signOut();
-        navigation.navigate("Login");
+        navigation.push("Login");
         
     }catch(e){
         Alert.alert("Could not Logout");
@@ -350,7 +350,7 @@ if(users && IncomingRequests)
     const signOutUser = async () => {
         try {
             await auth.signOut();
-            navigation.navigate("Login");
+            navigation.push("Login");
 
         } catch (e) {
             Alert.alert("Could not Logout");
@@ -376,21 +376,21 @@ if(users && IncomingRequests)
                 colors={['#013C00', '#000000']}
                 style={styles.background} >
                 <ImageBackground source={require('./homeAssets/designspikes1.png')} style={styles.spike1} />
-                <Image source={require('./homeAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.navigate("Home")} />
+                <Image source={require('./homeAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.push("Home")} />
                 <TouchableOpacity style={styles.logout} onPress={() => signOutUser()}>
                     <Text style={styles.uploadText}>Log Out</Text>
                 </TouchableOpacity>
                 <ImageBackground source={require('./homeAssets/menubar.png')} style={styles.menu} />
-                <TouchableOpacity style={styles.homebtn} onPress={() => navigation.navigate("Home")}>
+                <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
                     <Text style={styles.highlighttxt}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.navigate("Profile")}>
+                <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
                     <Text style={styles.robototxt}>Profile</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.navigate("MyGames")}>
+                <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.push("MyGames")}>
                     <Text style={styles.robototxt}>My Games</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.navigate("GameHub")}>
+                <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.push("GameHub")}>
                     <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     <Image source={require('./homeAssets/searchIcon.png')} style={styles.searchIcon} />
@@ -474,7 +474,7 @@ if(users && IncomingRequests)
                         {
                         return(
                         <View  key={index} style={styles.friendbox}>
-                            <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", friendUid[index])}>
+                            <TouchableOpacity onPress={() => navigation.push("SearchProfile", friendUid[index])}>
                                 <Image source={friendImages[index]} style={styles.dpview}/>
                                 <Text style={styles.nametxt}>{profile}</Text>
                             </TouchableOpacity> 
