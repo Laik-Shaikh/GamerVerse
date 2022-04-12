@@ -5,6 +5,7 @@ import fire from '../firebase';
 import uuid from 'uuid';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import {getAuth} from "firebase/auth";
+import { createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup } from "firebase/auth";
 import {getDatabase,ref,set, query,push,get, orderByChild, equalTo} from "firebase/database"
 
 import * as ImagePicker from 'expo-image-picker';
@@ -14,7 +15,7 @@ const windowHeight = Dimensions.get('window').height
 
 
 
-export default function CreateProfile({navigation}) {
+export default function CreateProfile({navigation,route}) {
 
   const [image, setImage] = useState(null);
 
@@ -26,9 +27,16 @@ export default function CreateProfile({navigation}) {
   const auth = getAuth()
   const db = getDatabase()
   
-  const storageRef = strRef(storage, 'Profile/'+auth.currentUser.uid+'.jpg');
-  const dbRef = ref(db,'users/'+auth.currentUser.uid)
-  console.log(auth.currentUser)
+  const parameterAcceptor = route.params;
+  console.log(parameterAcceptor)
+  var pArray=Object.values(parameterAcceptor)
+  console.log(pArray)
+  const UName=pArray[1]
+  console.log(UName)
+  const PWord=pArray[0]
+
+
+
 
   const [location,setLocation] = React.useState()
   const [selectedValue,setSelectedValue] = React.useState()
@@ -57,7 +65,7 @@ export default function CreateProfile({navigation}) {
       
     }
   };
-  const [UName, setName] = React.useState();
+  const [UserName, setUserName] = React.useState();
   const [PNum, setPNum] = React.useState(0);
   const [Disc, setDisc] = React.useState();
   function discCheck(Disc){
@@ -66,7 +74,6 @@ export default function CreateProfile({navigation}) {
     let k=0;
     let hash = '#'
     for (var i=0; i < Disc.length; i++) {
-      console.log(Disc[i]);
         if(Disc[i]=='#') {
             k++;
             for (var l=1;l<5;l++){
@@ -78,7 +85,6 @@ export default function CreateProfile({navigation}) {
       }
         if(k>=1 && j == 4)
         {
-          console.log("disc tag approoved");
           return true
         }
         else 
@@ -91,18 +97,38 @@ export default function CreateProfile({navigation}) {
     let numbers = '0123456789';
     for (var i=0; i < PNum.length; i++) {
         if(numbers.indexOf(PNum[i]) > -1 && PNum.length==10) {
-            console.log("Phone number approoved")
+          
         }
         else {
             alert("Please enter valid phone number");
             return false
         }
     }
-    
     return true
-}
+  }
+    function NameCheck(UserName){
+          if(UserName.length>0) {
+            return true
+          }
+          else {
+              alert("Please enter valid name");
+              return false
+          }
+        }
+        // function ImageCheck(uri){
+        //   if(uri) {
+        //     return true
+        //   }
+        //   else {
+        //       alert("Please upload display picture");
+        //       return false
+        //   }
+        // }
+
 async function sendFirebaseData(){
             console.log(image);
+            const storageRef = strRef(storage, 'Profile/'+auth.currentUser.uid+'.jpg');
+            const dbRef = ref(db,'users/'+auth.currentUser.uid)
             const response = await fetch(image);
             const blob = await response.blob();
             uploadBytes(storageRef, blob, metadata).then((snapshot) => {
@@ -117,9 +143,9 @@ async function sendFirebaseData(){
                     ConfirmedProfiles:['XX'],
                     DiscordId: Disc,
                     uid: auth.currentUser.uid,
-                    Name: UName,
+                    Name: UserName,
                     DisplayPicture: url,
-                    aboutMe:"Hey, I am "+UName,
+                    aboutMe:"Hey, I am "+UserName,
                     PostCount: 0
                   })
                 let LocUploadRef = query(ref(db,'locations/'),orderByChild('LocationLower'),equalTo(selectedValue.toLowerCase()))
@@ -175,7 +201,7 @@ function renderSug() {
           <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FCamIcon.png?alt=media&token=f86b3513-20cc-4a25-8e60-26c7f71fb7da"} style={styles.CamIcon} />
           {image && <Image source={{ uri:image }} style={styles.ProfileImage} />}
           </TouchableOpacity>
-          <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={UName => setName(UName)}></TextInput>
+          <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={UserName => setUserName(UserName)}></TextInput>
           <TextInput style={styles.InputStyle2} placeholder='Phone Number' onChangeText={PNum => setPNum(PNum)}></TextInput>
           <TextInput 
           
@@ -199,13 +225,21 @@ function renderSug() {
                 try {
                   mobileCheck(PNum);
                   discCheck(Disc);
-                  if(mobileCheck(PNum) && discCheck(Disc)){
+                  NameCheck(UserName);
+                  console.log(mobileCheck(PNum),
+                  discCheck(Disc),
+                  NameCheck(UserName))
+                  if(!image) alert("Please enter a profile image.");
+                  if(mobileCheck(PNum) && discCheck(Disc) && NameCheck(UserName) && (image)) {
+                    console.log("making account")
+                    await createUserWithEmailAndPassword(auth,UName,PWord)
                     sendFirebaseData();
                     navigation.navigate('GameHub')
                   }
                 } catch (error) {
                   console.log(error);
-                  alert('Error');
+                  alert("Some data already exists or is missing. Please enter correct data.")
+                  navigation.navigate("Login")
                 }
               }
             }>
