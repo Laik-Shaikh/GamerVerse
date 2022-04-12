@@ -201,7 +201,7 @@ export default function homepage({ navigation, route }) {
     }
 
     var handleSearch = (e) => {
-        if (e.nativeEvent.key == 'Enter') {
+        if (e.nativeEvent.key == 'Enter' && textInputValue.length>0 && textInputValue!=" ") {
             navigation.navigate("SearchName", { textInputValue })
             console.log('search started')
         }
@@ -311,7 +311,7 @@ export default function homepage({ navigation, route }) {
 
 
         const likePhoto = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Post%2FLike.png?alt=media&token=bfce5738-8e63-4bb3-8841-212c7fef39d6'
-
+        const white = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FwhiteLike.png?alt=media&token=e0746851-94cf-424a-9541-684544a056ce'
 
         const pickImage = async () => {
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -346,6 +346,7 @@ export default function homepage({ navigation, route }) {
                             GameCode: selectGameCode,
                             Image: url,
                             LikeImage: likePhoto,
+                            WhiteLike: white,
                             Likes: ['XX'],
                             // User: userName,
                             PostNumber: postNumber,
@@ -429,12 +430,11 @@ export default function homepage({ navigation, route }) {
                         <Image style={{
                             position: 'absolute',
                             resizeMode: 'contain',
-                            top: 0.011 * windowHeight,
-                            left: 0.015 * windowWidth,
-                            width: 0.03 * windowWidth,
-                            height: 0.03 * windowHeight,
-                            transform: [{ rotate: '20deg' }]
-                        }} source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FBell.png?alt=media&token=58552420-503b-45e6-a134-9b3b4f5a35b3"} />
+                            top: -0.008 * windowHeight,
+                            left: -0.008 * windowWidth,
+                            width: 0.07 * windowWidth,
+                            height: 0.07 * windowHeight,
+                        }} source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Ffrands.png?alt=media&token=93a5de65-97d2-45fc-88b9-6a845aa612c0"} />
                         <Text style={{
                             position: 'absolute',
                             left: 0.045 * windowWidth,
@@ -571,7 +571,8 @@ export default function homepage({ navigation, route }) {
                                                     }
                                                     return true;
                                                 }
-
+                                            if(newItem.Likes.includes(auth.currentUser.uid))
+                                            {
                                                 return (
                                                     <View style={styles.allPost}>
                                                     <TouchableOpacity onPress={() => navigation.push("SearchProfile", newItem.uid)}>
@@ -581,6 +582,50 @@ export default function homepage({ navigation, route }) {
                                                         <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                position: 'absolute',
+                                                                width: 0.053 * windowWidth,
+                                                                height: 0.053 * windowHeight,
+                                                                top: 0.52 * windowHeight,
+                                                                left: 0.006 * windowWidth
+                                                            }}
+                                                            onPress={() => {
+                                                                // console.log(likes)
+                                                                if (!newItem.Likes.includes(auth.currentUser.uid)) {
+                                                                    if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
+
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    var ind = likeData.indexOf(auth.currentUser.uid)
+                                                                    likeData.splice(ind, 1)
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                            }}
+                                                        >
+                                                           <Image source={newItem.LikeImage} style={styles.likeImage} /> 
+                                                        </TouchableOpacity>
+                                                        {console.log(newItem.DisplayProfile)}
+                                                            
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
+                                                    </View>
+                                                )
+                                            }
+                                            else{
+                                                return (
+                                                    <View style={styles.allPost}>
+                                                        <Image source={newItem.Image} style={styles.post} />
+                                                        <Text style={styles.profileName}>{newItem.User}</Text>
+                                                        <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                        {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
@@ -608,13 +653,15 @@ export default function homepage({ navigation, route }) {
                                                                 }
                                                             }}
                                                         >
-                                                            <Image source={newItem.LikeImage} style={styles.likeImage} />
+                                                            <Image source={newItem.WhiteLike} style={styles.whiteLikeImage} />   
                                                         </TouchableOpacity>
                                                         {console.log(newItem.DisplayProfile)}
+                                                        
                                                         <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                     </View>
                                                 )
                                             }
+                                        }
                                         })
                                     }
                                     
@@ -636,14 +683,14 @@ export default function homepage({ navigation, route }) {
                         visible={modalVisible}
                         transparent={true}
                         onRequestClose={() => {
-                            Alert.alert("Post Uploaded Successfully.");
+                            Alert.alert("Post will be uploaded in some time.");
                             setModalVisible(!modalVisible);
                         }}
                     >
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 {/* <View> */}
-                                <TextInput placeholder='Enter the Description'
+                                <TextInput placeholder='Caption for your post'
                                     style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
                                 {/* </View> */}
@@ -653,7 +700,7 @@ export default function homepage({ navigation, route }) {
                                         setModalVisible(!modalVisible)
                                     }}
                                 >
-                                    <Text style={styles.textStyle}>Cancel</Text>
+                                    <Text style={styles.text1}>Cancel</Text>
                                 </TouchableOpacity>
 
                                 {/* Upload to FireBase       */}
@@ -662,9 +709,16 @@ export default function homepage({ navigation, route }) {
                                     onPress={
                                         async () => {
                                             try {
-                                                uploadPost();
-                                                alert("Uploaded Successfully");
-                                                setModalVisible(!modalVisible);
+                                                if(!image) alert("Please choose image.");
+                                                if(!selectGameName) alert("Please choose game.");
+                                                if((image) && (selectGameName))
+                                                {
+                                                    uploadPost();
+                                                    alert("Uploaded Successfully");
+                                                    setModalVisible(!modalVisible);
+                                                }
+                                               
+                                                
 
                                             } catch (error) {
                                                 console.log('error');
@@ -673,7 +727,7 @@ export default function homepage({ navigation, route }) {
                                         }
                                     }
                                 >
-                                    <Text style={styles.textStyle}>Upload</Text>
+                                    <Text style={styles.text1}>Upload</Text>
                                 </TouchableOpacity>
 
                                 {/* Choose Image */}
@@ -681,12 +735,12 @@ export default function homepage({ navigation, route }) {
                                 <TouchableOpacity style={[styles.button, styles.chooseButton]}
                                     onPress={pickImage}
                                 >
-                                    <Text style={styles.textStyle}>Choose Image</Text>
+                                    <Text style={styles.text1}>Choose Image</Text>
                                     {image && <Image source={{ uri: image }} style={styles.selectedImage} />}
                                 </TouchableOpacity>
 
                                 <View style={styles.name}>
-                                    <Text style={styles.text1}>This Post is Related to : </Text>
+                                    <Text style={styles.text2}>Select Game : </Text>
                                 </View>
 
                                 <ScrollView style={styles.gameScrollContainer} vertical={true}>
@@ -846,6 +900,19 @@ const styles = StyleSheet.create({
         "fontWeight": "bold",
         "fontSize": 18,
         "color": "#000000",
+    },
+    text2: {
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 18,
+        "color": "white",
+    },
+
+    text2: {
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 18,
+        "color": "white",
     },
 
     homebtn: {
@@ -1069,6 +1136,7 @@ const styles = StyleSheet.create({
         borderWidth: '2px',
         borderStyle: 'solid',
         borderColor: '#006400',
+        backgroundColor: '#FFFFFF',
         alignItems: 'center',
         paddingTop: '5px',
         paddingBottom: '5px'
@@ -1083,7 +1151,8 @@ const styles = StyleSheet.create({
 
     modalView: {
         margin: 20,
-        backgroundColor: 'white',
+        // backgroundColor: "rgba(255, 255, 255, 0.3)",
+        backgroundColor: "black",
         borderRadius: 20,
         padding: 35,
         width: 0.6 * windowWidth,
@@ -1107,22 +1176,23 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        borderRadius: 20,
+        borderRadius: 10,
         padding: 10,
         elevation: 2,
     },
 
     uploadButton: {
-        backgroundColor: 'green',
+        backgroundColor: 'white',
         height: 0.05 * windowHeight,
         width: 0.15 * windowWidth,
         left: -0.18 * windowWidth,
         top: 0.43 * windowHeight,
+        textAlign: 'center'
 
     },
 
     chooseButton: {
-        backgroundColor: '#0000cd',
+        backgroundColor: 'white',
         height: 0.05 * windowHeight,
         width: 0.15 * windowWidth,
         // left: 0.05*windowWidth,
@@ -1139,16 +1209,18 @@ const styles = StyleSheet.create({
         width: 0.15 * windowWidth,
         left: 0.18 * windowWidth,
         top: 0.48 * windowHeight,
-
+        textAlign: 'center',
+        alignContent: 'center',
+        alignItems: 'center'
     },
 
     textStyle: {
-        marginTop: '10px',
+        // marginTop: '10px',
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 20,
-        marginBottom: '15px'
+        // marginBottom: '10px'
     },
 
     selectedImage: {
@@ -1166,7 +1238,7 @@ const styles = StyleSheet.create({
         height: 0.08 * windowHeight,
         paddingLeft: '15px',
         top: '20px',
-        backgroundColor: 'cyan'
+        backgroundColor: 'white'
     },
 
     name: {
@@ -1185,7 +1257,7 @@ const styles = StyleSheet.create({
         top: 0.19 * windowHeight,
         // flexGrow: 0.1,
         // justifyContent: 'space-between',
-        // backgroundColor: 'cyan'
+        // backgroundColor: 'white'
     },
 
     postContainer: {
@@ -1228,6 +1300,18 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: '100%',
         height: '100%'
+    },
+
+    whiteLikeImage:{
+        position: 'absolute',
+        // resizeMode: 'contain',
+        width: 0.045*windowWidth,
+        height: 0.045*windowHeight,
+        left: 0.0001*windowWidth,
+        marginTop: 0.01 * windowHeight,
+        // width: '80%',
+        // height: '80%',
+        // marginBottom: '2px'
     },
 
     profile: {
