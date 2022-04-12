@@ -7,6 +7,9 @@
     },
     "locations": {
       ".indexOn": "LocationLower"
+    },
+    "games": {
+      ".indexOn": "Code"
     }
   }
 }
