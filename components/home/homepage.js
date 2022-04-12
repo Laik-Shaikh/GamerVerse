@@ -421,7 +421,9 @@ export default function homepage({ navigation, route }) {
                     <TextInput 
                     style={styles.InputStyle1} 
                     placeholder='Search for friends, games or location'
-                    onChangeText={(text) => setTextInputValue(text)}
+                    onChangeText={(text) => {
+                        getLocations(text)
+                        setTextInputValue(text)}}
                     value={textInputValue}
                     onKeyPress={e => handleSearch(e)}
                     ></TextInput>
