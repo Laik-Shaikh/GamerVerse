@@ -309,7 +309,7 @@ export default function homepage({ navigation, route }) {
 
 
         const likePhoto = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Post%2FLike.png?alt=media&token=bfce5738-8e63-4bb3-8841-212c7fef39d6'
-
+        const white = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FwhiteLike.png?alt=media&token=e0746851-94cf-424a-9541-684544a056ce'
 
         const pickImage = async () => {
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -344,6 +344,7 @@ export default function homepage({ navigation, route }) {
                             GameCode: selectGameCode,
                             Image: url,
                             LikeImage: likePhoto,
+                            WhiteLike: white,
                             Likes: ['XX'],
                             // User: userName,
                             PostNumber: postNumber,
@@ -569,6 +570,7 @@ export default function homepage({ navigation, route }) {
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
@@ -596,7 +598,13 @@ export default function homepage({ navigation, route }) {
                                                                 }
                                                             }}
                                                         >
-                                                            <Image source={newItem.LikeImage} style={styles.likeImage} />
+                                                            if(newItem.Likes.includes(auth.currentUser.uid))
+                                                            {
+                                                                <Image source={newItem.LikeImage} style={styles.likeImage} />
+                                                            }
+                                                            else{
+                                                                <Image source={newItem.WhiteLike} style={styles.likeImage} />
+                                                            }
                                                         </TouchableOpacity>
                                                         {console.log(newItem.DisplayProfile)}
                                                         <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
@@ -674,7 +682,7 @@ export default function homepage({ navigation, route }) {
                                 </TouchableOpacity>
 
                                 <View style={styles.name}>
-                                    <Text style={styles.text1}>This Post is Related to : </Text>
+                                    <Text style={styles.text2}>This Post is Related to : </Text>
                                 </View>
 
                                 <ScrollView style={styles.gameScrollContainer} vertical={true}>
@@ -855,6 +863,13 @@ const styles = StyleSheet.create({
         "fontWeight": "bold",
         "fontSize": 18,
         "color": "#000000",
+    },
+
+    text2: {
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 18,
+        "color": "white",
     },
 
     homebtn: {
@@ -1072,7 +1087,7 @@ const styles = StyleSheet.create({
         // borderBottomRightRadius:  60,
         borderWidth: '2px',
         borderStyle: 'solid',
-        borderColor: '#006400',
+        borderColor: 'white',
         alignItems: 'center',
         paddingTop: '5px',
         paddingBottom: '5px'
@@ -1087,7 +1102,7 @@ const styles = StyleSheet.create({
 
     modalView: {
         margin: 20,
-        backgroundColor: 'white',
+        backgroundColor: '#006400',
         borderRadius: 20,
         padding: 35,
         width: 0.6 * windowWidth,
@@ -1111,7 +1126,7 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        borderRadius: 20,
+        borderRadius: 10,
         padding: 10,
         elevation: 2,
     },
@@ -1127,7 +1142,7 @@ const styles = StyleSheet.create({
     },
 
     uploadButton: {
-        backgroundColor: 'green',
+        backgroundColor: '#32CD32',
         height: 0.05 * windowHeight,
         width: 0.15 * windowWidth,
         left: -0.18 * windowWidth,
@@ -1157,12 +1172,12 @@ const styles = StyleSheet.create({
     },
 
     textStyle: {
-        marginTop: '10px',
+        // marginTop: '10px',
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 20,
-        marginBottom: '15px'
+        // marginBottom: '10px'
     },
 
     selectedImage: {
@@ -1180,7 +1195,7 @@ const styles = StyleSheet.create({
         height: 0.08 * windowHeight,
         paddingLeft: '15px',
         top: '20px',
-        backgroundColor: 'cyan'
+        backgroundColor: 'white'
     },
 
     name: {
@@ -1199,7 +1214,7 @@ const styles = StyleSheet.create({
         top: 0.19 * windowHeight,
         // flexGrow: 0.1,
         // justifyContent: 'space-between',
-        // backgroundColor: 'cyan'
+        backgroundColor: 'orange'
     },
 
     postContainer: {
