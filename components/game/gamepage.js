@@ -80,9 +80,9 @@ if(!gameInfo)
                 start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
                 colors={['#013C00', '#000000']}
                 style={styles.background} >
-                <ImageBackground source={require('./gameAssets/designspikes1.png')} style={styles.spike1} />
-                <Image source={require('./gameAssets/gamerversetitle.png')} style={styles.title} />
-                <ImageBackground source={require('./gameAssets/menubar.png')} style={styles.menu} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fmenubar.png?alt=media&token=ffa75a86-6d73-441d-b9b5-3d48601a0994"} style={styles.menu} />
                 <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
                 <Text style={styles.robototxt}>Home</Text>
                 </TouchableOpacity>
@@ -95,7 +95,7 @@ if(!gameInfo)
                 <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
                 <Text style={styles.highlighttxt}>Game Hub</Text>
                 </TouchableOpacity>
-                <Image source={require('./gameAssets/searchIcon.png')} style={styles.searchIcon} />
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
                 <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
                 <View style={styles.ratingContainer}>
                     <Text style={styles.ratingTxt}>Rating{gameInfo.Rating}</Text>
@@ -103,7 +103,7 @@ if(!gameInfo)
                 <View style={styles.desclabContainer}>
                     <Text style={styles.ratingTxt}>Description</Text>
                 </View>
-                <ImageBackground source={require('./gameAssets/designspikes.png')} style={styles.spike2} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
                 <View style={styles.taglabContainer}>
                     <Text style={styles.ratingTxt}>Tag</Text>
                 </View>
@@ -162,9 +162,9 @@ else{
                 start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
                 colors={['#013C00', '#000000']}
                 style={styles.background} >
-                <ImageBackground source={require('./gameAssets/designspikes1.png')} style={styles.spike1} />
-                <Image source={require('./gameAssets/gamerversetitle.png')} style={styles.title} />
-                <ImageBackground source={require('./gameAssets/menubar.png')} style={styles.menu} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fmenubar.png?alt=media&token=ffa75a86-6d73-441d-b9b5-3d48601a0994"} style={styles.menu} />
                 <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
                 <Text style={styles.robototxt}>Home</Text>
                 </TouchableOpacity>
@@ -177,7 +177,7 @@ else{
                 <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
                 <Text style={styles.highlighttxt}>Game Hub</Text>
                 </TouchableOpacity>
-                <Image source={require('./gameAssets/searchIcon.png')} style={styles.searchIcon} />
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
                 <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
                 <View style={styles.ratingContainer}>
                     <Text style={styles.ratingTxt}>Rating{gameInfo.Rating}</Text>
@@ -185,7 +185,7 @@ else{
                 <View style={styles.desclabContainer}>
                     <Text style={styles.ratingTxt}>Description</Text>
                 </View>
-                <ImageBackground source={require('./gameAssets/designspikes.png')} style={styles.spike2} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
                 <View style={styles.taglabContainer}>
                     <Text style={styles.ratingTxt}>Tag</Text>
                 </View>

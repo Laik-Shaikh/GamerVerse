@@ -132,13 +132,13 @@ function renderGame(){
                 style = {styles.background}
             />
             
-            <ImageBackground source={require('./searchAssets/designspikes1.png')} 
+            <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fds1.png?alt=media&token=9753aac0-931b-4c66-9f2a-00d65dc99bd6"} 
                 style={styles.spikes1} />
-            <ImageBackground source={require('./searchAssets/designspikes2.png')} 
+            <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fds2.png?alt=media&token=1f1f37dd-b12d-43eb-be6e-0e739dc18b41"} 
                 style={styles.spikes2} />
-            <Image source={require('./searchAssets/GamerVerseTitle.png')} 
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} 
                 style = {styles.GamerVerseTitle} />   
-            <ImageBackground source={require('./searchAssets/MenuBar.png')}
+            <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"}
                 style = {styles.menuBar} />
 
             {/* NavBar Buttons     */}
@@ -154,7 +154,7 @@ function renderGame(){
             <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
                 <Text style={styles.robototxt}>Game Hub</Text>
             </TouchableOpacity>
-            <Image source={require('./searchAssets/searchIcon.png')} style={styles.searchIcon} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
             <TextInput 
                     style={styles.InputStyle1} 
                     placeholder='Search for friends, games or location'
@@ -167,7 +167,7 @@ function renderGame(){
             <Text style={styles.playersearchText} >Search Result:</Text>
 
             <ScrollView style = {styles.scrollContainer} showsVerticalScrollIndicator={false}>
-                <Image source={require('./searchAssets/frown.png')} style = {styles.frown}></Image>
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Ffrown.png?alt=media&token=ad3f609b-ac13-4bef-a646-422b87ed6526"} style = {styles.frown}></Image>
                 <Text style={styles.notfoundText}>Result not found</Text>
             </ScrollView>
 
@@ -184,14 +184,14 @@ return(
             style = {styles.background}
         />
         
-        <ImageBackground source={require('./searchAssets/designspikes1.png')} 
-            style={styles.spikes1} />
-        <ImageBackground source={require('./searchAssets/designspikes2.png')} 
-            style={styles.spikes2} />
-        <Image source={require('./searchAssets/GamerVerseTitle.png')} 
-            style = {styles.GamerVerseTitle} />   
-        <ImageBackground source={require('./searchAssets/MenuBar.png')}
-            style = {styles.menuBar} />
+        <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fds1.png?alt=media&token=9753aac0-931b-4c66-9f2a-00d65dc99bd6"} 
+                style={styles.spikes1} />
+            <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fds2.png?alt=media&token=1f1f37dd-b12d-43eb-be6e-0e739dc18b41"} 
+                style={styles.spikes2} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} 
+                style = {styles.GamerVerseTitle} />   
+            <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"}
+                style = {styles.menuBar} />
 
         {/*Search Result*/}
         <Text style={styles.playersearchText} >Search Result:</Text>
@@ -215,7 +215,7 @@ return(
         <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
             <Text style={styles.robototxt}>Game Hub</Text>
         </TouchableOpacity>
-        <Image source={require('./searchAssets/searchIcon.png')} style={styles.searchIcon} />
+        <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
         <TextInput 
                     style={styles.InputStyle1} 
                     placeholder='Search for friends, games or location'
