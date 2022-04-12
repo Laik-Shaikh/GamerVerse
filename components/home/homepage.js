@@ -597,7 +597,6 @@ export default function homepage({ navigation, route }) {
                                                                     update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
                                                                         Likes: likeData
                                                                     })
-                                                                    console.log('hello')
                                                                 }
                                                                 else {
                                                                     var ind = likeData.indexOf(auth.currentUser.uid)
@@ -643,7 +642,7 @@ export default function homepage({ navigation, route }) {
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 {/* <View> */}
-                                <TextInput placeholder='Enter the Description'
+                                <TextInput placeholder='Caption for your post'
                                     style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
                                 {/* </View> */}
@@ -653,7 +652,7 @@ export default function homepage({ navigation, route }) {
                                         setModalVisible(!modalVisible)
                                     }}
                                 >
-                                    <Text style={styles.textStyle}>Cancel</Text>
+                                    <Text style={styles.text1}>Cancel</Text>
                                 </TouchableOpacity>
 
                                 {/* Upload to FireBase       */}
@@ -673,7 +672,7 @@ export default function homepage({ navigation, route }) {
                                         }
                                     }
                                 >
-                                    <Text style={styles.textStyle}>Upload</Text>
+                                    <Text style={styles.text1}>Upload</Text>
                                 </TouchableOpacity>
 
                                 {/* Choose Image */}
@@ -681,12 +680,12 @@ export default function homepage({ navigation, route }) {
                                 <TouchableOpacity style={[styles.button, styles.chooseButton]}
                                     onPress={pickImage}
                                 >
-                                    <Text style={styles.textStyle}>Choose Image</Text>
+                                    <Text style={styles.text1}>Choose Image</Text>
                                     {image && <Image source={{ uri: image }} style={styles.selectedImage} />}
                                 </TouchableOpacity>
 
                                 <View style={styles.name}>
-                                    <Text style={styles.text1}>This Post is Related to : </Text>
+                                    <Text style={styles.text2}>Select Game : </Text>
                                 </View>
 
                                 <ScrollView style={styles.gameScrollContainer} vertical={true}>
@@ -846,6 +845,12 @@ const styles = StyleSheet.create({
         "fontWeight": "bold",
         "fontSize": 18,
         "color": "#000000",
+    },
+    text2: {
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 18,
+        "color": "white",
     },
 
     homebtn: {
@@ -1064,6 +1069,7 @@ const styles = StyleSheet.create({
         borderWidth: '2px',
         borderStyle: 'solid',
         borderColor: '#006400',
+        backgroundColor: '#FFFFFF',
         alignItems: 'center',
         paddingTop: '5px',
         paddingBottom: '5px'
@@ -1078,7 +1084,8 @@ const styles = StyleSheet.create({
 
     modalView: {
         margin: 20,
-        backgroundColor: 'white',
+        // backgroundColor: "rgba(255, 255, 255, 0.3)",
+        backgroundColor: "black",
         borderRadius: 20,
         padding: 35,
         width: 0.6 * windowWidth,
@@ -1118,16 +1125,17 @@ const styles = StyleSheet.create({
     },
 
     uploadButton: {
-        backgroundColor: 'green',
+        backgroundColor: 'white',
         height: 0.05 * windowHeight,
         width: 0.15 * windowWidth,
         left: -0.18 * windowWidth,
         top: 0.43 * windowHeight,
+        textAlign: 'center'
 
     },
 
     chooseButton: {
-        backgroundColor: '#0000cd',
+        backgroundColor: 'white',
         height: 0.05 * windowHeight,
         width: 0.15 * windowWidth,
         // left: 0.05*windowWidth,
@@ -1144,7 +1152,9 @@ const styles = StyleSheet.create({
         width: 0.15 * windowWidth,
         left: 0.18 * windowWidth,
         top: 0.48 * windowHeight,
-
+        textAlign: 'center',
+        alignContent: 'center',
+        alignItems: 'center'
     },
 
     textStyle: {
@@ -1171,7 +1181,7 @@ const styles = StyleSheet.create({
         height: 0.08 * windowHeight,
         paddingLeft: '15px',
         top: '20px',
-        backgroundColor: 'cyan'
+        backgroundColor: 'white'
     },
 
     name: {
@@ -1190,7 +1200,7 @@ const styles = StyleSheet.create({
         top: 0.19 * windowHeight,
         // flexGrow: 0.1,
         // justifyContent: 'space-between',
-        // backgroundColor: 'cyan'
+        // backgroundColor: 'white'
     },
 
     postContainer: {
