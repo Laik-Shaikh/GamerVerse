@@ -69,7 +69,7 @@ export default function searchpagename ({ navigation, route }){
             <View>
         {/* <Text style={[styles.playersearchText,{top: -250/1024*windowHeight,}]}>Players</Text> */}
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10, left: 0.05 * windowWidth,}}>
-                <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", profile.uid)}>
+                <TouchableOpacity onPress={() => navigation.push("SearchProfile", profile.uid)}>
                     <Image source={profile.DisplayPicture} style = {styles.profileimg}/>
                     <Text style={styles.profilename}>{profile.Name}</Text>
                 </TouchableOpacity>
@@ -87,7 +87,7 @@ export default function searchpagename ({ navigation, route }){
         if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
         return (
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10, left: 0.05 * windowWidth,}}>
-                <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", profile.uid)}>
+                <TouchableOpacity onPress={() => navigation.push("SearchProfile", profile.uid)}>
                     <Image source={profile.DisplayPicture} style = {styles.profileimg}/>
                     <Text style={styles.profilename}>{profile.Name}</Text>
                 </TouchableOpacity>
@@ -106,7 +106,7 @@ function renderGame(){
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -50/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 170}}>
                 <View style={styles.infoContainer}>
                 {console.log(game.Code)}
-                <TouchableOpacity onPress={() => navigation.navigate("Game",{ GameCode: game.Code })}>
+                <TouchableOpacity onPress={() => navigation.push("Game",{ GameCode: game.Code })}>
                     <Image source={game.Image} style = {styles.gameLogo}/>
                     <Text style={styles.gameNameTitle}>{game.Name}</Text>
                     <Text style={styles.gameDescription}>{game.Description}</Text>
@@ -142,16 +142,16 @@ function renderGame(){
                 style = {styles.menuBar} />
 
             {/* NavBar Buttons     */}
-            <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+            <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                 <Text style={styles.highlighttxt}>Home</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+            <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                 <Text style={styles.robototxt}>Profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+            <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                 <Text style={styles.robototxt}>My Games</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+            <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                 <Text style={styles.robototxt}>Game Hub</Text>
             </TouchableOpacity>
             <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
@@ -203,16 +203,16 @@ return(
         </ScrollView>
         
         {/* NavBar Buttons     */}
-        <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
             <Text style={styles.highlighttxt}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+        <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
             <Text style={styles.robototxt}>Profile</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+        <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
             <Text style={styles.robototxt}>My Games</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+        <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
             <Text style={styles.robototxt}>Game Hub</Text>
         </TouchableOpacity>
         <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
@@ -233,14 +233,15 @@ return(
 const styles = StyleSheet.create({
     container : {
         position: 'relative',
-        width : windowWidth,
-        height : windowHeight,
+        width: "100%",
+        height: "100%",
+        overflow: 'hidden',
     },
 
     background: {
         position: 'relative',
-        width: "100%",
-        height: "100%",
+        width: windowWidth,
+        height: windowHeight,
         justifyContent: 'center',
     },
 

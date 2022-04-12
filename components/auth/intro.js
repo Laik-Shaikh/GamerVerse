@@ -21,10 +21,10 @@ return (
                     style={styles.background} >
                         <TouchableOpacity  onPress={() => 
                     {if (auth.currentUser) {
-                        navigation.navigate("Home")
+                        navigation.push("Home")
                       }
                       else {
-                          navigation.navigate("Login")
+                          navigation.push("Login")
                         }
                        }
                      } >

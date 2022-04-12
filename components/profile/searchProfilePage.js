@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,Button,TextInput} from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,ScrollView,TextInput,ActivityIndicator} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
 
@@ -7,7 +7,7 @@ import fire from '../firebase';
 import 'firebase/database'
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
-import { getDatabase, onValue,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo, push ,update ,get} from "firebase/database";
 
 
 const windowWidth = Dimensions.get('screen').width;
@@ -19,6 +19,8 @@ export default function searchProfilePage ({ navigation, route }){
       var profileUid = route.params
       const [profileInfo,setProfileInfo] = React.useState()
       const [userInfo,setUserInfo] = React.useState()
+      var [gameData, setGameData] = React.useState()
+      var [myGames, setMyGames] = React.useState()
       const db = getDatabase();
       const auth = getAuth();
       var requests = [ "YY" ];
@@ -41,6 +43,16 @@ export default function searchProfilePage ({ navigation, route }){
         const data1 = Object.values(snapshot.val());
         setUserInfo(data1[0])
     })
+
+    get(query(ref(db, 'users/' + profileUid + '/Games'))).then((snapshot) => {
+        setMyGames(Object.values(snapshot.val()))
+    })
+
+    get(query(ref(db, 'games/'))).then((snapshot) => {
+        console.log(Object.values(snapshot.val()))
+        setGameData(Object.values(snapshot.val()))
+    })
+    
   },[])
   console.log(userInfo)
   console.log(profileInfo)
@@ -87,8 +99,17 @@ export default function searchProfilePage ({ navigation, route }){
             if (auth.currentUser.uid==requests[k]) return k;
         }
     }
-  if (!profileInfo) {
-    return (<Text>Rukavat ke liye khed hai</Text>)
+  if (!profileInfo  || !gameData) {
+    return (
+        <LinearGradient
+                start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                colors={['#013C00', '#000000']}
+                style={styles.background} >
+            <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+            {/* <View style={styles.loading}>
+            </View> */}
+        </LinearGradient>
+        )
 }
 
   if (profileInfo && status ==3 ){
@@ -102,19 +123,19 @@ export default function searchProfilePage ({ navigation, route }){
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.navigate("Home")} />
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
                     
-                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -182,8 +203,27 @@ export default function searchProfilePage ({ navigation, route }){
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
                         <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
-                        <Image source={require('./profileAssets/GameImage.jpg')} style={styles.gameImage} />
-                        <Text style={[styles.infoHeadTxt,{top: 0.18*windowHeight,left:0.192*windowWidth}]}>Spider-man</Text>
+                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
+                            style={styles.scrollContainer2} horizontal={true}
+                            showsHorizontalScrollIndicator={false}>
+                            {
+
+                                gameData.map((game, index) => {
+                                    if (myGames.includes(gameData[index].Code)) {
+                                        return (
+                                            <View key={index}>
+                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
+                                                    <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                                    <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    }
+                                })
+
+                            }
+
+                        </ScrollView>
                     </View>
                     
                     <View style={styles.divider2}/>
@@ -203,19 +243,19 @@ export default function searchProfilePage ({ navigation, route }){
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.navigate("Home")} />
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
                     
-                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -275,8 +315,27 @@ export default function searchProfilePage ({ navigation, route }){
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
                         <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
-                        <Image source={require('./profileAssets/GameImage.jpg')} style={styles.gameImage} />
-                        <Text style={[styles.infoHeadTxt,{top: 0.18*windowHeight,left:0.192*windowWidth}]}>Spider-man</Text>
+                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
+                            style={styles.scrollContainer2} horizontal={true}
+                            showsHorizontalScrollIndicator={false}>
+                            {
+
+                                gameData.map((game, index) => {
+                                    if (myGames.includes(gameData[index].Code)) {
+                                        return (
+                                            <View key={index}>
+                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
+                                                    <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                                    <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    }
+                                })
+
+                            }
+
+                        </ScrollView>
                     </View>
                     
                     <View style={styles.divider2}/>
@@ -296,19 +355,19 @@ export default function searchProfilePage ({ navigation, route }){
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.navigate("Home")} />
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
                     
-                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -368,8 +427,27 @@ export default function searchProfilePage ({ navigation, route }){
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
                         <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
-                        <Image source={require('./profileAssets/GameImage.jpg')} style={styles.gameImage} />
-                        <Text style={[styles.infoHeadTxt,{top: 0.18*windowHeight,left:0.192*windowWidth}]}>Spider-man</Text>
+                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
+                            style={styles.scrollContainer2} horizontal={true}
+                            showsHorizontalScrollIndicator={false}>
+                            {
+
+                                gameData.map((game, index) => {
+                                    if (myGames.includes(gameData[index].Code)) {
+                                        return (
+                                            <View key={index}>
+                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
+                                                    <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                                    <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    }
+                                })
+
+                            }
+
+                        </ScrollView>
                     </View>
                     
                     <View style={styles.divider2}/>
@@ -384,8 +462,8 @@ const styles = StyleSheet.create({
     container: {
         position: "relative",
         width: "100%",
-        height: "100%"
-
+        height: "100%",
+        overflow: 'hidden',
     },
     background: {
         position:"relative",
@@ -582,12 +660,18 @@ const styles = StyleSheet.create({
         color: "#FFFFFF"
     },
     gameImage: {
-        position: "absolute",
-        left: 0.05 * windowWidth,
+        padding: 1,
+        height: 0.18 * windowHeight,
+        width: 0.17 * windowWidth,
+    },
+
+    scrollContainer2: {
+        position: 'absolute',
+        width: 0.48 * windowWidth,
+        height: 0.22 * windowHeight,
+        left: 0.18 * windowWidth,
         top: 0.02 * windowHeight,
-        resizeMode: 'contain',
-        height: 0.15 * windowHeight,
-        width: 0.35 * windowWidth,
+        flexGrow: 0.1,
     },
     divider1: {
         position: "absolute",

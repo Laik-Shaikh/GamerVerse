@@ -7,8 +7,7 @@ import { getAuth,createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPop
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height
 
-import BG from './authAssets/BG.png'
-import S1 from './authAssets/slide1.png'
+
 //<ImageBackground source={S1} resizeMode="cover" style={styles.S1}/>
 //
 
@@ -32,8 +31,8 @@ export default function Login({ navigation }) {
                   <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup3.png?alt=media&token=1d83027a-da05-4dbf-bd10-28027ae21454"} style={styles.img1} />
                   <Text style={styles.signinText}>Sign Up</Text>
                   <TextInput style={styles.InputStyle1} placeholder='Email ID' onChangeText={UName => setUName(UName)} ref={unamekeeper}></TextInput>
-                  <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true} onChangeText={PWord => setPWord(PWord)} secureTextEntry={true}></TextInput>
-                  <TextInput style={styles.InputStyle3} placeholder='Confirm Password' secureTextEntry={true} onChangeText={ConfirmPWord => setConfirmPWord(ConfirmPWord)} secureTextEntry={true}></TextInput>
+                  <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true} onChangeText={PWord => setPWord(PWord)}></TextInput>
+                  <TextInput style={styles.InputStyle3} placeholder='Confirm Password' onChangeText={ConfirmPWord => setConfirmPWord(ConfirmPWord)} secureTextEntry={true}></TextInput>
                   <TouchableOpacity style={styles.Button} title='Register' secureTextEntry={true}onPress={
                     async () => {
                       try {

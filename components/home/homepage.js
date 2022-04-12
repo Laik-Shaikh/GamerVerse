@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, push, get, onChildAdded } from "firebase/database";
+import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt } from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
@@ -33,7 +33,7 @@ export default function homepage({ navigation, route }) {
 
     const storage = getStorage();
     const metadata = {
-      contentType: 'image/jpg',
+        contentType: 'image/jpg',
     };
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -54,12 +54,12 @@ export default function homepage({ navigation, route }) {
     var profileUid = auth.currentUser.uid;
     const [textInputValue, setTextInputValue] = React.useState('');
     var [friends, setFriends] = React.useState(null);
-   
+
     console.log(users)
     console.log(friends)
 
 
-    
+
     var [IncomingRequests, setIncomingRequests] = React.useState(null);
     var [friendIncomingRequests, setFriendIncomingRequests] = React.useState(null);
     var [friends, setFriends] = React.useState(null);
@@ -70,25 +70,25 @@ export default function homepage({ navigation, route }) {
     var friendNames = [];
     var friendImages = [];
     var friendUid = [];
-    var acceptedProfiles =[];
-    var rejectedProfiles =[];
+    var acceptedProfiles = [];
+    var rejectedProfiles = [];
     var likes = ["XX"]
 
 
-    const GameRef = query(ref(db,'games'))
-    const UserRef1 = query(ref(db,'users/' + auth.currentUser.uid + '/Games'))
-    const UserName = query(ref(db,'users/' + auth.currentUser.uid + '/Name'))
+    const GameRef = query(ref(db, 'games'))
+    const UserRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/Games'))
+    const UserName = query(ref(db, 'users/' + auth.currentUser.uid + '/Name'))
     const UidRef = query(ref(db, 'users/' + auth.currentUser.uid + '/uid'))
-    const PostCounter = query(ref(db, 'users/' + auth.currentUser.uid+ '/PostCount'));
+    const PostCounter = query(ref(db, 'users/' + auth.currentUser.uid + '/PostCount'));
     const PostCounter1 = query(ref(db, 'users/' + auth.currentUser.uid));
     const PostCounter3 = query(ref(db, 'users/' + auth.currentUser.uid + '/PostCount'));
-    const PostRef = query(ref(db,'posts'));
+    const PostRef = query(ref(db, 'posts'));
     const ProfileRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/DisplayPicture'));
-    
-    const UserRef = query(ref(db,'users/' + auth.currentUser.uid + '/RequestedProfiles'))
-    const ConfirmedProfilesRef = query(ref(db,'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
-    const ThisProfileRef = query(ref(db,'users/' + auth.currentUser.uid))
-    const ProfileRef = query(ref(db,'users'))
+
+    const UserRef = query(ref(db, 'users/' + auth.currentUser.uid + '/RequestedProfiles'))
+    const ConfirmedProfilesRef = query(ref(db, 'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
+    const ThisProfileRef = query(ref(db, 'users/' + auth.currentUser.uid))
+    const ProfileRef = query(ref(db, 'users'))
     // const [users, setUsers] = React.useState(null);
     const [location, setLocation] = React.useState(null);
     const [selectedValue, setSelectedValue] = React.useState()
@@ -97,19 +97,19 @@ export default function homepage({ navigation, route }) {
             const data = Object.values(snapshot.val());
             setIncomingRequests(data)
             // console.log(data)
-            }
+        }
         )
         onValue(ProfileRef, (snapshot) => {
             const data1 = Object.values(snapshot.val());
             setUsers(data1)
             // console.log(data1)
-            }
+        }
         )
         onValue(ConfirmedProfilesRef, (snapshot) => {
             const data2 = Object.values(snapshot.val());
             setFriends(data2)
             // console.log(data1)
-            }
+        }
         )
 
         onValue(GameRef, (snapshot) => {
@@ -131,7 +131,7 @@ export default function homepage({ navigation, route }) {
             const info2 = snapshot.val();
             setUserName(info2)
             console.log(info2)
-            }
+        }
         )
 
         onValue(UidRef, (snapshot) => {
@@ -144,7 +144,7 @@ export default function homepage({ navigation, route }) {
             const info4 = snapshot.val();
             setPostNumber(info4)
             console.log(info4)
-            }
+        }
         )
 
         onValue(PostRef, (snapshot) => {
@@ -152,204 +152,241 @@ export default function homepage({ navigation, route }) {
             // setPostImage(Object.values(data5[0]))
             // console.log(Object.values(data5[0]))
             setPostImage(info5)
-            }
+        }
         )
 
         onValue(ProfileRef1, (snapshot) => {
             const info6 = snapshot.val();
             setProfileImage(info6)
             console.log(info6)
-            }
+        }
         )
-    },[])
-console.log(IncomingRequests)
-console.log(users)
-console.log(friends)
+    }, [])
+    console.log(IncomingRequests)
+    console.log(users)
+    console.log(friends)
 
-function requestAccepted(requestUID){
-    var y = requestUID;
-    if (!friends.includes(y))
-    {
-        friends.push(y);
-        requestDenied(y);
-        update(ThisProfileRef, {
-            RequestedProfiles: IncomingRequests,
-          });
-        var FriendProfileRef = query(ref(db,'users/' + y + '/ConfirmedProfiles'))
-        var FriendProfileUpdateRef = query(ref(db,'users/' + y))
-                get(FriendProfileRef).then((snapshot) =>  {
+    function requestAccepted(requestUID) {
+        var y = requestUID;
+        if (!friends.includes(y)) {
+            friends.push(y);
+            requestDenied(y);
+            update(ThisProfileRef, {
+                RequestedProfiles: IncomingRequests,
+            });
+            var FriendProfileRef = query(ref(db, 'users/' + y + '/ConfirmedProfiles'))
+            var FriendProfileUpdateRef = query(ref(db, 'users/' + y))
+            get(FriendProfileRef).then((snapshot) => {
                 const data3 = Object.values(snapshot.val());
                 data3.push(auth.currentUser.uid)
                 console.log(data3)
                 update(FriendProfileUpdateRef, {
                     ConfirmedProfiles: data3,
-                  }); 
-                }
+                });
+            }
             )
-        // update(FriendProfileRef, {
-        //     RequestedProfiles: auth.currentUser.uid,
-        //   });  
-    }
-}
-
-function requestDenied(requestUID){
-var toRemove = requestUID;
-console.log(toRemove)
-var index = IncomingRequests.indexOf(toRemove);
-if (index > -1) { 
-IncomingRequests.splice(index, 1);
-}
-}
-
-var handleSearch = (e) => {
-if (e.nativeEvent.key == 'Enter') {
-navigation.navigate("SearchName", {textInputValue})
-console.log('search started')
-}
-}
-if(users && IncomingRequests)
-  {
-    for(var i= 1; i<users.length;i++)
-    {
-        var x = users[i].uid;
-        console.log(x);
-        if (IncomingRequests.includes(x))
-        {
-           requestNames.push(users[i].Name);
-           requestImages.push(users[i].DisplayPicture);
-           requestUID.push(users[i].uid);
-    
+            // update(FriendProfileRef, {
+            //     RequestedProfiles: auth.currentUser.uid,
+            //   });  
         }
     }
-    console.log(requestNames)
-    console.log(requestImages)
-    console.log(requestUID)
-  }
- 
-  const signOutUser = async () => {
-    try{
-        await auth.signOut();
-        navigation.navigate("Login");
-        
-    }catch(e){
-        Alert.alert("Could not Logout");
-        console.log(e)
+
+    function requestDenied(requestUID) {
+        var toRemove = requestUID;
+        console.log(toRemove)
+        var index = IncomingRequests.indexOf(toRemove);
+        if (index > -1) {
+            IncomingRequests.splice(index, 1);
+        }
     }
-}
+
+    var handleSearch = (e) => {
+        if (e.nativeEvent.key == 'Enter') {
+            navigation.navigate("SearchName", { textInputValue })
+            console.log('search started')
+        }
+    }
+
+    const getLocations = async (loc) => {
+        if (loc) {
+            const UserRef = query(ref(db, 'locations'), orderByChild('LocationLower'), startAt(loc), endAt(loc + "\uf8ff"))
+            onValue(UserRef, (snapshot) => {
+                if (snapshot.val()) {
+                    setLocation(Object.values(snapshot.val()))
+                }
+            })
+        }
+    }
+
+    function renderSug() {
+        if (!selectedValue) {
+            console.log(location)
+            return (<FlatList
+
+                data={location}
+                style={styles.LocSuggestions}
+                keyExtractor={(item) => item.magicKey}
+                renderItem={(suggestion) => {
+                    return (
+                        <TouchableOpacity style={styles.item} onPress={() => {
+                            setSelectedValue(suggestion.item.Location)
+                            navigation.navigate("SearchName", { textInputValue: suggestion.item.Location })
+                        }
+
+                        }>
+                            <Text style={styles.itemText}>{suggestion.item.Location}</Text>
+                        </TouchableOpacity>)
+                }}
+
+
+            ></FlatList>)
+        }
+    }
+
+    if (users && IncomingRequests) {
+        for (var i = 1; i < users.length; i++) {
+            var x = users[i].uid;
+            console.log(x);
+            if (IncomingRequests.includes(x)) {
+                requestNames.push(users[i].Name);
+                requestImages.push(users[i].DisplayPicture);
+                requestUID.push(users[i].uid);
+
+            }
+        }
+        console.log(requestNames)
+        console.log(requestImages)
+        console.log(requestUID)
+    }
+
+
 
     if (!users) {
-        return (<Text>Rukavat ke liye khed hai</Text>)
+        return (
+            <LinearGradient
+                start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
+                colors={['#013C00', '#000000']}
+                style={styles.background} >
+                <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
+                {/* <View style={styles.loading}>
+                </View> */}
+            </LinearGradient>
+        )
     }
 
-    if(users)
-    {
-        if(friends)
-        {
-            for(var i= 0; i<users.length;i++)
-            {
+    if (users) {
+        if (friends) {
+            for (var i = 0; i < users.length; i++) {
                 var x = users[i].uid;
                 console.log(x);
-                if (friends.includes(x))
-                {
-                friendNames.push(users[i].Name);
-                friendImages.push(users[i].DisplayPicture);
-                friendUid.push(users[i].uid);
+                if (friends.includes(x)) {
+                    friendNames.push(users[i].Name);
+                    friendImages.push(users[i].DisplayPicture);
+                    friendUid.push(users[i].uid);
                 }
             }
-        console.log(friendImages)
-        console.log(friendNames)
+            console.log(friendImages)
+            console.log(friendNames)
         }
-        
-
-    // const auth = getAuth();
-    // const db = getDatabase();
-
-    
-    
-    // var userid = ''
-    // const dbRef = ref(db,'posts/Post1')
-  
-    console.log(UserName)
-    console.log(PostCounter3)
-    console.log(GameRef)
-    console.log(UserRef1)
-    console.log(PostRef)
-    
-
-   
 
 
-    const likePhoto = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Post%2FLike.png?alt=media&token=bfce5738-8e63-4bb3-8841-212c7fef39d6'
+        // const auth = getAuth();
+        // const db = getDatabase();
 
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
 
-        console.log(result);
+        // var userid = ''
+        // const dbRef = ref(db,'posts/Post1')
 
-        if (!result.cancelled) {
-            setImage(result.uri);
-        }
-    };
+        console.log(UserName)
+        console.log(PostCounter3)
+        console.log(GameRef)
+        console.log(UserRef1)
+        console.log(PostRef)
 
-    async function uploadPost() {
-        const response = await fetch(image);
-        const blob = await response.blob();
-       
-          get(PostCounter).then((snapshot) =>  {
-            var upl3 = snapshot.val();
-            upl3 = upl3 + 1;
-            console.log(upl3)
-            var storageRef = strRef(storage, 'Post/'+ auth.currentUser.uid + '_' + upl3 + '.jpg');
-            const dbRef = ref(db,'posts/' + auth.currentUser.uid + '/Post' + postNumber)
-            uploadBytes(storageRef, blob, metadata).then((snapshot) => {
-                getDownloadURL(storageRef).then((url) => {
-                    set(dbRef, {
-                        Description: description,
-                        GameName: selectGameName,
-                        GameCode: selectGameCode,
-                        Image: url,
-                        LikeImage: likePhoto ,
-                        Likes: ['XX'],
-                        // User: userName,
-                        PostNumber : postNumber,
-                        uid: auth.currentUser.uid
-                      })
-                      })
-               
-                console.log('Uploaded a blob or file!');
-          });
-            console.log(upl3)
-            update(PostCounter1, {
-                PostCount: upl3,
-              }); 
+
+
+
+
+        const likePhoto = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Post%2FLike.png?alt=media&token=bfce5738-8e63-4bb3-8841-212c7fef39d6'
+
+
+        const pickImage = async () => {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+
+            console.log(result);
+
+            if (!result.cancelled) {
+                setImage(result.uri);
             }
-        )
+        };
+
+        async function uploadPost() {
+            const response = await fetch(image);
+            const blob = await response.blob();
+
+            get(PostCounter).then((snapshot) => {
+                var upl3 = snapshot.val();
+                upl3 = upl3 + 1;
+                console.log(upl3)
+                var storageRef = strRef(storage, 'Post/' + auth.currentUser.uid + '_' + upl3 + '.jpg');
+                const dbRef = ref(db, 'posts/' + auth.currentUser.uid + '/Post' + postNumber)
+                uploadBytes(storageRef, blob, metadata).then((snapshot) => {
+                    getDownloadURL(storageRef).then((url) => {
+                        set(dbRef, {
+                            Description: description,
+                            GameName: selectGameName,
+                            GameCode: selectGameCode,
+                            Image: url,
+                            LikeImage: likePhoto,
+                            Likes: ['XX'],
+                            // User: userName,
+                            PostNumber: postNumber,
+                            uid: auth.currentUser.uid
+                        })
+                    })
+
+                    console.log('Uploaded a blob or file!');
+                });
+                console.log(upl3)
+                update(PostCounter1, {
+                    PostCount: upl3,
+                });
+            }
+            )
 
 
-    }
-
-
-
-
-
-    const signOutUser = async () => {
-        try {
-            await auth.signOut();
-            navigation.navigate("Login");
-
-        } catch (e) {
-            Alert.alert("Could not Logout");
-            console.log(e)
         }
-    }
-    if (!games || !latestPosts) {
-        return (<Text>Rukavat ke liye khed hai</Text>)
+
+
+
+
+        const signOutUser = async () => {
+            try {
+                await auth.signOut();
+                navigation.navigate("Login");
+
+            } catch (e) {
+                Alert.alert("Could not Logout");
+                console.log(e)
+            }
+        }
+        if (!games || !latestPosts) {
+            return (
+                <LinearGradient
+                    start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                    <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
+                    {/* <View style={styles.loading}>
+                </View> */}
+                </LinearGradient>
+            )
     }
     return (
         <View style={styles.container} >
@@ -366,13 +403,13 @@ if(users && IncomingRequests)
                 <TouchableOpacity style={styles.homebtn} onPress={() => navigation.navigate("Home")}>
                     <Text style={styles.highlighttxt}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.navigate("Profile")}>
+                <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
                     <Text style={styles.robototxt}>Profile</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.navigate("MyGames")}>
+                <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.push("MyGames")}>
                     <Text style={styles.robototxt}>My Games</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.navigate("GameHub")}>
+                <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.push("GameHub")}>
                     <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
@@ -383,6 +420,7 @@ if(users && IncomingRequests)
                     value={textInputValue}
                     onKeyPress={e => handleSearch(e)}
                     ></TextInput>
+                    {renderSug()}
                     <View style={styles.notif}>
                         <Image style={{position:'absolute', 
                         resizeMode: 'contain',
@@ -411,43 +449,42 @@ if(users && IncomingRequests)
                                 "color": "#FFFFFF",
                                 }}>
                                 Friend Request by:</Text> */}
-                            <View style={{position:'relative',flex:1, flexDirection:'row'}}>
-                            <Image source={requestImages[index]} style={{
-                        position: "absolute",
-                        top: 0 * windowHeight,
-                        left: 0*windowWidth,
-                        width: 0.05 * windowHeight,
-                        height: 0.05 * windowHeight,
-                        borderRadius: 0.065 * windowHeight,}} />
-                            <Text style={{
-                                position: 'absolute',
-                                left:0.045*windowWidth,
-                                width: 0.07*windowWidth,
-                                "color": "#FFFFFF",
-                                }}>{profile} sent a friend request!</Text>                            
-                            </View> 
-                            <View style={styles.notifdecisionbox}>
-                        <TouchableOpacity  onPress={() => 
-                {
-                    if (requestAccepted(requestUID[index]));
-                    update(ThisProfileRef, {
-                        ConfirmedProfiles: friends,
-                      }); 
-                }} ><Text style={[styles.decisionbutton,{backgroundColor: "rgba(3, 184, 21, 1)"}]}>Accept</Text></TouchableOpacity>
-                        <TouchableOpacity 
-                         onPress={() => 
-                            {
-                                if (IncomingRequests.includes(requestUID[index])) requestDenied(requestUID[index]);
-                                update(ThisProfileRef, {
-                                    RequestedProfiles: IncomingRequests,
-                                  }); 
-                            }}><Text style={[styles.decisionbutton,{backgroundColor: "rgba(255, 255, 255, 0.25)"},{left: -0.03*windowWidth}]}>Decline</Text></TouchableOpacity>
-                        </View>
-                        </View>
-                        )
-                    })
-                    }
-                    </ScrollView>
+                                        <View style={{ position: 'relative', flex: 1, flexDirection: 'row' }}>
+                                            <Image source={requestImages[index]} style={{
+                                                position: "absolute",
+                                                top: 0 * windowHeight,
+                                                left: 0 * windowWidth,
+                                                width: 0.05 * windowHeight,
+                                                height: 0.05 * windowHeight,
+                                                borderRadius: 0.065 * windowHeight,
+                                            }} />
+                                            <Text style={{
+                                                position: 'absolute',
+                                                left: 0.045 * windowWidth,
+                                                width: 0.07 * windowWidth,
+                                                "color": "#FFFFFF",
+                                            }}>{profile} sent a friend request!</Text>
+                                        </View>
+                                        <View style={styles.notifdecisionbox}>
+                                            <TouchableOpacity onPress={() => {
+                                                if (requestAccepted(requestUID[index]));
+                                                update(ThisProfileRef, {
+                                                    ConfirmedProfiles: friends,
+                                                });
+                                            }} ><Text style={[styles.decisionbutton, { backgroundColor: "rgba(3, 184, 21, 1)" }]}>Accept</Text></TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    if (IncomingRequests.includes(requestUID[index])) requestDenied(requestUID[index]);
+                                                    update(ThisProfileRef, {
+                                                        RequestedProfiles: IncomingRequests,
+                                                    });
+                                                }}><Text style={[styles.decisionbutton, { backgroundColor: "rgba(255, 255, 255, 0.25)" }, { left: -0.03 * windowWidth }]}>Decline</Text></TouchableOpacity>
+                                        </View>
+                                    </View>
+                                )
+                            })
+                            }
+                        </ScrollView>
                     </View>
                     {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
                     <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
@@ -456,7 +493,7 @@ if(users && IncomingRequests)
                         {
                         return(
                         <View  key={index} style={styles.friendbox}>
-                            <TouchableOpacity onPress={() => navigation.navigate("SearchProfile", friendUid[index])}>
+                            <TouchableOpacity onPress={() => navigation.push("SearchProfile", friendUid[index])}>
                                 <Image source={friendImages[index]} style={styles.dpview}/>
                                 <Text style={styles.nametxt}>{profile}</Text>
                             </TouchableOpacity> 
@@ -475,204 +512,202 @@ if(users && IncomingRequests)
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdivider.png?alt=media&token=458aa29f-e202-4bab-8393-3a7fb6994608"} style={styles.divider} />
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
 
-                {/* {games.map((item, index) => {
+                    {/* {games.map((item, index) => {
                         if(gamesCode.includes(item.Code))
                         {
                             setGameNames(item.Name)
                         }
                     })} */}
 
- 
 
-                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={styles.postContainer}>
+
+                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer}>
                         {postImage.map((item, index) => {
                             // console.log(postImage);
                             // console.log(item)
-                            
-                        
-                            return(
+
+
+                            return (
                                 <View key={index}>
                                     {
-                                         Object.values(item).map((newItem, newIndex) => {
-                                            
-                                        if(gamesCode.includes(newItem.GameCode)){
-                                            if((!(newItem.User))){
-                                                get(query(ref(db, 'users'), orderByChild('uid'), equalTo(newItem.uid))).then((snapshot) => {
-                                                    var postUserData = Object.values(snapshot.val())
-                                                    newItem['User'] = postUserData[0].Name
-                                                    newItem.DisplayProfile = postUserData[0].DisplayPicture
-                                                    setReset(reset+0.1)
-                                                }
-                                            )}
-                                            var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes' ))
-                                            var likeData;
-                                            onValue(LikeRef, (snapshot) =>
-                                            {
-                                                console.log(LikeRef)
-                                                likeData = Object.values(snapshot.val());
-                                               
-                                                console.log(likeData)
-                                                
-                                            }
-                                            );
-                                        
-                                       
-                                            function checkLikes (userid) {
-                                                // console.log(likes.length)
-                                                for(var i=0; i<likeData.length; i++)
-                                                {
-                                                    if(userid==likes[i]) return false;
-                                                }
-                                                return true;
-                                            }
-                                        
-                                            return(
-                                                <View style={styles.allPost}>
-                                                    <Image source={newItem.Image} style={styles.post} />
-                                                    <Text style={styles.profileName}>{newItem.User}</Text>
-                                                    <Image source={newItem.DisplayProfile} style={styles.profile} />
-                                                    <Text style={styles.displayDescription}>{newItem.Description}</Text>
-                                                    {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
-                                                    <TouchableOpacity 
-                                                        style={{position: 'absolute',
-                                                                width: 0.053*windowWidth,
-                                                                height: 0.053*windowHeight,
-                                                                top: 0.52*windowHeight,
-                                                                left: 0.006*windowWidth
-                                                                }}
-                                                        onPress={  () => {
-                                                            // console.log(likes)
-                                                            if(!newItem.Likes.includes(auth.currentUser.uid))
-                                                            {
-                                                                if(checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
+                                        Object.values(item).map((newItem, newIndex) => {
 
-                                                                update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber )), {
-                                                                    Likes: likeData
-                                                                })
-                                                                console.log('hello')
-                                                            }
-                                                            else
-                                                            {
-                                                                var ind = likeData.indexOf(auth.currentUser.uid)
-                                                                likeData.splice(ind,1)
-                                                                update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber )), {
-                                                                    Likes: likeData
-                                                                })
-                                                            }
-                                                        }}        
-                                                                >
-                                                        <Image source={newItem.LikeImage} style={styles.likeImage} />
-                                                    </TouchableOpacity>
-                                                    {console.log(newItem.DisplayProfile)}
-                                                    <Text style={styles.likestext}>{newItem.Likes.length -1}</Text>
-                                                </View>
-                                            )
-                                        }
+                                            if (gamesCode.includes(newItem.GameCode)) {
+                                                if ((!(newItem.User))) {
+                                                    get(query(ref(db, 'users'), orderByChild('uid'), equalTo(newItem.uid))).then((snapshot) => {
+                                                        var postUserData = Object.values(snapshot.val())
+                                                        newItem['User'] = postUserData[0].Name
+                                                        newItem.DisplayProfile = postUserData[0].DisplayPicture
+                                                        setReset(reset + 0.1)
+                                                    }
+                                                    )
+                                                }
+                                                var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes'))
+                                                var likeData;
+                                                onValue(LikeRef, (snapshot) => {
+                                                    console.log(LikeRef)
+                                                    likeData = Object.values(snapshot.val());
+
+                                                    console.log(likeData)
+
+                                                }
+                                                );
+
+
+                                                function checkLikes(userid) {
+                                                    // console.log(likes.length)
+                                                    for (var i = 0; i < likeData.length; i++) {
+                                                        if (userid == likes[i]) return false;
+                                                    }
+                                                    return true;
+                                                }
+
+                                                return (
+                                                    <View style={styles.allPost}>
+                                                        <Image source={newItem.Image} style={styles.post} />
+                                                        <Text style={styles.profileName}>{newItem.User}</Text>
+                                                        <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                        {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                position: 'absolute',
+                                                                width: 0.053 * windowWidth,
+                                                                height: 0.053 * windowHeight,
+                                                                top: 0.52 * windowHeight,
+                                                                left: 0.006 * windowWidth
+                                                            }}
+                                                            onPress={() => {
+                                                                // console.log(likes)
+                                                                if (!newItem.Likes.includes(auth.currentUser.uid)) {
+                                                                    if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
+
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                    console.log('hello')
+                                                                }
+                                                                else {
+                                                                    var ind = likeData.indexOf(auth.currentUser.uid)
+                                                                    likeData.splice(ind, 1)
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                            }}
+                                                        >
+                                                            <Image source={newItem.LikeImage} style={styles.likeImage} />
+                                                        </TouchableOpacity>
+                                                        {console.log(newItem.DisplayProfile)}
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
+                                                    </View>
+                                                )
+                                            }
                                         })
                                     }
                                     )
-                                
-                            </View>
-                        )
 
-                    })}
-                </ScrollView>
+                                </View>
+                            )
 
-
-                <TouchableOpacity style={styles.upload} onPress={() => setModalVisible(true)}>
-                    <Text style={styles.uploadText}>Upload a Post</Text>
-                </TouchableOpacity>
+                        })}
+                    </ScrollView>
 
 
-                <Modal
-                    animationType='slide'
-                    visible={modalVisible}
-                    transparent={true}
-                    onRequestClose={() => {
-                        Alert.alert("Post Uploaded Successfully.");
-                        setModalVisible(!modalVisible);
-                    }}
-                >
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            {/* <View> */}
-                            <TextInput placeholder='Enter the Description'
-                                style={styles.textInput} onChangeText={description => setDescription(description)}
-                            />
-                            {/* </View> */}
-                            {/* <Image source={require('./homeAssets/divider.png')} style={styles.divider1} /> */}
-                            <TouchableOpacity style={styles.button, styles.buttonClose}
-                                onPress={() => {
-                                    setModalVisible(!modalVisible)
-                                }}
-                            >
-                                <Text style={styles.textStyle}>Cancel</Text>
-                            </TouchableOpacity>
+                    <TouchableOpacity style={styles.upload} onPress={() => setModalVisible(true)}>
+                        <Text style={styles.uploadText}>Upload a Post</Text>
+                    </TouchableOpacity>
 
-                            {/* Upload to FireBase       */}
 
-                            <TouchableOpacity style={styles.button, styles.uploadButton}
-                                onPress={
-                                    async () => {
-                                        try {
-                                            uploadPost();
-                                            alert("Uploaded Successfully");
-                                            setModalVisible(!modalVisible);
+                    <Modal
+                        animationType='slide'
+                        visible={modalVisible}
+                        transparent={true}
+                        onRequestClose={() => {
+                            Alert.alert("Post Uploaded Successfully.");
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                {/* <View> */}
+                                <TextInput placeholder='Enter the Description'
+                                    style={styles.textInput} onChangeText={description => setDescription(description)}
+                                />
+                                {/* </View> */}
+                                {/* <Image source={require('./homeAssets/divider.png')} style={styles.divider1} /> */}
+                                <TouchableOpacity style={[styles.button, styles.buttonClose]}
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible)
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>Cancel</Text>
+                                </TouchableOpacity>
 
-                                        } catch (error) {
-                                            console.log('error');
-                                            alert('Error')
+                                {/* Upload to FireBase       */}
+
+                                <TouchableOpacity style={[styles.button, styles.uploadButton]}
+                                    onPress={
+                                        async () => {
+                                            try {
+                                                uploadPost();
+                                                alert("Uploaded Successfully");
+                                                setModalVisible(!modalVisible);
+
+                                            } catch (error) {
+                                                console.log('error');
+                                                alert('Error')
+                                            }
                                         }
                                     }
-                                }
-                            >
-                                <Text style={styles.textStyle}>Upload</Text>
-                            </TouchableOpacity>
+                                >
+                                    <Text style={styles.textStyle}>Upload</Text>
+                                </TouchableOpacity>
 
-                            {/* Choose Image */}
+                                {/* Choose Image */}
 
-                            <TouchableOpacity style={styles.button, styles.chooseButton}
-                                onPress={pickImage}
-                            >
-                                <Text style={styles.textStyle}>Choose Image</Text>
-                                {image && <Image source={{ uri: image }} style={styles.selectedImage} />}
-                            </TouchableOpacity>
+                                <TouchableOpacity style={[styles.button, styles.chooseButton]}
+                                    onPress={pickImage}
+                                >
+                                    <Text style={styles.textStyle}>Choose Image</Text>
+                                    {image && <Image source={{ uri: image }} style={styles.selectedImage} />}
+                                </TouchableOpacity>
 
-                            <View style={styles.name}>
-                                <Text style={styles.text1}>This Post is Related to : </Text>
-                            </View>
+                                <View style={styles.name}>
+                                    <Text style={styles.text1}>This Post is Related to : </Text>
+                                </View>
 
-                            <ScrollView style={styles.gameScrollContainer} vertical={true}>
-                                {games.map((item, index) => {
-                                    if (gamesCode.includes(item.Code)) {
+                                <ScrollView style={styles.gameScrollContainer} vertical={true}>
+                                    {games.map((item, index) => {
+                                        if (gamesCode.includes(item.Code)) {
 
-                                        return (
-                                            <View key={index}>
-                                                <TouchableOpacity style={styles.gameName}
-                                                    onPress={() => {
-                                                        setSelectGameName(item.Name)
-                                                        setSelectGameCode(item.Code)
-                                                        //    console.log(item.Name)
-                                                    }} >
-                                                    <Text style={styles.gameText}>{item.Name}</Text>
-                                                    {/* {setGameNames(item.Name)} */}
-                                                </TouchableOpacity>
-                                            </View>
-                                        )
+                                            return (
+                                                <View key={index}>
+                                                    <TouchableOpacity style={styles.gameName}
+                                                        onPress={() => {
+                                                            setSelectGameName(item.Name)
+                                                            setSelectGameCode(item.Code)
+                                                            //    console.log(item.Name)
+                                                        }} >
+                                                        <Text style={styles.gameText}>{item.Name}</Text>
+                                                        {/* {setGameNames(item.Name)} */}
+                                                    </TouchableOpacity>
+                                                </View>
+                                            )
+                                        }
                                     }
-                                }
 
-                                )}
-                            </ScrollView>
+                                    )}
+                                </ScrollView>
 
+                            </View>
                         </View>
-                    </View>
-                </Modal>
-            </LinearGradient>
-        </View>
-    );
-                            
-}
+                    </Modal>
+                </LinearGradient>
+            </View>
+        );
+
+    }
 }
 
 
@@ -680,9 +715,9 @@ if(users && IncomingRequests)
 const styles = StyleSheet.create({
     container: {
         position: "relative",
-        width: windowWidth,
-        height: windowHeight,
-
+        width: "100%",
+        height: "100%",
+        overflow: 'hidden',
     },
 
     background: {
@@ -690,26 +725,31 @@ const styles = StyleSheet.create({
         width: windowWidth,
         height: windowHeight,
     },
-    friendscroll:{
+
+    friendscroll: {
         flexGrow: 0.1,
-        width: 250 / 1440 * windowWidth,
+        width: 275 / 1440 * windowWidth,
+        left: 5 / 1440 * windowWidth,
         height: 592 / 1024 * windowHeight,
+        top: 195 / 1024 * windowHeight,
         borderRadius: 10,
+        // backgroundColor: "rgba(255, 255, 255, 0.7)",
     },
-    friendbox:{
-        flex:1, 
-        flexDirection:"column",
-        marginVertical:30,
+
+    friendbox: {
+        flex: 1,
+        flexDirection: "column",
+        marginVertical: 30,
         alignItems: "center",
-        left:0.05*windowWidth,
-        height:0.08 * windowHeight,
-        width: 0.013*windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        left: 0.05 * windowWidth,
+        height: 0.08 * windowHeight,
+        width: 0.015 * windowWidth,
+        backgroundColor: "rgba(255, 255, 255, 1)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
-    loading:{
-        minHeight: 100/1024*windowHeight,
+    loading: {
+        minHeight: 100 / 1024 * windowHeight,
         display: "flex",
         alignItems: 'center',
         justifyContent: 'center',
@@ -762,8 +802,8 @@ const styles = StyleSheet.create({
         "fontSize": 18,
         "color": "#FFFFFF",
         position: 'absolute',
-        top: 0.21 * windowHeight,
-        left: 0.05 * windowWidth
+        top: 0.01 * windowHeight,
+        left: 0.02 * windowWidth
     },
 
     posttxt: {
@@ -789,7 +829,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
 
-    friendscroll:{
+    friendscroll: {
         flexGrow: 0.1,
         width: 275 / 1440 * windowWidth,
         left: 5 / 1440 * windowWidth,
@@ -799,16 +839,17 @@ const styles = StyleSheet.create({
         // backgroundColor: "rgba(255, 255, 255, 0.7)",
     },
 
-    friendbox:{
-        flex:1, 
-        flexDirection:"column",
-        marginVertical:30,
+    friendbox: {
+        flex: 1,
+        flexDirection: "column",
+        marginVertical: 30,
         alignItems: "center",
-        left:0.05*windowWidth,
-        height:0.08 * windowHeight,
-        width: 0.015*windowWidth,
+        left: 0.05 * windowWidth,
+        height: 0.08 * windowHeight,
+        width: 0.015 * windowWidth,
         backgroundColor: "rgba(255, 255, 255, 1)",
-        transform: "matrix(1, 0, 0, 1, 0, 0)"},
+        transform: "matrix(1, 0, 0, 1, 0, 0)"
+    },
     text1: {
         "fontStyle": "normal",
         "fontWeight": "bold",
@@ -855,6 +896,26 @@ const styles = StyleSheet.create({
         width: 1 * windowWidth,
     },
 
+    LocSuggestions: {
+        position: 'absolute',
+        top: 160 / 1024 * windowHeight,
+        right: 85 / 1440 * windowWidth,
+        flexGrow: 0,
+        width: 305 / 1440 * windowWidth,
+        backgroundColor: 'rgba(255, 255, 255,1)',
+        zIndex: 1,
+    },
+
+    itemText: {
+        fontSize: 15,
+        paddingLeft: 10
+    },
+
+    item: {
+        width: 305 / 1440 * windowWidth,
+        paddingTop: 10
+    },
+
     posts: {
         position: "absolute",
         top: 0.3 * windowHeight,
@@ -866,10 +927,11 @@ const styles = StyleSheet.create({
 
     dpview: {
         position: "absolute",
-        top: 0.2 * windowHeight,
-        resizeMode: 'contain',
-        height: 0.06 * windowHeight,
-        width: 0.05 * windowWidth,
+        top: 0 * windowHeight,
+        left: -0.02 * windowWidth,
+        width: 0.05 * windowHeight,
+        height: 0.05 * windowHeight,
+        borderRadius: 0.065 * windowHeight,
     },
 
     dppostview: {
@@ -908,46 +970,46 @@ const styles = StyleSheet.create({
         width: 0.03 * windowWidth,
     },
 
-    notif:{
-        position:"absolute",
-        flex:1,
-        top:0.2*windowHeight,
-        left:0.8*windowWidth,
-        height:(695/900) * windowHeight,
-        width: (227/1600)*windowWidth,
+    notif: {
+        position: "absolute",
+        flex: 1,
+        top: 0.2 * windowHeight,
+        left: 0.8 * windowWidth,
+        height: (695 / 900) * windowHeight,
+        width: (227 / 1600) * windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.25)",
         borderRadius: 10,
     },
-    
-    notifbox:{
-        flex:1, 
+
+    notifbox: {
+        flex: 1,
         // flexDirection:"column",
-        marginVertical:50,
+        marginVertical: 50,
         // alignItems: "center",
-        top:0.02*windowHeight,
-        left:0.005*windowWidth,
-        height:0.7 * windowHeight,
-        width: 0.13*windowWidth,
+        top: 0.02 * windowHeight,
+        left: 0.005 * windowWidth,
+        height: 0.7 * windowHeight,
+        width: 0.13 * windowWidth,
         // backgroundColor: "rgba(255, 255, 255, 0.5)",
         borderRadius: 10,
     },
-    
-    notifdecisionbox:{
-        position:"absolute",
-        flex:1, 
-        flexDirection:"row",
-        justifyContent:'space-between',
-        top:0.05*windowHeight,
-        left:0.005/4*windowWidth,
-        height:0.02 * windowHeight,
-        width: 0.12*windowWidth,
+
+    notifdecisionbox: {
+        position: "absolute",
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        top: 0.05 * windowHeight,
+        left: 0.005 / 4 * windowWidth,
+        height: 0.02 * windowHeight,
+        width: 0.12 * windowWidth,
         borderRadius: 10,
     },
-    
-    
-    notifscroll:{
+
+
+    notifscroll: {
         flexGrow: 0.1,
-        height:'100%',
+        height: '100%',
         width: '100%',
         borderRadius: 10,
     },
@@ -1054,16 +1116,16 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
 
-      logout:{
+    logout: {
         position: 'absolute',
-        width: 0.09*windowWidth,
-        height: 0.03*windowHeight,
-        top: 0.05*windowHeight,
-        left: 0.9*windowWidth,
+        width: 0.09 * windowWidth,
+        height: 0.03 * windowHeight,
+        top: 0.05 * windowHeight,
+        left: 0.9 * windowWidth,
         backgroundColor: 'green',
         textAlign: 'center'
     },
- 
+
     uploadButton: {
         backgroundColor: 'green',
         height: 0.05 * windowHeight,
@@ -1142,11 +1204,11 @@ const styles = StyleSheet.create({
 
     postContainer: {
         position: 'absolute',
-        width: 0.58*windowWidth,
-        height: 0.73*windowHeight,
-        top: 0.23*windowHeight,
-        left: 0.21*windowWidth,
-       // backgroundColor: 'red',
+        width: 0.58 * windowWidth,
+        height: 0.73 * windowHeight,
+        top: 0.23 * windowHeight,
+        left: 0.21 * windowWidth,
+        // backgroundColor: 'red',
         flexGrow: 0.1
     },
 
@@ -1156,7 +1218,7 @@ const styles = StyleSheet.create({
         height: 0.62 * windowHeight,
         marginTop: '10px',
         //backgroundColor: 'cyan',
-        left: 0.01*windowWidth,
+        left: 0.01 * windowWidth,
         flexGrow: 0.1
         // width: '100%',
         // height: '100%',
@@ -1175,14 +1237,14 @@ const styles = StyleSheet.create({
 
     },
 
-    likeImage:{
+    likeImage: {
         position: 'absolute',
         resizeMode: 'contain',
         width: '100%',
         height: '100%'
     },
 
-    profile:{
+    profile: {
         position: 'absolute',
         resizeMode: 'contain',
         width: 0.05 * windowHeight,
@@ -1214,14 +1276,14 @@ const styles = StyleSheet.create({
         flexGrow: 0.1
     },
 
-    likestext:{
+    likestext: {
         position: 'absolute',
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 26,
-        top: 0.52*windowHeight,
-        left: 0.05*windowWidth                                                        
+        top: 0.52 * windowHeight,
+        left: 0.05 * windowWidth
     },
 
 

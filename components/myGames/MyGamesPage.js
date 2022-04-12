@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView} from 'react-native';
+import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView,ActivityIndicator} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import fire from '../firebase';
 import 'firebase/database'
@@ -53,7 +53,16 @@ export default function MyGamesPage ({ navigation, route }){
     // console.log(displayGame[1].charAt(0))
 
     if (!games) {
-        return (<Text>Rukavat ke liye khed hai</Text>)
+        return (
+            <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+                {/* <View style={styles.loading}>
+                </View> */}
+            </LinearGradient>
+            )
     }
     return(
         <View style={styles.container}>
@@ -74,16 +83,16 @@ export default function MyGamesPage ({ navigation, route }){
                 style = {styles.menuBar} />
 
             {/* NavBar Buttons     */}
-            <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+            <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                 <Text style={styles.robototxt}>Home</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+            <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                 <Text style={styles.robototxt}>Profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+            <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                 <Text style={styles.highlighttxt}>My Games</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+            <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                 <Text style={styles.robototxt}>Game Hub</Text>
             </TouchableOpacity>
 
@@ -114,14 +123,12 @@ export default function MyGamesPage ({ navigation, route }){
                             return (
                                 <View key={index} >   
                                     {/* {console.log(computer)} */}
-                                    <TouchableOpacity style={styles.apexLegend} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
+                                    <TouchableOpacity style={styles.imgContainer} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                     </TouchableOpacity>
-                               
+                                    <Text style={styles.nametxt}>{item.Name}</Text>
                                 </View>
-    
-    
                             )
                         }
                             
@@ -140,14 +147,12 @@ export default function MyGamesPage ({ navigation, route }){
                             return (
                                 <View key={index} >   
                                     {/* {console.log(computer)} */}
-                                    <TouchableOpacity style={styles.apexLegend} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
+                                    <TouchableOpacity style={styles.imgContainer} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                     </TouchableOpacity>
-                               
+                                    <Text style={styles.nametxt}>{item.Name}</Text>
                                 </View>
-    
-    
                             )
                         }
                             
@@ -156,7 +161,7 @@ export default function MyGamesPage ({ navigation, route }){
                 
             </ScrollView>
 
-            <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style = {styles.scrollContainer3} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style = {[styles.scrollContainer3]} showsVerticalScrollIndicator={false}>
             {games.map((item, index) =>{
                      if(displayGame.includes(item.Code)){   
                         console.log(item.Code)
@@ -166,14 +171,11 @@ export default function MyGamesPage ({ navigation, route }){
                             return (
                                 <View key={index} >   
                                     {/* {console.log(computer)} */}
-                                    <TouchableOpacity style={styles.apexLegend} onPress={() => navigation.push("Game", { GameCode: item.Code})}>
-                                    <Image source={item.Image}
-                                        style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                    <TouchableOpacity style={[styles.imgContainer]} onPress={() => navigation.push("Game", { GameCode: item.Code})}>
+                                    <Image source={item.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                     </TouchableOpacity>
-                               
+                                    <Text style={styles.nametxt}>{item.Name}</Text>
                                 </View>
-    
-    
                             )
                         }
                             
@@ -182,8 +184,6 @@ export default function MyGamesPage ({ navigation, route }){
                 
             </ScrollView>
 
-            
-            
         </View>
     )
 }
@@ -192,8 +192,9 @@ export default function MyGamesPage ({ navigation, route }){
 const styles = StyleSheet.create({
     container : {
         position: 'relative',
-        width : windowWidth,
-        height : windowHeight,
+        width: "100%",
+        height: "100%",
+        overflow: 'hidden',
     },
 
     background: {
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
 
     spikes2:{
         position:'absolute',
-        bottom: '0px', 
+        bottom: "0px", 
         resizeMode:'contain',
         height: 0.2*windowHeight,
         width:0.15* windowWidth,
@@ -248,6 +249,17 @@ const styles = StyleSheet.create({
         borderBottomColor: "#FFFFFF",
         borderBottomWidth: 1,
         "color": "#FFFFFF"
+    },
+
+    nametxt: {
+        "fontStyle": "normal",
+        "fontWeight": "500",
+        "fontSize": 18,
+        "color": "#FFFFFF",
+        position:'absolute',
+        top:0.02*windowHeight,
+        left:0.15*windowWidth,
+        width:0.15*windowWidth
     },
    
     homebtn:{
@@ -300,18 +312,18 @@ const styles = StyleSheet.create({
         position: 'absolute',
         resizeMode: 'contain',
         width : 0.1 * windowWidth,
-        height : 0.83 * windowHeight,
-        left : 0.265*windowWidth,
-        top : 0.16*windowHeight
+        height : 0.8 * windowHeight,
+        left : 0.28*windowWidth,
+        top : 0.17*windowHeight
     },
 
     verLine2:{
        position: 'absolute',
        resizeMode: 'contain',
        width : 0.1 * windowWidth,
-       height : 0.83 * windowHeight,
+       height : 0.8 * windowHeight,
        right: 0.265*windowWidth,
-       top: 0.16*windowHeight
+       top: 0.17*windowHeight
     },
 
     pcLogo:{
@@ -355,7 +367,7 @@ const styles = StyleSheet.create({
         width: 0.58*windowWidth,
         height : 0.6*windowHeight,
         top : 0.37*windowHeight,
-        left: 0.345*windowWidth,
+        left: 0.347*windowWidth,
         flexGrow: 0.1
     },
 
@@ -364,23 +376,23 @@ const styles = StyleSheet.create({
         width: 0.58*windowWidth,
         height : 0.6*windowHeight,
         top : 0.37*windowHeight,
-        left: 0.7*windowWidth,
+        left: 0.69*windowWidth,
         flexGrow: 0.1
     },
 
-    apexLegend:{
+    imgContainer:{
         paddingLeft: 10,
         paddingRight: 10,
         width: 0.13 * windowWidth,
         height: 0.24 * windowHeight,
     },
 
-    apexContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.02*windowHeight
-    },
+    // apexContainer:{
+    //     width: 0.4*windowWidth,
+    //     height: 0.25*windowHeight,
+    //     left: 0.15*windowWidth,
+    //     top: 0.02*windowHeight
+    // },
 
    tagText:{
     "fontStyle": "normal",
@@ -389,165 +401,4 @@ const styles = StyleSheet.create({
     "color": "#FFFFFF"
    },
 
-    gta5:{
-        position: 'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: -0.12*windowWidth,
-        top: 0.06*windowHeight
-    },
-
-    gta5Container:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.06*windowHeight
-    },
-
-    valorant:{
-        position: 'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: -0.12*windowWidth,
-        top: 0.10*windowHeight
-    },
-
-    valorantContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.10*windowHeight
-    },
-
-    cod:{
-        position: 'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: -0.12*windowWidth,
-        top: 0.14*windowHeight
-    },
-
-    codContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.14*windowHeight,
-    },
-
-    coc:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        top: 0.02*windowHeight,
-        left: -0.14*windowWidth
-    },
-
-    cocContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.02*windowHeight
-    },
-
-    codMob:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        top: 0.06*windowHeight,
-        left: -0.14*windowWidth
-    },
-
-    codMobContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.06*windowHeight
-    },
-
-    pogo:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        top: 0.10*windowHeight,
-        left: -0.14*windowWidth
-    },
-
-    pogoContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.10*windowHeight
-    },
-
-    freeFire:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        top: 0.14*windowHeight,
-        left: -0.14*windowWidth
-    },
-
-    freeFireContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.14*windowHeight
-    },
-
-    gow:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        top: 0.02*windowHeight,
-        left: -0.12*windowWidth,
-    },
-
-    gowContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.02*windowHeight
-    },
-
-    mortalKombat:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        top: 0.06*windowHeight,
-        left: -0.12*windowWidth,
-    },
-
-    mkContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.06*windowHeight
-    },
-
-    spiderMan:{
-        position:'absolute',
-        resizeMode: 'contain',
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        top: 0.10*windowHeight,
-        left: -0.12*windowWidth,
-    },
-
-    spiderContainer:{
-        width: 0.4*windowWidth,
-        height: 0.25*windowHeight,
-        left: 0.15*windowWidth,
-        top: 0.10*windowHeight
-    },
-    
-    
 });

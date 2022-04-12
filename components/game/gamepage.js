@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,TextInput } from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,TextInput, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
@@ -71,9 +71,19 @@ if(userInfo){
     }
 if(!gameInfo)
 {
-    return (<Text>Rukavat ke liye khed hai</Text>)
+    return (
+        <LinearGradient
+                start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                colors={['#013C00', '#000000']}
+                style={styles.background} >
+            <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
+            {/* <View style={styles.loading}>
+            </View> */}
+        </LinearGradient>
+        )
     }
     if (gameInfo && notfollowStatus){
+        const rating = gameInfo.Rating
     return (
         <View style={styles.container} >
             <LinearGradient
@@ -86,19 +96,23 @@ if(!gameInfo)
                 <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
                 <Text style={styles.robototxt}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                 <Text style={styles.robototxt}>Profile</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                 <Text style={styles.robototxt}>My Games</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                 <Text style={styles.highlighttxt}>Game Hub</Text>
                 </TouchableOpacity>
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
                 <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
                 <View style={styles.ratingContainer}>
-                    <Text style={styles.ratingTxt}>Rating{gameInfo.Rating}</Text>
+                    <Text style={styles.ratingTxt}>Rating</Text>
+                    <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdark.png?alt=media&token=0e44c147-d2b8-43e9-b960-91ddc8f8873b"} style={styles.defaultStar}></Image>
+                    <View style={[styles.lightStarContainer,{width: ((3.5 * rating  ) / (0.302*windowWidth)) * 5 * windowWidth,}]}>
+                        <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flight.png?alt=media&token=703a5b40-df81-4132-8d18-66865a8e3a69"} style={styles.lightStar}></Image>
+                    </View>
                 </View>
                 <View style={styles.desclabContainer}>
                     <Text style={styles.ratingTxt}>Description</Text>
@@ -156,6 +170,9 @@ if(!gameInfo)
 );
 }
 else{
+    
+    const rating1 = gameInfo.Rating
+    if (gameInfo){
     return (
         <View style={styles.container} >
             <LinearGradient
@@ -168,19 +185,23 @@ else{
                 <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
                 <Text style={styles.robototxt}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.navigate("Profile")}>
+                <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
                 <Text style={styles.robototxt}>Profile</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.navigate("MyGames")}>
+                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                 <Text style={styles.robototxt}>My Games</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.navigate("GameHub")}>
+                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                 <Text style={styles.highlighttxt}>Game Hub</Text>
                 </TouchableOpacity>
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
                 <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
                 <View style={styles.ratingContainer}>
-                    <Text style={styles.ratingTxt}>Rating{gameInfo.Rating}</Text>
+                    <Text style={styles.ratingTxt}>Rating</Text>
+                    <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdark.png?alt=media&token=0e44c147-d2b8-43e9-b960-91ddc8f8873b"} style={styles.defaultStar}></Image>
+                    <View style={[styles.lightStarContainer,{width: ((3.5 * rating1  ) / (0.302*windowWidth)) * 5 * windowWidth,}]}>
+                        <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flight.png?alt=media&token=703a5b40-df81-4132-8d18-66865a8e3a69"} style={styles.lightStar}></Image>
+                    </View>
                 </View>
                 <View style={styles.desclabContainer}>
                     <Text style={styles.ratingTxt}>Description</Text>
@@ -241,13 +262,14 @@ else{
 );
 }
 }
+}
 
 const styles = StyleSheet.create({
     container: {
         position:"relative",
-        width: windowWidth,
-        height: windowHeight
-
+        width: "100%",
+        height: "100%",
+        overflow: 'hidden',
     },
     background: {
         position:"relative",
@@ -310,6 +332,33 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         "color": "#FFFFFF"
     },
+
+    defaultStar:{
+    position: "absolute",
+    width: 275 / 1440 * windowWidth,
+    height: 50 / 1024 * windowHeight,
+    left: 75 / 1440 * windowWidth,
+    top: 200 / 1024 * windowHeight,
+    justifyContent: 'center',
+    alignItems: 'center'
+    },
+
+    lightStar:{
+        // position: "absolute",
+        width: 275 / 1440 * windowWidth,
+        height: 50 / 1024 * windowHeight,
+        left: 0 * windowWidth,
+        top: 0 * windowHeight,
+        },
+
+    lightStarContainer:{
+        position: "absolute",
+        // backgroundColor: "rgba(255, 255, 255, 0.95)",
+        height: 50 / 1024 * windowHeight,
+        left: 75 / 1440 * windowWidth,
+        top: 200 / 1024 * windowHeight,
+        overflow: 'hidden',
+        },
 
     Button:
   {
@@ -399,7 +448,7 @@ const styles = StyleSheet.create({
       taglabContainer:{
         position: "absolute",
         width: 0.302*windowWidth,
-        height: 0.225*windowHeight,
+        height: 0.227*windowHeight,
         top: 0.769*windowHeight,
         backgroundColor: "rgba(255, 255, 255, 0.25)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
@@ -465,7 +514,7 @@ const styles = StyleSheet.create({
       tagContainer:{
         position: "absolute",
         width: 0.698*windowWidth,
-        height: 0.225*windowHeight,
+        height: 0.227*windowHeight,
         top: 0.769*windowHeight,
         left:0.302*windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.20)",
