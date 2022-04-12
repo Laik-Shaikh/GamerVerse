@@ -429,12 +429,11 @@ export default function homepage({ navigation, route }) {
                         <Image style={{
                             position: 'absolute',
                             resizeMode: 'contain',
-                            top: 0.011 * windowHeight,
-                            left: 0.015 * windowWidth,
-                            width: 0.03 * windowWidth,
-                            height: 0.03 * windowHeight,
-                            transform: [{ rotate: '20deg' }]
-                        }} source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FBell.png?alt=media&token=58552420-503b-45e6-a134-9b3b4f5a35b3"} />
+                            top: -0.008 * windowHeight,
+                            left: -0.008 * windowWidth,
+                            width: 0.07 * windowWidth,
+                            height: 0.07 * windowHeight,
+                        }} source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Ffrands.png?alt=media&token=93a5de65-97d2-45fc-88b9-6a845aa612c0"} />
                         <Text style={{
                             position: 'absolute',
                             left: 0.045 * windowWidth,
