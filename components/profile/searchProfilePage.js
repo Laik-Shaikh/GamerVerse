@@ -315,7 +315,7 @@ export default function searchProfilePage ({ navigation, route }){
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
                         <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
+                        <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={styles.divider2}/>
@@ -407,7 +407,7 @@ export default function searchProfilePage ({ navigation, route }){
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
                         <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
+                        <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={styles.divider2}/>
