@@ -74,7 +74,7 @@ export default function Login({ navigation }) {
                   const { isNewUser } = getAdditionalUserInfo(result)
                   console.log(isNewUser)
                   if (isNewUser) {
-                    navigation.push("CreateProfile")
+                    navigation.navigate("CreateProfile",{PWord:"google",UName:"google"})
                   }
                   else {
                     navigation.push("Home")
