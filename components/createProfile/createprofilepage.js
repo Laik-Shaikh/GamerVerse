@@ -13,7 +13,7 @@ import * as ImagePicker from 'expo-image-picker';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height
 
-import BG from './createProfileAssets/BG.png'
+
 
 export default function CreateProfile({navigation,route}) {
 
@@ -190,15 +190,15 @@ function renderSug() {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
+      <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FBG.png?alt=media&token=02003518-4b7f-40c9-ba6a-9bf4c095275e"} resizeMode="cover" style={styles.bg}>
 
         <View style={styles.rectanglebg} />
-        <Image source={require('./createProfileAssets/logo.png')} style={styles.logo} />
+        <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.logo} />
 
         <View style={styles.whitebg} >
           <Text style={styles.signinText}>Create Your Profile</Text>
           <TouchableOpacity onPress={pickImage} style={{position:'absolute'}} >
-          <Image source={require('./createProfileAssets/CamIcon.png')} style={styles.CamIcon} />
+          <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FCamIcon.png?alt=media&token=f86b3513-20cc-4a25-8e60-26c7f71fb7da"} style={styles.CamIcon} />
           {image && <Image source={{ uri:image }} style={styles.ProfileImage} />}
           </TouchableOpacity>
           <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={UserName => setUserName(UserName)}></TextInput>

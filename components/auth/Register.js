@@ -7,8 +7,7 @@ import { getAuth,createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPop
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height
 
-import BG from './authAssets/BG.png'
-import S1 from './authAssets/slide1.png'
+
 //<ImageBackground source={S1} resizeMode="cover" style={styles.S1}/>
 //
 
@@ -22,14 +21,14 @@ export default function Login({ navigation ,route}) {
 
     return(
         <View style={styles.container}>
-        <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
+        <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FBG.png?alt=media&token=02003518-4b7f-40c9-ba6a-9bf4c095275e"} resizeMode="cover" style={styles.bg}>
             <View style={styles.rectanglebg} />
             
-            <Image source={require('./authAssets/logo.png')} style={styles.logo} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.logo} />
             <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 1332/1440 * windowWidth, "height": 500/1024 * windowHeight, "left": 40/1440 * windowWidth, "top": 40/1024 * windowHeight}}>
                 <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
                   <View style={styles.whitebg}/>
-                  <Image source={require('./authAssets/group3.png')} style={styles.img1} />
+                  <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup3.png?alt=media&token=1d83027a-da05-4dbf-bd10-28027ae21454"} style={styles.img1} />
                   <Text style={styles.signinText}>Sign Up</Text>
                   <TextInput style={styles.InputStyle1} placeholder='Email ID' onChangeText={UName => setUName(UName)} ref={unamekeeper}></TextInput>
                   <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true} onChangeText={PWord => setPWord(PWord)}></TextInput>

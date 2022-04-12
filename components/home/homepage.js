@@ -394,13 +394,13 @@ export default function homepage({ navigation, route }) {
                 start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
                 colors={['#013C00', '#000000']}
                 style={styles.background} >
-                <ImageBackground source={require('./homeAssets/designspikes1.png')} style={styles.spike1} />
-                <Image source={require('./homeAssets/gamerversetitle.png')} style={styles.title} onPress={() => navigation.push("Home")} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.navigate("Home")} />
                 <TouchableOpacity style={styles.logout} onPress={() => signOutUser()}>
                     <Text style={styles.uploadText}>Log Out</Text>
                 </TouchableOpacity>
-                <ImageBackground source={require('./homeAssets/menubar.png')} style={styles.menu} />
-                <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
+                <TouchableOpacity style={styles.homebtn} onPress={() => navigation.navigate("Home")}>
                     <Text style={styles.highlighttxt}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
@@ -412,51 +412,39 @@ export default function homepage({ navigation, route }) {
                 <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.push("GameHub")}>
                     <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
-                    <Image source={require('./homeAssets/searchIcon.png')} style={styles.searchIcon} />
-                    <TextInput
-                        style={styles.InputStyle1}
-                        placeholder='Search for friends, games or location'
-                        onChangeText={(text) => {
-                            setLocation()
-                            getLocations(text.toLowerCase())
-                            setTextInputValue(text)
-                        }}
-                        value={textInputValue}
-                        onKeyPress={e => handleSearch(e)}
-                        onFocus={() => {
-                            if (selectedValue)
-                                setSelectedValue(undefined)
-                        }}
+                    <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
+                    <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => setTextInputValue(text)}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
                     ></TextInput>
                     {renderSug()}
                     <View style={styles.notif}>
-                        <Image style={{
-                            position: 'absolute',
-                            resizeMode: 'contain',
-                            top: 0.01 * windowHeight,
-                            left: 0.015 * windowWidth,
-                            width: 0.03 * windowWidth,
-                            height: 0.03 * windowHeight,
-                            transform: [{ rotate: '20deg' }]
-                        }} source={require('./homeAssets/Bell.png')} />
-                        <Text style={{
-                            position: 'absolute',
-                            left: 0.045 * windowWidth,
-                            top: 0.015 * windowHeight,
-                            color: 'white',
-                            fontWeight: 'bold'
-                        }}>Notifications</Text>
-                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
-                            style={styles.notifscroll}>
-                            {requestNames.map((profile, index) => {
-                                {
-                                    console.log("WORKS")
-                                    console.log(profile)
-                                    console.log(requestImages[index])
-                                }
-                                return (
-                                    <View key={index} style={styles.notifbox}>
-                                        {/* <Text style={{
+                        <Image style={{position:'absolute', 
+                        resizeMode: 'contain',
+                        top:0.01*windowHeight,
+                        left:0.015*windowWidth,
+                        width:0.03*windowWidth,
+                        height:0.03*windowHeight,
+                        transform: [{ rotate: '20deg' }]
+                    }} source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FBell.png?alt=media&token=58552420-503b-45e6-a134-9b3b4f5a35b3"}/>
+                    <Text style ={{  position: 'absolute',
+                    left: 0.045*windowWidth,
+                    top:0.015 *windowHeight,
+                    color: 'white',
+                    fontWeight: 'bold'}}>Notifications</Text>
+                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
+                    style={styles.notifscroll}>
+                    {requestNames.map((profile,index)=>
+                        {
+                           { console.log("WORKS")
+                        console.log(profile)
+                        console.log(requestImages[index])} 
+                        return(
+                        <View  key={index} style={styles.notifbox}>
+                            {/* <Text style={{
                                 position: 'relative',
                                 "color": "#FFFFFF",
                                 }}>
@@ -521,8 +509,8 @@ export default function homepage({ navigation, route }) {
                     {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
                     <Image source={require('./homeAssets/dp.png')} style={styles.dpview} />
                     <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
-                    <ImageBackground source={require('./homeAssets/divider.png')} style={styles.divider} />
-                    <ImageBackground source={require('./homeAssets/designspikes.png')} style={styles.spike2} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdivider.png?alt=media&token=458aa29f-e202-4bab-8393-3a7fb6994608"} style={styles.divider} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
 
                     {/* {games.map((item, index) => {
                         if(gamesCode.includes(item.Code))
