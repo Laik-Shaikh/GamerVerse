@@ -683,7 +683,7 @@ export default function homepage({ navigation, route }) {
                         visible={modalVisible}
                         transparent={true}
                         onRequestClose={() => {
-                            Alert.alert("Post Uploaded Successfully.");
+                            Alert.alert("Post will be uploaded in some time.");
                             setModalVisible(!modalVisible);
                         }}
                     >
