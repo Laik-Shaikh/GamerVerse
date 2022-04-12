@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import fire from '../firebase';
 import 'firebase/auth';
-import { getAuth, signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,getAdditionalUserInfo } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo } from "firebase/auth";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -12,6 +12,7 @@ const windowHeight = Dimensions.get('screen').height;
 export default function Login({ navigation }) {
   const [UName, setUName] = React.useState();
   const [PWord, setPWord] = React.useState();
+  const [loginError, setLoginError] = React.useState();
   const unamekeeper = React.createRef();
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
@@ -20,7 +21,7 @@ export default function Login({ navigation }) {
         <View style={styles.container}>
         <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FBG.png?alt=media&token=02003518-4b7f-40c9-ba6a-9bf4c095275e"} resizeMode="cover" style={styles.bg}>
             <View style={styles.rectanglebg} />
-            
+
             <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.logo} />
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 1400/1440 * windowWidth, "height": 685/1024 * windowHeight, "left": 40/1440 * windowWidth, "top": 70/1024 * windowHeight}}>
                 <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
@@ -32,122 +33,154 @@ export default function Login({ navigation }) {
                   {/* <TouchableOpacity style={styles.forgotPasswordText}>
                     <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "rgba(84, 224, 255, 1)" }}>Forgot Password?</Text>
                   </TouchableOpacity> */}
+                  <Text style={styles.forgotPasswordText}>{loginError ? loginError : ""}</Text>
                   <TouchableOpacity style={styles.Button} title='Login'
-                  onPress={
-                    async () => {
-                      try {
-                        console.log(fire.auth);
-                        console.log(UName+" "+PWord);
-                        await signInWithEmailAndPassword(auth,UName,PWord);
-                        console.log("yes")
-                        setPWord(" ");
-                        setUName(" ");
-                        navigation.push("Home") 
-                      } catch (error) {
-                        console.log(error);
-                        alert('Error');
+                 onPress={
+                  async () => {
+                    try {
+                      console.log(fire.auth);
+                      console.log(UName + " " + PWord);
+                      await signInWithEmailAndPassword(auth, UName, PWord);
+                      console.log("yes")
+                      setPWord(" ");
+                      setUName(" ");
+                      navigation.push("Home")
+                    } catch (error) {
+                      console.log(error.code);
+                      if (error.code == "auth/user-not-found") {
+                        setLoginError("Email does not exist! Please create an account to login!")
+                      }
+                      if (error.code == "auth/wrong-password") {
+                        setLoginError("Invalid password!")
                       }
                     }
+
                   }
-                    >
-                  <Text style={styles.ButtonText}>Login</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.Button2} onPress={() => {
-                    signInWithPopup(auth, provider)
-                    .then((result) => {
-                      
-                      const credential = GoogleAuthProvider.credentialFromResult(result);
-                      const token = credential.accessToken;
-                      
-                      const user = result.user;
-                      console.log(user)
-                      console.log(token)
-                      const { isNewUser } = getAdditionalUserInfo(result)
-                      console.log(isNewUser)
-                      if(isNewUser){
-                        navigation.navigate("CreateProfile")}
-                      else{
-                        navigation.navigate("Home")
-                      }
-                      
-                    }).catch((error) => {console.log(error)})
-                  }}><Text style={styles.ButtonText}>Sign In with google</Text></TouchableOpacity>
-                  <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Register")}>
-                    <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Don't have an account? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14,borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Register</Text></Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{"left": 0/1440 * windowWidth, "top": 560/1024 * windowHeight}}>
-                  <View style={styles.whitebg}/>
-                  <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup2.png?alt=media&token=ba480b96-bcc4-42a3-8a3f-7f1c9002506d"} style={styles.img2} />
-                  <Text style={styles.title1}>Find friends with similar game sense nearby</Text>
-                  <Text style={styles.subtext1}>Search for tags related to games to find new friends. Add multiple tags to your profile so other players can find you!</Text>
-                </View>
-                <View style={{"left": 0/1440 * windowWidth, "top": 1120/1024 * windowHeight}}>
-                  <View style={styles.whitebg}/>
-                  <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup3.png?alt=media&token=1d83027a-da05-4dbf-bd10-28027ae21454"} style={[styles.img1, {left: -23/1440* windowWidth}]} />
-                  <Text style={styles.title2}>Create your own gamer profile and add all your favourite games</Text>
-                  <Text style={styles.subtext2}>Add your own profile picture and gaming interests according to your needs to build an entire gaming profile!</Text>
-                </View>
-                <View style={{"left": 0/1440 * windowWidth, "top": 1680/1024 * windowHeight}}>
-                  <View style={styles.whitebg}/>
-                  <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup4.png?alt=media&token=7d6a8266-153a-4568-9604-2e986c582450"} style={styles.img2} />
-                  <Text style={styles.title1}>Tags that are inclusive of all gaming platforms</Text>
-                  <Text style={styles.subtext1}>Need new friends for all different platforms? 
-Find all sorts of players over all of platforms with just a few simple steps!</Text>
-                </View>
-                <View style={{"left": 0/1440 * windowWidth, "top": 2240/1024 * windowHeight, paddingBottom: 0.01 * windowHeight}}>
-                  <View style={styles.whitebg}/>
-                  <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup5.png?alt=media&token=f1b4235e-f7a3-47fb-8bbb-c2aca5caee3d"} style={[styles.img1, {left: -90/1440 * windowWidth}]} />
-                  <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup6.png?alt=media&token=5c306777-8295-43b2-9cf9-72a592023380"} style={styles.img2} />
-                  <Text style={styles.title3}>Update your own posts, gameplays and achievements</Text>
-                  <Text style={styles.subtext3}>Share all of your achievements, badges, gameplays, etc with all of your friends on GamerVerse now!</Text>
-                </View>
-            </ScrollView>
-        </ImageBackground>
-        </View>
-    )
+                }
+              
+            >
+              <Text style={styles.ButtonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.Button2} onPress={() => {
+              signInWithPopup(auth, provider)
+                .then((result) => {
+
+                  const credential = GoogleAuthProvider.credentialFromResult(result);
+                  const token = credential.accessToken;
+
+                  const user = result.user;
+                  console.log(user)
+                  console.log(token)
+                  const { isNewUser } = getAdditionalUserInfo(result)
+                  console.log(isNewUser)
+                  if (isNewUser) {
+                    navigation.navigate("CreateProfile")
+                  }
+                  else {
+                    navigation.navigate("Home")
+                  }
+
+                }).catch((error) => { console.log(error) })
+            }}>
+              <Text style={styles.ButtonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.Button2} onPress={() => {
+              signInWithPopup(auth, provider)
+                .then((result) => {
+
+                  const credential = GoogleAuthProvider.credentialFromResult(result);
+                  const token = credential.accessToken;
+
+                  const user = result.user;
+                  console.log(user)
+                  console.log(token)
+                  const { isNewUser } = getAdditionalUserInfo(result)
+                  console.log(isNewUser)
+                  if (isNewUser) {
+                    navigation.navigate("CreateProfile")
+                  }
+                  else {
+                    navigation.navigate("Home")
+                  }
+
+                }).catch((error) => { console.log(error) })
+            }}><Text style={styles.ButtonText}>Sign Up with google</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Register")}>
+              <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Don't have an account? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Register</Text></Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ "left": 0 / 1440 * windowWidth, "top": 560 / 1024 * windowHeight }}>
+            <View style={styles.whitebg} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup2.png?alt=media&token=ba480b96-bcc4-42a3-8a3f-7f1c9002506d"} style={styles.img2} />
+            <Text style={styles.title1}>Find friends with similar game sense nearby</Text>
+            <Text style={styles.subtext1}>Search for tags related to games to find new friends. Add multiple tags to your profile so other players can find you!</Text>
+          </View>
+          <View style={{ "left": 0 / 1440 * windowWidth, "top": 1120 / 1024 * windowHeight }}>
+            <View style={styles.whitebg} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup3.png?alt=media&token=1d83027a-da05-4dbf-bd10-28027ae21454"} style={[styles.img1, {left: -23/1440* windowWidth}]} />
+            <Text style={styles.title2}>Create your own gamer profile and add all your favourite games</Text>
+            <Text style={styles.subtext2}>Add your own profile picture and gaming interests according to your needs to build an entire gaming profile!</Text>
+          </View>
+          <View style={{ "left": 0 / 1440 * windowWidth, "top": 1680 / 1024 * windowHeight }}>
+            <View style={styles.whitebg} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup4.png?alt=media&token=7d6a8266-153a-4568-9604-2e986c582450"} style={styles.img2} />
+            <Text style={styles.title1}>Tags that are inclusive of all gaming platforms</Text>
+            <Text style={styles.subtext1}>Need new friends for all different platforms?
+              Find all sorts of players over all of platforms with just a few simple steps!</Text>
+          </View>
+          <View style={{ "left": 0 / 1440 * windowWidth, "top": 2240 / 1024 * windowHeight }}>
+            <View style={styles.whitebg} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup5.png?alt=media&token=f1b4235e-f7a3-47fb-8bbb-c2aca5caee3d"} style={[styles.img1, {left: -90/1440 * windowWidth}]} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup6.png?alt=media&token=5c306777-8295-43b2-9cf9-72a592023380"} style={styles.img2} />
+            <Text style={styles.title3}>Update your own posts, gameplays and achievements</Text>
+            <Text style={styles.subtext3}>Share all of your achievements, badges, gameplays, etc with all of your friends on GamerVerse now!</Text>
+          </View>
+        </ScrollView>
+      </ImageBackground>
+    </View>
+  )
 }
 const styles = StyleSheet.create({
-    container: {
-        position: "relative",
-        width: "100%",
-        flex: 1,
-        height: "100%"
-    },
-    
-    bg: {
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        justifyContent: 'center',
-    },
+  container: {
+    position: "relative",
+    width: "100%",
+    flex: 1,
+    height: "100%"
+  },
 
-    S1: {
-        "position": "absolute",
-        resizeMode:'contain',
-        width: 1332 / 1440 * windowWidth,
-        height: 500 / 1024 * windowHeight,
-        left: 40 / 1440 * windowWidth,
-        top: 250 / 1024 * windowHeight,
-    },
+  bg: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    justifyContent: 'center',
+  },
 
-    scroll:{
-        "position": "absolute",
-        width: 1332 / 1440 * windowWidth,
-        height: 500 / 1024 * windowHeight,
-        left: 40 / 1440 * windowWidth,
-        top: 125 / 1024 * windowHeight,
-    },
+  S1: {
+    "position": "absolute",
+    resizeMode: 'contain',
+    width: 1332 / 1440 * windowWidth,
+    height: 500 / 1024 * windowHeight,
+    left: 40 / 1440 * windowWidth,
+    top: 250 / 1024 * windowHeight,
+  },
 
-      logo:{
-        "position": "absolute",
-        top: 5/1024*windowHeight,
-        left:420/1440*windowWidth,
-        height: 109/1024*windowHeight,
-        width: 600/1440*windowWidth,
-    },
+  scroll: {
+    "position": "absolute",
+    width: 1332 / 1440 * windowWidth,
+    height: 500 / 1024 * windowHeight,
+    left: 40 / 1440 * windowWidth,
+    top: 125 / 1024 * windowHeight,
+  },
 
-    rectanglebg:
+  logo: {
+    "position": "absolute",
+    top: 5 / 1024 * windowHeight,
+    left: 420 / 1440 * windowWidth,
+    height: 109 / 1024 * windowHeight,
+    width: 600 / 1440 * windowWidth,
+  },
+
+  rectanglebg:
   {
     position: "absolute",
     width: "100%",
@@ -160,10 +193,14 @@ const styles = StyleSheet.create({
   forgotPasswordText:
   {
     position: "absolute",
-    left: 1083 / 1440 * windowWidth,
+    left: 877 / 1440 * windowWidth,
     top: 270 / 1024 * windowHeight,
-    borderBottomColor: "#54E0FF",
-    borderBottomWidth: 0.7,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    fontSize: 12,
+    lineHeight: 14,
+    color: "rgba(255, 84, 84, 1)"
   },
 
   SignUpText:
@@ -205,29 +242,29 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
-  img1:{
+  img1: {
     "position": "absolute",
     marginTop: 0,
     marginHorizontal: 0,
-    top: 0/1024*windowHeight,
-    left: -55/1440*windowWidth,
-    height: 486/1024*windowHeight,
-    width: 615/1440*windowWidth,
-    resizeMode:'contain',
-},
+    top: 0 / 1024 * windowHeight,
+    left: -55 / 1440 * windowWidth,
+    height: 486 / 1024 * windowHeight,
+    width: 615 / 1440 * windowWidth,
+    resizeMode: 'contain',
+  },
 
-img2:{
-  "position": "absolute",
-  marginTop: 0,
-  marginHorizontal: 0,
-  top: 0/1024*windowHeight,
-  right: -55/1440*windowWidth,
-  height: 486/1024*windowHeight,
-  width: 615/1440*windowWidth,
-  resizeMode:'contain',
-},
+  img2: {
+    "position": "absolute",
+    marginTop: 0,
+    marginHorizontal: 0,
+    top: 0 / 1024 * windowHeight,
+    right: -55 / 1440 * windowWidth,
+    height: 486 / 1024 * windowHeight,
+    width: 615 / 1440 * windowWidth,
+    resizeMode: 'contain',
+  },
 
-    whitebg:
+  whitebg:
   {
     position: "absolute",
     width: 1305 / 1440 * windowWidth,
@@ -269,14 +306,14 @@ img2:{
     textAlign: "center",
     color: "#FFFFFF"
   },
-  
+
   title1:
   {
     "position": "absolute",
-    top: 100/1024*windowHeight,
-    left: 108/1440*windowWidth,
-    height: 106/1024*windowHeight,
-    width: 680/1440*windowWidth,
+    top: 100 / 1024 * windowHeight,
+    left: 108 / 1440 * windowWidth,
+    height: 106 / 1024 * windowHeight,
+    width: 680 / 1440 * windowWidth,
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "500",
@@ -291,10 +328,10 @@ img2:{
   subtext1:
   {
     "position": "absolute",
-    top: 250/1024*windowHeight,
-    left: 108/1440*windowWidth,
-    height: 56/1024*windowHeight,
-    width: 680/1440*windowWidth,
+    top: 250 / 1024 * windowHeight,
+    left: 108 / 1440 * windowWidth,
+    height: 56 / 1024 * windowHeight,
+    width: 680 / 1440 * windowWidth,
     fontFamily: "Roboto-thin",
     fontStyle: "light",
     fontWeight: "light",
@@ -309,10 +346,10 @@ img2:{
   title2:
   {
     "position": "absolute",
-    top: 100/1024*windowHeight,
-    right: 75/1440*windowWidth,
-    height: 106/1024*windowHeight,
-    width: 680/1440*windowWidth,
+    top: 100 / 1024 * windowHeight,
+    right: 75 / 1440 * windowWidth,
+    height: 106 / 1024 * windowHeight,
+    width: 680 / 1440 * windowWidth,
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "500",
@@ -327,10 +364,10 @@ img2:{
   subtext2:
   {
     "position": "absolute",
-    top: 250/1024*windowHeight,
-    right: 75/1440*windowWidth,
-    height: 56/1024*windowHeight,
-    width: 680/1440*windowWidth,
+    top: 250 / 1024 * windowHeight,
+    right: 75 / 1440 * windowWidth,
+    height: 56 / 1024 * windowHeight,
+    width: 680 / 1440 * windowWidth,
     fontFamily: "Roboto-thin",
     fontStyle: "light",
     fontWeight: "light",
@@ -345,10 +382,10 @@ img2:{
   title3:
   {
     "position": "absolute",
-    top: 100/1024*windowHeight,
-    left: 343/1440*windowWidth,
-    height: 106/1024*windowHeight,
-    width: 640/1440*windowWidth,
+    top: 100 / 1024 * windowHeight,
+    left: 343 / 1440 * windowWidth,
+    height: 106 / 1024 * windowHeight,
+    width: 640 / 1440 * windowWidth,
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "500",
@@ -363,10 +400,10 @@ img2:{
   subtext3:
   {
     "position": "absolute",
-    top: 250/1024*windowHeight,
-    left: 343/1440*windowWidth,
-    height: 56/1024*windowHeight,
-    width: 680/1440*windowWidth,
+    top: 250 / 1024 * windowHeight,
+    left: 343 / 1440 * windowWidth,
+    height: 56 / 1024 * windowHeight,
+    width: 680 / 1440 * windowWidth,
     fontFamily: "Roboto-thin",
     fontStyle: "light",
     fontWeight: "light",
@@ -378,50 +415,50 @@ img2:{
     color: "#FFFFFF"
   },
 
-    InputStyle1:{
-      "position": "absolute",
-      top: 140/1024*windowHeight,
-      left: 877/1440*windowWidth,
-      height: 45/1024*windowHeight,
-      width: 305/1440*windowWidth,
-      color: 'white',
-      fontSize: 17,
-      paddingLeft: 10,
-      paddingBottom: 7,
-      paddingTop: 3,    
-      borderBottomColor: "#FFFFFF",
-      borderBottomWidth: 1,
-      placeholderTextColor: "#FFFFFF",
-      backgroundColor: "#e5e5e500"
+  InputStyle1: {
+    "position": "absolute",
+    top: 140 / 1024 * windowHeight,
+    left: 877 / 1440 * windowWidth,
+    height: 45 / 1024 * windowHeight,
+    width: 305 / 1440 * windowWidth,
+    color: 'white',
+    fontSize: 17,
+    paddingLeft: 10,
+    paddingBottom: 7,
+    paddingTop: 3,
+    borderBottomColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    placeholderTextColor: "#FFFFFF",
+    backgroundColor: "#e5e5e500"
   },
 
-    InputStyle2:{
-      "position": "absolute",
-      top: 215/1024*windowHeight,
-      left: 877/1440*windowWidth,
-      height: 45/1024*windowHeight,
-      width: 305/1440*windowWidth,
-      color: 'white',
-      fontSize: 17,
-      paddingLeft: 10,
-      paddingBottom: 7,
-      paddingTop: 3,
-      borderBottomColor: "#FFFFFF",
-      borderBottomWidth: 1,
-      placeholderTextColor: "#FFFFFF",
-      backgroundColor: "#e5e5e500"
-    },
+  InputStyle2: {
+    "position": "absolute",
+    top: 215 / 1024 * windowHeight,
+    left: 877 / 1440 * windowWidth,
+    height: 45 / 1024 * windowHeight,
+    width: 305 / 1440 * windowWidth,
+    color: 'white',
+    fontSize: 17,
+    paddingLeft: 10,
+    paddingBottom: 7,
+    paddingTop: 3,
+    borderBottomColor: "#FFFFFF",
+    borderBottomWidth: 1,
+    placeholderTextColor: "#FFFFFF",
+    backgroundColor: "#e5e5e500"
+  },
 
-    signinText: {
-      position: "absolute",
-      top: 65/1024*windowHeight,
-      left: 877/1440*windowWidth,
-      height: 32/1024*windowHeight,
-      width: 305/1440*windowWidth,
-      color: 'white',
-      fontSize: 27,
-      lineHeight: 32,
-      textAlign: 'center',
-    },
+  signinText: {
+    position: "absolute",
+    top: 65 / 1024 * windowHeight,
+    left: 877 / 1440 * windowWidth,
+    height: 32 / 1024 * windowHeight,
+    width: 305 / 1440 * windowWidth,
+    color: 'white',
+    fontSize: 27,
+    lineHeight: 32,
+    textAlign: 'center',
+  },
 
-  });
+});
