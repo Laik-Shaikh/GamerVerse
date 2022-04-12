@@ -12,7 +12,7 @@ import S1 from './authAssets/slide1.png'
 //<ImageBackground source={S1} resizeMode="cover" style={styles.S1}/>
 //
 
-export default function Login({ navigation }) {
+export default function Login({ navigation ,route}) {
   const [UName, setUName] = React.useState();
   const [PWord, setPWord] = React.useState();
   const [ConfirmPWord, setConfirmPWord] = React.useState();
@@ -35,14 +35,12 @@ export default function Login({ navigation }) {
                   <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true} onChangeText={PWord => setPWord(PWord)}></TextInput>
                   <TextInput style={styles.InputStyle3} placeholder='Confirm Password' onChangeText={ConfirmPWord => setConfirmPWord(ConfirmPWord)} secureTextEntry={true}></TextInput>
                   <TouchableOpacity style={styles.Button} title='Register' secureTextEntry={true}onPress={
-                    async () => {
+                     () => {
                       try {
                         console.log(fire.auth);
                         console.log(UName+" "+PWord+" "+ConfirmPWord);
                         if(PWord==ConfirmPWord){ 
-                          await createUserWithEmailAndPassword(auth,UName,PWord);
-                          console.log("yes")
-                          navigation.navigate("CreateProfile")
+                          navigation.navigate("CreateProfile",{PWord,UName})
                         }
                         else
                         {
