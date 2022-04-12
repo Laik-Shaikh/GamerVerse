@@ -244,7 +244,7 @@ function renderSug() {
                     
                     <View style={styles.divider1}/>
                     {console.log(profileInfo.Name)}
-                    <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Name}</Text>
                     </View>
@@ -254,7 +254,7 @@ function renderSug() {
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Location}</Text>
                     </View>
                     
-                    <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Phone Number</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 {profileInfo.PhoneNumber}</Text>
                     </View>
@@ -264,7 +264,7 @@ function renderSug() {
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Email}</Text>
                     </View>
                     
-                    <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Discord Id</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.DiscordId}</Text>
                     </View>
@@ -375,7 +375,7 @@ function renderSug() {
                     
                     <View style={styles.divider1}/>
                     {console.log(profileInfo.Name)}
-                    <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Name}</Text>
                     </View>
@@ -385,7 +385,7 @@ function renderSug() {
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
-                    <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Phone Number</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
@@ -395,7 +395,7 @@ function renderSug() {
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
-                    <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Discord Id</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
@@ -486,7 +486,7 @@ function renderSug() {
                     
                     <View style={styles.divider1}/>
                     {console.log(profileInfo.Name)}
-                    <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Name}</Text>
                     </View>
@@ -496,7 +496,7 @@ function renderSug() {
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
-                    <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Phone Number</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
@@ -506,7 +506,7 @@ function renderSug() {
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
-                    <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
+                    <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Discord Id</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
@@ -601,7 +601,7 @@ const styles = StyleSheet.create({
         height: 0.3*windowHeight,
         top: 0.15*windowHeight,
         alignItems:"center",
-        backgroundColor: "rgba(255, 255, 255, 0.25)",
+        backgroundColor: "rgba(255, 255, 255, 0.15)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
     dpicture: {
@@ -698,14 +698,16 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: "#FFFFFF"
     },
+
     aboutMeContainer: {
         position: "absolute",
         width: 0.32*windowWidth,
         height: 0.547*windowHeight,
         top: 0.45*windowHeight,
         alignItems: "center",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
       },
+
     spike1:{
         position:"absolute",
         resizeMode:'contain',
@@ -731,7 +733,7 @@ const styles = StyleSheet.create({
         width: 0.68 * windowWidth,
         height: 0.12 * windowHeight,
         left: 0.32 * windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
     infoHeadTxt: {

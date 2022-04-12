@@ -632,9 +632,11 @@ export default function homepage({ navigation, route }) {
                                             else{
                                                 return (
                                                     <View style={styles.allPost}>
-                                                        <Image source={newItem.Image} style={styles.post} />
+                                                        <TouchableOpacity onPress={() => navigation.push("SearchProfile", newItem.uid)}>
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        </TouchableOpacity>
+                                                        <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
                                                     
