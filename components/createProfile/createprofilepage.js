@@ -29,15 +29,11 @@ export default function CreateProfile({navigation,route}) {
   
   const parameterAcceptor = route.params;
   console.log(parameterAcceptor)
-  if(parameterAcceptor != "25"){
     var pArray=Object.values(parameterAcceptor)
     console.log(pArray)
     const UName=pArray[1]
     console.log(UName)
     const PWord=pArray[0]
-  
-    
-  }
 
 
 
@@ -226,10 +222,9 @@ function renderSug() {
                   if(!image) alert("Please enter a profile image.");
                   if(mobileCheck(PNum) && discCheck(Disc) && NameCheck(UserName) && (image)) {
                     console.log("making account")
-                    if(parameterAcceptor != "25")
-                    await createUserWithEmailAndPassword(auth,UName,PWord)
+                    if(UName != "google" && PWord != "google"){await createUserWithEmailAndPassword(auth,UName,PWord)}
                     sendFirebaseData();
-                    navigation.navigate('GameHub')
+                    navigation.push('GameHub')
                   }
                 } catch (error) {
                   console.log(error);

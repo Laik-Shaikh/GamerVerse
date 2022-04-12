@@ -57,7 +57,7 @@ export default function MyGamesPage ({ navigation, route }){
 
     var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
-            navigation.navigate("SearchName", { textInputValue })
+            navigation.push("SearchName", { textInputValue })
             console.log('search started')
         }
     }
@@ -85,7 +85,7 @@ export default function MyGamesPage ({ navigation, route }){
                     return (
                         <TouchableOpacity style={styles.item} onPress={() => {
                             setSelectedValue(suggestion.item.Location)
-                            navigation.navigate("SearchName", { textInputValue: suggestion.item.Location })
+                            navigation.push("SearchName", { textInputValue: suggestion.item.Location })
                         }
 
                         }>

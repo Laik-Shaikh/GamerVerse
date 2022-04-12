@@ -60,20 +60,19 @@ export default function Login({ navigation ,route}) {
                   <TouchableOpacity style={styles.Google} onPress={() => {
                     signInWithPopup(auth, provider)
                     .then((result) => {
-                      
+                      console.log(auth,provider)
                       const credential = GoogleAuthProvider.credentialFromResult(result);
                       const token = credential.accessToken;
-                      
                       const user = result.user;
                       console.log(user)
                       console.log(token)
-                      navigation.push("CreateProfile", "25")
+                      navigation.navigate("CreateProfile",{PWord:"google",UName:"google"})
                       
                     })
                   }}>
                   <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FG.png?alt=media&token=57d0bfbb-0d56-4efa-8c43-5d2e4506738f"} style={styles.G}></Image>
                   <Text style={styles.GoogleText}>Sign Up with google</Text></TouchableOpacity>
-                  <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Login")}>
+                  <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.push("Login")}>
                     <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Have an account already? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14,borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Login</Text></Text>
                   </TouchableOpacity>
                 </View>

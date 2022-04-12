@@ -140,7 +140,7 @@ if(!gameInfo)
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} />
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fmenubar.png?alt=media&token=ffa75a86-6d73-441d-b9b5-3d48601a0994"} style={styles.menu} />
-                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                 <Text style={styles.robototxt}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
@@ -248,7 +248,7 @@ else{
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} />
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fmenubar.png?alt=media&token=ffa75a86-6d73-441d-b9b5-3d48601a0994"} style={styles.menu} />
-                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.navigate("Home")}>
+                <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                 <Text style={styles.robototxt}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>

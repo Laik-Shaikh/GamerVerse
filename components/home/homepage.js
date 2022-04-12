@@ -202,7 +202,7 @@ export default function homepage({ navigation, route }) {
 
     var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter' && textInputValue.length>0 && textInputValue!=" ") {
-            navigation.navigate("SearchName", { textInputValue })
+            navigation.push("SearchName", { textInputValue })
             console.log('search started')
         }
     }
@@ -372,7 +372,7 @@ export default function homepage({ navigation, route }) {
         const signOutUser = async () => {
             try {
                 await auth.signOut();
-                navigation.navigate("Login");
+                navigation.push("Login");
 
             } catch (e) {
                 Alert.alert("Could not Logout");
@@ -400,12 +400,12 @@ export default function homepage({ navigation, route }) {
                 colors={['#013C00', '#000000']}
                 style={styles.background} >
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
-                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.navigate("Home")} />
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
                 <TouchableOpacity style={styles.logout} onPress={() => signOutUser()}>
                     <Text style={styles.uploadText}>Log Out</Text>
                 </TouchableOpacity>
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
-                <TouchableOpacity style={styles.homebtn} onPress={() => navigation.navigate("Home")}>
+                <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
                     <Text style={styles.highlighttxt}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>

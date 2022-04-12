@@ -74,10 +74,10 @@ export default function Login({ navigation }) {
                   const { isNewUser } = getAdditionalUserInfo(result)
                   console.log(isNewUser)
                   if (isNewUser) {
-                    navigation.navigate("CreateProfile")
+                    navigation.push("CreateProfile")
                   }
                   else {
-                    navigation.navigate("Home")
+                    navigation.push("Home")
                   }
 
                 }).catch((error) => { console.log(error) })
@@ -86,7 +86,7 @@ export default function Login({ navigation }) {
             <Text style={styles.GoogleText}>Sign In with Google</Text>
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.SignInText} onPress={() => navigation.navigate("Register")}>
+            <TouchableOpacity style={styles.SignInText} onPress={() => navigation.push("Register")}>
               <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Don't have an account? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Register</Text></Text>
             </TouchableOpacity>
           </View>
