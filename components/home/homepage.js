@@ -201,7 +201,7 @@ export default function homepage({ navigation, route }) {
     }
 
     var handleSearch = (e) => {
-        if (e.nativeEvent.key == 'Enter') {
+        if (e.nativeEvent.key == 'Enter' && textInputValue.length>0) {
             navigation.navigate("SearchName", { textInputValue })
             console.log('search started')
         }

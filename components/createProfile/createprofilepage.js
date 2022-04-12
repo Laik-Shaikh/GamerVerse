@@ -208,7 +208,7 @@ function renderSug() {
           style={styles.InputStyle3} 
           value={selectedValue}
           onChangeText={(text) => getLocationsFromApi(text)}
-          placeholder="Enter your location"
+          placeholder="Location (Drop Down Only)"
           onFocus={() => {
             if(selectedValue)
               setSelectedValue(undefined)
