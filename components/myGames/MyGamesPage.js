@@ -54,14 +54,16 @@ export default function MyGamesPage ({ navigation, route }){
 
     if (!games) {
         return (
-            <LinearGradient
-                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+            <View style={styles.container}>
+                <LinearGradient
+                    start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
                     colors={['#013C00', '#000000']}
-                    style={styles.background} >
-                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
-                {/* <View style={styles.loading}>
-                </View> */}
-            </LinearGradient>
+                    style={[styles.background,{width: '100%', height: '100%'}]} >
+                    <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
+                    {/* <View style={styles.loading}>
+                    </View> */}
+                </LinearGradient>
+            </View>
             )
     }
     return(

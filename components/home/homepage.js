@@ -263,14 +263,16 @@ export default function homepage({ navigation, route }) {
 
     if (!users) {
         return (
-            <LinearGradient
-                start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
-                colors={['#013C00', '#000000']}
-                style={styles.background} >
-                <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
-                {/* <View style={styles.loading}>
-                </View> */}
-            </LinearGradient>
+            <View style={styles.container}>
+                <LinearGradient
+                    start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={[styles.background,{width: '100%', height: '100%'}]} >
+                    <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
+                    {/* <View style={styles.loading}>
+                    </View> */}
+                </LinearGradient>
+            </View>
         )
     }
 
@@ -378,14 +380,16 @@ export default function homepage({ navigation, route }) {
         }
         if (!games || !latestPosts) {
             return (
+                <View style={styles.container}>
                 <LinearGradient
                     start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
                     colors={['#013C00', '#000000']}
-                    style={styles.background} >
+                    style={[styles.background,{width: '100%', height: '100%'}]} >
                     <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
                     {/* <View style={styles.loading}>
-                </View> */}
+                    </View> */}
                 </LinearGradient>
+            </View>
             )
     }
     return (
@@ -433,7 +437,7 @@ export default function homepage({ navigation, route }) {
                         <Image style={{
                             position: 'absolute',
                             resizeMode: 'contain',
-                            top: 0.01 * windowHeight,
+                            top: 0.011 * windowHeight,
                             left: 0.015 * windowWidth,
                             width: 0.03 * windowWidth,
                             height: 0.03 * windowHeight,
@@ -442,10 +446,10 @@ export default function homepage({ navigation, route }) {
                         <Text style={{
                             position: 'absolute',
                             left: 0.045 * windowWidth,
-                            top: 0.015 * windowHeight,
+                            top: 0.016 * windowHeight,
                             color: 'white',
                             fontWeight: 'bold'
-                        }}>Notifications</Text>
+                        }}>Friend Requests</Text>
                         <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
                             style={styles.notifscroll}>
                             {requestNames.map((profile, index) => {
@@ -462,6 +466,7 @@ export default function homepage({ navigation, route }) {
                                 }}>
                                 Friend Request by:</Text> */}
                                         <View style={{ position: 'relative', flex: 1, flexDirection: 'row' }}>
+                                            <TouchableOpacity onPress={() => navigation.push("SearchProfile", requestUID[index])}>
                                             <Image source={requestImages[index]} style={{
                                                 position: "absolute",
                                                 top: 0 * windowHeight,
@@ -476,6 +481,7 @@ export default function homepage({ navigation, route }) {
                                                 width: 0.07 * windowWidth,
                                                 "color": "#FFFFFF",
                                             }}>{profile} sent a friend request!</Text>
+                                            </TouchableOpacity>
                                         </View>
                                         <View style={styles.notifdecisionbox}>
                                             <TouchableOpacity onPress={() => {
@@ -533,7 +539,7 @@ export default function homepage({ navigation, route }) {
 
 
 
-                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer}>
+                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer} showsVerticalScrollIndicator={false}>
                         {postImage.map((item, index) => {
                             // console.log(postImage);
                             // console.log(item)
@@ -576,9 +582,11 @@ export default function homepage({ navigation, route }) {
 
                                                 return (
                                                     <View style={styles.allPost}>
-                                                        <Image source={newItem.Image} style={styles.post} />
+                                                    <TouchableOpacity onPress={() => navigation.push("SearchProfile", newItem.uid)}>
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                    </TouchableOpacity>
+                                                        <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
                                                         <TouchableOpacity
@@ -617,7 +625,7 @@ export default function homepage({ navigation, route }) {
                                             }
                                         })
                                     }
-                                    )
+                                    
 
                                 </View>
                             )
@@ -742,8 +750,8 @@ const styles = StyleSheet.create({
         flexGrow: 0.1,
         width: 275 / 1440 * windowWidth,
         left: 5 / 1440 * windowWidth,
-        height: 592 / 1024 * windowHeight,
-        top: 195 / 1024 * windowHeight,
+        height: 650 / 1024 * windowHeight,
+        top: 200 / 1024 * windowHeight,
         borderRadius: 10,
         // backgroundColor: "rgba(255, 255, 255, 0.7)",
     },
@@ -756,7 +764,7 @@ const styles = StyleSheet.create({
         left: 0.05 * windowWidth,
         height: 0.08 * windowHeight,
         width: 0.015 * windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 1)",
+        // backgroundColor: "rgba(255, 255, 255, 1)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
@@ -840,28 +848,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-
-    friendscroll: {
-        flexGrow: 0.1,
-        width: 275 / 1440 * windowWidth,
-        left: 5 / 1440 * windowWidth,
-        height: 592 / 1024 * windowHeight,
-        top: 195 / 1024 * windowHeight,
-        borderRadius: 10,
-        // backgroundColor: "rgba(255, 255, 255, 0.7)",
-    },
-
-    friendbox: {
-        flex: 1,
-        flexDirection: "column",
-        marginVertical: 30,
-        alignItems: "center",
-        left: 0.05 * windowWidth,
-        height: 0.08 * windowHeight,
-        width: 0.015 * windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 1)",
-        transform: "matrix(1, 0, 0, 1, 0, 0)"
-    },
+    
     text1: {
         "fontStyle": "normal",
         "fontWeight": "bold",
@@ -958,9 +945,9 @@ const styles = StyleSheet.create({
     divider: {
         position: "absolute",
         top: 0.2 * windowHeight,
-        left: 0.2 * windowWidth,
+        left: 0.185 * windowWidth,
         resizeMode: 'contain',
-        height: 0.6 * windowHeight,
+        height: 0.7 * windowHeight,
         width: "3px",
     },
 
@@ -986,7 +973,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         flex: 1,
         top: 0.2 * windowHeight,
-        left: 0.8 * windowWidth,
+        left: 0.81 * windowWidth,
         height: (695 / 900) * windowHeight,
         width: (227 / 1600) * windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.25)",
@@ -1219,7 +1206,7 @@ const styles = StyleSheet.create({
         width: 0.58 * windowWidth,
         height: 0.73 * windowHeight,
         top: 0.23 * windowHeight,
-        left: 0.21 * windowWidth,
+        left: 0.216 * windowWidth,
         // backgroundColor: 'red',
         flexGrow: 0.1
     },
@@ -1242,7 +1229,7 @@ const styles = StyleSheet.create({
         width: 0.52 * windowWidth,
         height: 0.52 * windowHeight,
         left: 0.01 * windowWidth,
-        marginTop: 0.06 * windowHeight,
+        marginTop: 0.09 * windowHeight,
         // width: '100%',
         // height: '100%',
         // flex: 1
@@ -1258,10 +1245,10 @@ const styles = StyleSheet.create({
 
     profile: {
         position: 'absolute',
-        resizeMode: 'contain',
+        // resizeMode: 'contain',
         width: 0.05 * windowHeight,
         height: 0.05 * windowHeight,
-        borderRadius: 0.075 * windowHeight,
+        borderRadius: 0.065 * windowHeight,
         top: 0.01 * windowHeight,
         left: 0.01 * windowWidth,
     },
@@ -1272,19 +1259,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 22,
-        left: 0.04 * windowWidth,
-        top: 0.015 * windowHeight
+        left: 0.047 * windowWidth,
+        top: 0.0157 * windowHeight
     },
 
     displayDescription: {
         position: 'absolute',
         color: 'white',
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: 16,
         paddingLeft: '20px',
         // marginTop: '15px',
-        bottom: 0.01 * windowHeight,
+        top: 0.065 * windowHeight,
+        left: 0.01 * windowWidth,
         flexGrow: 0.1
     },
 
@@ -1294,18 +1282,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 26,
-        top: 0.52 * windowHeight,
+        top: 0.525 * windowHeight,
         left: 0.05 * windowWidth
     },
-
-
-
-
-
-
-
-
-
 
 
 

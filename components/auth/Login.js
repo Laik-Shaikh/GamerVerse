@@ -29,9 +29,9 @@ export default function Login({ navigation }) {
                   <Text style={styles.signinText}>Sign In</Text>
                   <TextInput style={styles.InputStyle1} placeholder='Email ID'  onChangeText={UName => setUName(UName)} ref={unamekeeper}></TextInput>
                   <TextInput style={styles.InputStyle2} placeholder='Password' onChangeText={PWord => setPWord(PWord)} secureTextEntry={true}></TextInput>
-                  <TouchableOpacity style={styles.forgotPasswordText}>
+                  {/* <TouchableOpacity style={styles.forgotPasswordText}>
                     <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "rgba(84, 224, 255, 1)" }}>Forgot Password?</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                   <TouchableOpacity style={styles.Button} title='Login'
                   onPress={
                     async () => {
@@ -71,7 +71,7 @@ export default function Login({ navigation }) {
                       }
                       
                     }).catch((error) => {console.log(error)})
-                  }}><Text style={styles.ButtonText}>Sign Up with google</Text></TouchableOpacity>
+                  }}><Text style={styles.ButtonText}>Sign In with google</Text></TouchableOpacity>
                   <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Register")}>
                     <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Don't have an account? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14,borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Register</Text></Text>
                   </TouchableOpacity>
@@ -84,7 +84,7 @@ export default function Login({ navigation }) {
                 </View>
                 <View style={{"left": 0/1440 * windowWidth, "top": 1120/1024 * windowHeight}}>
                   <View style={styles.whitebg}/>
-                  <Image source={require('./authAssets/group3.png')} style={styles.img1} />
+                  <Image source={require('./authAssets/group3.png')} style={[styles.img1, {left: -23/1440* windowWidth}]} />
                   <Text style={styles.title2}>Create your own gamer profile and add all your favourite games</Text>
                   <Text style={styles.subtext2}>Add your own profile picture and gaming interests according to your needs to build an entire gaming profile!</Text>
                 </View>
@@ -95,9 +95,9 @@ export default function Login({ navigation }) {
                   <Text style={styles.subtext1}>Need new friends for all different platforms? 
 Find all sorts of players over all of platforms with just a few simple steps!</Text>
                 </View>
-                <View style={{"left": 0/1440 * windowWidth, "top": 2240/1024 * windowHeight}}>
+                <View style={{"left": 0/1440 * windowWidth, "top": 2240/1024 * windowHeight, paddingBottom: 0.01 * windowHeight}}>
                   <View style={styles.whitebg}/>
-                  <Image source={require('./authAssets/group5.png')} style={styles.img1} />
+                  <Image source={require('./authAssets/group5.png')} style={[styles.img1, {left: -90/1440 * windowWidth}]} />
                   <Image source={require('./authAssets/group6.png')} style={styles.img2} />
                   <Text style={styles.title3}>Update your own posts, gameplays and achievements</Text>
                   <Text style={styles.subtext3}>Share all of your achievements, badges, gameplays, etc with all of your friends on GamerVerse now!</Text>

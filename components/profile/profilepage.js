@@ -196,14 +196,16 @@ export default function profilepage({ navigation, route }) {
     }
     if (!userInfo || !myGames || !gameData) {
         return (
-            <LinearGradient
-                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+            <View style={styles.container}>
+                <LinearGradient
+                    start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
                     colors={['#013C00', '#000000']}
-                    style={styles.background} >
-                <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
-                {/* <View style={styles.loading}>
-                </View> */}
-            </LinearGradient>
+                    style={[styles.background,{width: '100%', height: '100%'}]} >
+                    <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
+                    {/* <View style={styles.loading}>
+                    </View> */}
+                </LinearGradient>
+            </View>
             )
     }
     if (nowEditable) {
@@ -263,7 +265,7 @@ export default function profilepage({ navigation, route }) {
                     </TouchableOpacity>
 
                     <View style={styles.divider1} />
-                    <View style={[styles.infoContainer, { top: 0.15 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.25)" }]}>
+                    <View style={[styles.infoContainer, { top: 0.15 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
                         <TextInput style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}
                             placeholder='Enter new name'
@@ -287,7 +289,7 @@ export default function profilepage({ navigation, route }) {
                         {renderSug()}
                     </View>
 
-                    <View style={[styles.infoContainer, { top: 0.39 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.25)" }]}>
+                    <View style={[styles.infoContainer, { top: 0.39 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
                         <Text style={styles.infoHeadTxt}>Phone Number</Text>
                         <TextInput style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}
                             placeholder='Enter new phone number'
@@ -300,7 +302,7 @@ export default function profilepage({ navigation, route }) {
                         <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Email}</Text>
                     </View>
 
-                    <View style={[styles.infoContainer, { top: 0.63 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.25)" }]}>
+                    <View style={[styles.infoContainer, { top: 0.63 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
                         <Text style={styles.infoHeadTxt}>Discord Id</Text>
                         <TextInput style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}
                             placeholder='Enter new discord ID'
@@ -391,7 +393,7 @@ export default function profilepage({ navigation, route }) {
 
                     <View style={styles.divider1} />
                     {console.log(userInfo[0].Name)}
-                    <View style={[styles.infoContainer, { top: 0.15 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.25)" }]}>
+                    <View style={[styles.infoContainer, { top: 0.15 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
                         <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Name}</Text>
                     </View>
@@ -401,7 +403,7 @@ export default function profilepage({ navigation, route }) {
                         <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Location}</Text>
                     </View>
 
-                    <View style={[styles.infoContainer, { top: 0.39 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.25)" }]}>
+                    <View style={[styles.infoContainer, { top: 0.39 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
                         <Text style={styles.infoHeadTxt}>Phone Number</Text>
                         <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>+91 {userInfo[0].PhoneNumber}</Text>
                     </View>
@@ -411,7 +413,7 @@ export default function profilepage({ navigation, route }) {
                         <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Email}</Text>
                     </View>
 
-                    <View style={[styles.infoContainer, { top: 0.63 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.25)" }]}>
+                    <View style={[styles.infoContainer, { top: 0.63 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
                         <Text style={styles.infoHeadTxt}>Discord Id</Text>
                         <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].DiscordId}</Text>
                     </View>
@@ -526,7 +528,7 @@ const styles = StyleSheet.create({
         height: 0.3 * windowHeight,
         top: 0.15 * windowHeight,
         alignItems: "center",
-        backgroundColor: "rgba(255, 255, 255, 0.25)",
+        backgroundColor: "rgba(255, 255, 255, 0.15)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
     dpicture: {
@@ -610,7 +612,7 @@ const styles = StyleSheet.create({
         height: 0.547 * windowHeight,
         top: 0.45 * windowHeight,
         alignItems: "center",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
     },
 
     spike1: {
@@ -640,7 +642,7 @@ const styles = StyleSheet.create({
         width: 0.68 * windowWidth,
         height: 0.12 * windowHeight,
         left: 0.32 * windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
         transform: "matrix(1, 0, 0, 1, 0, 0)",
     },
 
