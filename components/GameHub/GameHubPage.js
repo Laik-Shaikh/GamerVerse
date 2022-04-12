@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput,ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput,ActivityIndicator,FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue, ref, query, orderByChild, equalTo } from "firebase/database";
+import { getDatabase, onValue, ref, query, orderByChild, startAt,endAt } from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -12,6 +12,9 @@ const windowHeight = Dimensions.get('screen').height;
 export default function GameHubPage({ navigation, route }) {
 
     const [games, setGames] = React.useState(null);
+    const [textInputValue, setTextInputValue] = React.useState('');
+    const [location, setLocation] = React.useState(null);
+    const [selectedValue, setSelectedValue] = React.useState()
     const db = getDatabase();
     const GameRef = query(ref(db, 'games'))
     React.useEffect(() => {
@@ -20,6 +23,49 @@ export default function GameHubPage({ navigation, route }) {
             setGames(data)
         })
     }, [])
+
+    var handleSearch = (e) => {
+        if (e.nativeEvent.key == 'Enter') {
+            navigation.push("SearchName", { textInputValue })
+            console.log('search started')
+        }
+    }
+
+    const getLocations = async (loc) => {
+        if (loc) {
+            const UserRef = query(ref(db, 'locations'), orderByChild('LocationLower'), startAt(loc), endAt(loc + "\uf8ff"))
+            onValue(UserRef, (snapshot) => {
+                if (snapshot.val()) {
+                    setLocation(Object.values(snapshot.val()))
+                }
+            })
+        }
+    }
+
+    function renderSug() {
+        if (!selectedValue) {
+            console.log(location)
+            return (<FlatList
+
+                data={location}
+                style={styles.LocSuggestions}
+                keyExtractor={(item) => item.magicKey}
+                renderItem={(suggestion) => {
+                    return (
+                        <TouchableOpacity style={styles.item} onPress={() => {
+                            setSelectedValue(suggestion.item.Location)
+                            navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                        }
+
+                        }>
+                            <Text style={styles.itemText}>{suggestion.item.Location}</Text>
+                        </TouchableOpacity>)
+                }}
+
+
+            ></FlatList>)
+        }
+    }
     if (!games) {
         return (
             <View style={styles.container}>
@@ -49,10 +95,29 @@ export default function GameHubPage({ navigation, route }) {
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"}
                     style={styles.GamerVerseTitle} />
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
-                <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"}
                     style={styles.menuBar} />
-
+<TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
+                    ></TextInput>
+                    {renderSug()}
                 {/* NavBar Buttons     */}
 
                 <TouchableOpacity style={styles.homebtn} onPress={() => navigation.navigate("Home")}>
@@ -227,6 +292,25 @@ const styles = StyleSheet.create({
         backgroundColor: "#e5e5e500"
     },
 
+    LocSuggestions: {
+        position: 'absolute',
+        top: 150 / 1024 * windowHeight,
+        right: 85 / 1440 * windowWidth,
+        flexGrow: 0,
+        width: 305 / 1440 * windowWidth,
+        backgroundColor: 'rgba(255, 255, 255,1)',
+        zIndex: 1,
+    },
+
+    itemText: {
+        fontSize: 15,
+        paddingLeft: 10
+    },
+
+    item: {
+        width: 305 / 1440 * windowWidth,
+        paddingTop: 10
+    },
     menuBar: {
         position: "absolute",
         resizeMode: 'contain',

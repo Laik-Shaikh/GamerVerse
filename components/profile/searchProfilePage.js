@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,ScrollView,TextInput,ActivityIndicator} from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,ScrollView,TextInput,ActivityIndicator,FlatList} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
 
@@ -7,7 +7,7 @@ import fire from '../firebase';
 import 'firebase/database'
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
-import { getDatabase, onValue,ref,query, orderByChild, equalTo, push ,update ,get} from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo, startAt,endAt ,update ,get} from "firebase/database";
 
 
 const windowWidth = Dimensions.get('screen').width;
@@ -19,6 +19,9 @@ export default function searchProfilePage ({ navigation, route }){
       var profileUid = route.params
       const [profileInfo,setProfileInfo] = React.useState()
       const [userInfo,setUserInfo] = React.useState()
+      const [textInputValue, setTextInputValue] = React.useState('');
+      const [location, setLocation] = React.useState(null);
+      const [selectedValue, setSelectedValue] = React.useState()
       var [gameData, setGameData] = React.useState()
       var [myGames, setMyGames] = React.useState()
       const db = getDatabase();
@@ -54,6 +57,50 @@ export default function searchProfilePage ({ navigation, route }){
     })
     
   },[])
+
+  var handleSearch = (e) => {
+    if (e.nativeEvent.key == 'Enter') {
+        navigation.push("SearchName", { textInputValue })
+        console.log('search started')
+    }
+}
+
+const getLocations = async (loc) => {
+    if (loc) {
+        const UserRef = query(ref(db, 'locations'), orderByChild('LocationLower'), startAt(loc), endAt(loc + "\uf8ff"))
+        onValue(UserRef, (snapshot) => {
+            if (snapshot.val()) {
+                setLocation(Object.values(snapshot.val()))
+            }
+        })
+    }
+}
+
+function renderSug() {
+    if (!selectedValue) {
+        console.log(location)
+        return (<FlatList
+
+            data={location}
+            style={styles.LocSuggestions}
+            keyExtractor={(item) => item.magicKey}
+            renderItem={(suggestion) => {
+                return (
+                    <TouchableOpacity style={styles.item} onPress={() => {
+                        setSelectedValue(suggestion.item.Location)
+                        navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                    }
+
+                    }>
+                        <Text style={styles.itemText}>{suggestion.item.Location}</Text>
+                    </TouchableOpacity>)
+            }}
+
+
+        ></FlatList>)
+    }
+}
+
   console.log(userInfo)
   console.log(profileInfo)
   if(profileInfo && userInfo){
@@ -133,16 +180,35 @@ export default function searchProfilePage ({ navigation, route }){
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
-                    <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                    <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
+                    ></TextInput>
+                    {renderSug()}
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
 
                     
@@ -262,7 +328,26 @@ export default function searchProfilePage ({ navigation, route }){
                     </TouchableOpacity>
                     
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
-                    <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                    <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
+                    ></TextInput>
+                    {renderSug()}
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
 
                     
@@ -354,7 +439,26 @@ export default function searchProfilePage ({ navigation, route }){
                     </TouchableOpacity>
                     
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
-                    <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                    <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
+                    ></TextInput>
+                    {renderSug()}
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
 
                     
@@ -532,6 +636,26 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         placeholderTextColor: "#FFFFFF",
         backgroundColor: "#e5e5e500"
+    },
+
+    LocSuggestions: {
+        position: 'absolute',
+        top: 150 / 1024 * windowHeight,
+        right: 85 / 1440 * windowWidth,
+        flexGrow: 0,
+        width: 305 / 1440 * windowWidth,
+        backgroundColor: 'rgba(255, 255, 255,1)',
+        zIndex: 1,
+    },
+
+    itemText: {
+        fontSize: 15,
+        paddingLeft: 10
+    },
+
+    item: {
+        width: 305 / 1440 * windowWidth,
+        paddingTop: 10
     },
 
     Button:

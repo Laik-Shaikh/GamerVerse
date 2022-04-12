@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput} from 'react-native';
+import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView, TextInput,FlatList} from 'react-native';
 import { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -8,7 +8,9 @@ const windowHeight = Dimensions.get('screen').height;
 
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue,ref,query, orderByChild, equalTo } from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo,startAt,endAt } from "firebase/database";
+import 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
 export default function searchpagename ({ navigation, route }){
     const [searchAgain, setSearchAgain] = React.useState('');
@@ -20,7 +22,11 @@ export default function searchpagename ({ navigation, route }){
       var [userInfo,setUserInfo] = React.useState()
       var [searchedGame,setSearchedGame] = React.useState()
       var [locInfo,setLocInfo] = React.useState()
+      const [textInputValue2, setTextInputValue2] = React.useState('');
+      const [location, setLocation] = React.useState(null);
+      const [selectedValue, setSelectedValue] = React.useState()
       const db = getDatabase();
+      const auth =getAuth();
       
       var searchRef = query(ref(db,'users'),orderByChild('Name'))
       var searchGameRef = query(ref(db,'games'),orderByChild('Name'))
@@ -60,11 +66,58 @@ export default function searchpagename ({ navigation, route }){
   console.log(userInfo)
   console.log(searchedGame)
 
+  var handleSearch = (e) => {
+    if (e.nativeEvent.key == 'Enter') {
+        textInputValue=(textInputValue2)
+        navigation.push("SearchName", { textInputValue })
+        console.log('search started')
+    }
+}
+
+const getLocations = async (loc) => {
+    if (loc) {
+        const UserRef = query(ref(db, 'locations'), orderByChild('LocationLower'), startAt(loc), endAt(loc + "\uf8ff"))
+        onValue(UserRef, (snapshot) => {
+            if (snapshot.val()) {
+                setLocation(Object.values(snapshot.val()))
+            }
+        })
+    }
+}
+
+function renderSug() {
+    if (!selectedValue) {
+        console.log(location)
+        return (<FlatList
+
+            data={location}
+            style={styles.LocSuggestions}
+            keyExtractor={(item) => item.magicKey}
+            renderItem={(suggestion) => {
+                return (
+                    <TouchableOpacity style={styles.item} onPress={() => {
+                        setSelectedValue(suggestion.item.Location)
+                        navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                    }
+
+                    }>
+                        <Text style={styles.itemText}>{suggestion.item.Location}</Text>
+                    </TouchableOpacity>)
+            }}
+
+
+        ></FlatList>)
+    }
+}
+
+
   function renderLoc(){
       if(locInfo){
       return(
       locInfo.map((profile, index) => {
-        if(profile.Location.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+          console.log()
+        if(profile.Location.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == "" ){
+            if(!(profile.uid==auth.currentUser.uid)){
         return (
             <View>
         {/* <Text style={[styles.playersearchText,{top: -250/1024*windowHeight,}]}>Players</Text> */}
@@ -76,7 +129,7 @@ export default function searchpagename ({ navigation, route }){
             </View>
             </View>
         )
-        }
+      }}
     }))}
   }
   
@@ -85,6 +138,7 @@ export default function searchpagename ({ navigation, route }){
     return(
     userInfo.map((profile, index) => {
         if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+            if(!(profile.uid==auth.currentUser.uid)){
         return (
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10, left: 0.05 * windowWidth,}}>
                 <TouchableOpacity onPress={() => navigation.push("SearchProfile", profile.uid)}>
@@ -93,7 +147,7 @@ export default function searchpagename ({ navigation, route }){
                 </TouchableOpacity>
             </View>
         )
-        }
+        }}
     }))}
 }
 
@@ -158,10 +212,23 @@ function renderGame(){
             <TextInput 
                     style={styles.InputStyle1} 
                     placeholder='Search for friends, games or location'
-                    onChangeText={(text) => setSearchAgain(text)}
-                    value={searchAgain}
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue2(text)}}
+                    value={textInputValue2}
                     onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
                     ></TextInput>
+                    {renderSug()}
 
             {/*Search Result*/}
             <Text style={styles.playersearchText} >Search Result:</Text>
@@ -216,14 +283,27 @@ return(
             <Text style={styles.robototxt}>Game Hub</Text>
         </TouchableOpacity>
         <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
-        <TextInput 
+            <TextInput 
                     style={styles.InputStyle1} 
                     placeholder='Search for friends, games or location'
-                    onChangeText={(text) => setSearchAgain(text)}
-                    value={searchAgain}
-                    defaultValue={textInputValue}
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue2(text)}}
+                    value={textInputValue2}
                     onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
                     ></TextInput>
+                    {renderSug()}
+
 
 
     </View>
@@ -301,6 +381,26 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         placeholderTextColor: "#FFFFFF",
         backgroundColor: "#e5e5e500"
+    },
+
+    LocSuggestions: {
+        position: 'absolute',
+        top: 150 / 1024 * windowHeight,
+        right: 75 / 1440 * windowWidth,
+        flexGrow: 0,
+        width: 305 / 1440 * windowWidth,
+        backgroundColor: 'rgba(255, 255, 255,1)',
+        zIndex: 1,
+    },
+
+    itemText: {
+        fontSize: 15,
+        paddingLeft: 10
+    },
+
+    item: {
+        width: 305 / 1440 * windowWidth,
+        paddingTop: 10
     },
 
     whitebg:

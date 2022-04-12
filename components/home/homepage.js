@@ -202,7 +202,7 @@ export default function homepage({ navigation, route }) {
 
     var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
-            navigation.navigate("SearchName", { textInputValue })
+            navigation.push("SearchName", { textInputValue })
             console.log('search started')
         }
     }
@@ -230,7 +230,7 @@ export default function homepage({ navigation, route }) {
                     return (
                         <TouchableOpacity style={styles.item} onPress={() => {
                             setSelectedValue(suggestion.item.Location)
-                            navigation.navigate("SearchName", { textInputValue: suggestion.item.Location })
+                            navigation.push("SearchName", { textInputValue: suggestion.item.Location })
                         }
 
                         }>
@@ -420,9 +420,21 @@ export default function homepage({ navigation, route }) {
                     <TextInput 
                     style={styles.InputStyle1} 
                     placeholder='Search for friends, games or location'
-                    onChangeText={(text) => setTextInputValue(text)}
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
                     value={textInputValue}
                     onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
                     ></TextInput>
                     {renderSug()}
                     <View style={styles.notif}>
@@ -889,7 +901,7 @@ const styles = StyleSheet.create({
 
     LocSuggestions: {
         position: 'absolute',
-        top: 160 / 1024 * windowHeight,
+        top: 150 / 1024 * windowHeight,
         right: 85 / 1440 * windowWidth,
         flexGrow: 0,
         width: 305 / 1440 * windowWidth,

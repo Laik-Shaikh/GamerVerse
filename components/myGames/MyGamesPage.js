@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text, ScrollView,ActivityIndicator} from 'react-native';
+import {View, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, Text,TextInput,FlatList, ScrollView,ActivityIndicator} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue, ref, query, orderByChild, equalTo } from "firebase/database";
+import { getDatabase, onValue, ref, query, orderByChild, startAt,endAt } from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
@@ -17,6 +17,9 @@ export default function MyGamesPage ({ navigation, route }){
     const [games, setGames] = React.useState(null);
     // const [userGameInfo, setuserGameInfo] = React.useState();
     const [displayGame, setDisplayGame] = React.useState([])
+    const [textInputValue, setTextInputValue] = React.useState('');
+    const [location, setLocation] = React.useState(null);
+    const [selectedValue, setSelectedValue] = React.useState()
     const db = getDatabase();
     const GameRef = query(ref(db,'games'))
     // const gameImage = query(ref(db, 'games'),equalTo('P0'))
@@ -51,6 +54,50 @@ export default function MyGamesPage ({ navigation, route }){
     console.log(games)
     console.log(displayGame);
     // console.log(displayGame[1].charAt(0))
+
+    var handleSearch = (e) => {
+        if (e.nativeEvent.key == 'Enter') {
+            navigation.navigate("SearchName", { textInputValue })
+            console.log('search started')
+        }
+    }
+
+    const getLocations = async (loc) => {
+        if (loc) {
+            const UserRef = query(ref(db, 'locations'), orderByChild('LocationLower'), startAt(loc), endAt(loc + "\uf8ff"))
+            onValue(UserRef, (snapshot) => {
+                if (snapshot.val()) {
+                    setLocation(Object.values(snapshot.val()))
+                }
+            })
+        }
+    }
+
+    function renderSug() {
+        if (!selectedValue) {
+            console.log(location)
+            return (<FlatList
+
+                data={location}
+                style={styles.LocSuggestions}
+                keyExtractor={(item) => item.magicKey}
+                renderItem={(suggestion) => {
+                    return (
+                        <TouchableOpacity style={styles.item} onPress={() => {
+                            setSelectedValue(suggestion.item.Location)
+                            navigation.navigate("SearchName", { textInputValue: suggestion.item.Location })
+                        }
+
+                        }>
+                            <Text style={styles.itemText}>{suggestion.item.Location}</Text>
+                        </TouchableOpacity>)
+                }}
+
+
+            ></FlatList>)
+        }
+    }
+
 
     if (!games) {
         return (
@@ -98,8 +145,28 @@ export default function MyGamesPage ({ navigation, route }){
                 <Text style={styles.robototxt}>Game Hub</Text>
             </TouchableOpacity>
 
-            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FSearchBar.png?alt=media&token=ffa91873-57dc-4a89-abde-d6e64e8118ee"}
-                style = {styles.searchBar} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"}
+                style = {styles.searchIcon} />
+            <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
+                    ></TextInput>
+                    {renderSug()}
             <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FHoriDivider.png?alt=media&token=3fb49ba5-7989-4ae2-8065-eb6718e159f9"}
                 style = {styles.horiLine} />
             <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FVerLine.png?alt=media&token=ae718803-7ee5-4337-af84-5cc9ee2e1b11"} 
@@ -292,13 +359,50 @@ const styles = StyleSheet.create({
         width: 0.05*windowWidth
     },
 
-    searchBar:{
-        position:"absolute",
-        resizeMode:'contain',
-        top:0.10*windowHeight,
-        left:0.7*windowWidth,
-        height: 0.05*windowHeight,
-        width: 0.25*windowWidth,
+    searchIcon: {
+        position: "absolute",
+        resizeMode: 'contain',
+        top: 0.11 * windowHeight,
+        left: 0.7 * windowWidth,
+        height: 0.03 * windowHeight,
+        width: 0.03 * windowWidth,
+    },
+
+    LocSuggestions: {
+        position: 'absolute',
+        top: 150 / 1024 * windowHeight,
+        right: 70 / 1440 * windowWidth,
+        flexGrow: 0,
+        width: 305 / 1440 * windowWidth,
+        backgroundColor: 'rgba(255, 255, 255,1)',
+        zIndex: 1,
+    },
+
+    itemText: {
+        fontSize: 15,
+        paddingLeft: 10
+    },
+
+    item: {
+        width: 305 / 1440 * windowWidth,
+        paddingTop: 10
+    },
+
+    InputStyle1: {
+        "position": "absolute",
+        top: 107 / 1024 * windowHeight,
+        right: 70 / 1440 * windowWidth,
+        height: 42 / 1024 * windowHeight,
+        width: 305 / 1440 * windowWidth,
+        color: 'white',
+        fontSize: 17,
+        paddingLeft: 10,
+        paddingBottom: 2,
+        paddingTop: 3,
+        borderBottomColor: "#FFFFFF",
+        borderBottomWidth: 1,
+        placeholderTextColor: "#FFFFFF",
+        backgroundColor: "#e5e5e500"
     },
 
     horiLine:{

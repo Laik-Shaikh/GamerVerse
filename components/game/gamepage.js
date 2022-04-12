@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,TextInput, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Image, Dimensions,ImageBackground,Text,TouchableOpacity,TextInput, ActivityIndicator,FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import fire from '../firebase';
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 import 'firebase/database'
-import { getDatabase, onValue,ref,query, orderByChild, equalTo, push ,update ,set} from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo, push ,update ,startAt,endAt} from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -18,6 +18,9 @@ export default function gamepage({ navigation, route }) {
     console.log(GameCode)
     var [gameInfo,setGameInfo] = React.useState()
     const [userInfo,setUserInfo] = React.useState()
+    const [textInputValue, setTextInputValue] = React.useState('');
+    const [location, setLocation] = React.useState(null);
+    const [selectedValue, setSelectedValue] = React.useState()
     var gameTags=[];
     var tagArray=[];
     var notfollowStatus =true;
@@ -46,6 +49,48 @@ gameTags = gameInfo.Tags;
 console.log(gameTags);
 tagArray = Object.entries(gameTags);
 console.log(tagArray)
+}
+var handleSearch = (e) => {
+    if (e.nativeEvent.key == 'Enter') {
+        navigation.push("SearchName", { textInputValue })
+        console.log('search started')
+    }
+}
+
+const getLocations = async (loc) => {
+    if (loc) {
+        const UserRef = query(ref(db, 'locations'), orderByChild('LocationLower'), startAt(loc), endAt(loc + "\uf8ff"))
+        onValue(UserRef, (snapshot) => {
+            if (snapshot.val()) {
+                setLocation(Object.values(snapshot.val()))
+            }
+        })
+    }
+}
+
+function renderSug() {
+    if (!selectedValue) {
+        console.log(location)
+        return (<FlatList
+
+            data={location}
+            style={styles.LocSuggestions}
+            keyExtractor={(item) => item.magicKey}
+            renderItem={(suggestion) => {
+                return (
+                    <TouchableOpacity style={styles.item} onPress={() => {
+                        setSelectedValue(suggestion.item.Location)
+                        navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                    }
+
+                    }>
+                        <Text style={styles.itemText}>{suggestion.item.Location}</Text>
+                    </TouchableOpacity>)
+            }}
+
+
+        ></FlatList>)
+    }
 }
 if(userInfo){
     games = userInfo.Games;
@@ -108,7 +153,26 @@ if(!gameInfo)
                 <Text style={styles.highlighttxt}>Game Hub</Text>
                 </TouchableOpacity>
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
-                <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
+                    ></TextInput>
+                    {renderSug()}
                 <View style={styles.ratingContainer}>
                     <Text style={styles.ratingTxt}>Rating</Text>
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdark.png?alt=media&token=0e44c147-d2b8-43e9-b960-91ddc8f8873b"} style={styles.defaultStar}></Image>
@@ -197,7 +261,25 @@ else{
                 <Text style={styles.highlighttxt}>Game Hub</Text>
                 </TouchableOpacity>
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
-                <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
+                <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setSelectedValue("Somewhere")
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
+                    ></TextInput>
+                    {renderSug()}
                 <View style={styles.ratingContainer}>
                     <Text style={styles.ratingTxt}>Rating</Text>
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdark.png?alt=media&token=0e44c147-d2b8-43e9-b960-91ddc8f8873b"} style={styles.defaultStar}></Image>
@@ -318,6 +400,27 @@ const styles = StyleSheet.create({
         placeholderTextColor: "#FFFFFF",
         backgroundColor: "#e5e5e500"
     },
+
+    LocSuggestions: {
+        position: 'absolute',
+        top: 150 / 1024 * windowHeight,
+        right: 85 / 1440 * windowWidth,
+        flexGrow: 0,
+        width: 305 / 1440 * windowWidth,
+        backgroundColor: 'rgba(255, 255, 255,1)',
+        zIndex: 1,
+    },
+
+    itemText: {
+        fontSize: 15,
+        paddingLeft: 10
+    },
+
+    item: {
+        width: 305 / 1440 * windowWidth,
+        paddingTop: 10
+    },
+
 
     robototxt:{ 
         "fontStyle": "normal",
