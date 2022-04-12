@@ -64,7 +64,7 @@ export default function searchpagename ({ navigation, route }){
       if(locInfo){
       return(
       locInfo.map((profile, index) => {
-        if(profile.Location.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+        if(profile.Location.toLowerCase().includes(textInputValue.toLowerCase())){
         return (
             <View>
         {/* <Text style={[styles.playersearchText,{top: -250/1024*windowHeight,}]}>Players</Text> */}
@@ -84,7 +84,7 @@ export default function searchpagename ({ navigation, route }){
     if(userInfo){
     return(
     userInfo.map((profile, index) => {
-        if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+        if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase())){
         return (
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10, left: 0.05 * windowWidth,}}>
                 <TouchableOpacity onPress={() => navigation.push("SearchProfile", profile.uid)}>
@@ -101,7 +101,7 @@ function renderGame(){
     if(searchedGame){
     return(
     searchedGame.map((game, index) => {
-        if(game.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+        if(game.Name.toLowerCase().includes(textInputValue.toLowerCase())){
         return (
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -50/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 170}}>
                 <View style={styles.infoContainer}>

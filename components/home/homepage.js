@@ -786,7 +786,7 @@ const styles = StyleSheet.create({
 
     title: {
         position: "absolute",
-        left: 0.3 * windowWidth,
+        left: 0.35 * windowWidth,
         resizeMode: 'contain',
         height: 0.1 * windowHeight,
         width: 0.35 * windowWidth,
@@ -1028,22 +1028,27 @@ const styles = StyleSheet.create({
         top: 0.17 * windowHeight,
         left: 0.7 * windowWidth,
         backgroundColor: 'green',
-        textAlign: 'center'
+        textAlign: 'center',
+        borderRadius: '2px'
     },
+
     logout: {
         position: 'absolute',
-        width: 0.09 * windowWidth,
+        width: 0.087 * windowWidth,
         height: 0.03 * windowHeight,
         top: 0.05 * windowHeight,
-        left: 0.9 * windowWidth,
+        left: 0.875 * windowWidth,
         backgroundColor: 'green',
-        textAlign: 'center'
+        textAlign: 'center',
+        borderRadius: '2px'
     },
+
     uploadText: {
         "fontStyle": 'normal',
-        "fontSize": 16,
+        "fontSize": 15,
         "fontWeight": 'bold',
-        "color": '#ffffff'
+        "color": '#ffffff',
+        paddingTop: "2px"
     },
 
     gameText: {
@@ -1105,16 +1110,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 10,
         elevation: 2,
-    },
-
-    logout: {
-        position: 'absolute',
-        width: 0.09 * windowWidth,
-        height: 0.03 * windowHeight,
-        top: 0.05 * windowHeight,
-        left: 0.9 * windowWidth,
-        backgroundColor: 'green',
-        textAlign: 'center'
     },
 
     uploadButton: {
