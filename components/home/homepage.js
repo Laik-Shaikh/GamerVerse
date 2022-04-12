@@ -562,7 +562,8 @@ export default function homepage({ navigation, route }) {
                                                     }
                                                     return true;
                                                 }
-
+                                            if(newItem.Likes.includes(auth.currentUser.uid))
+                                            {
                                                 return (
                                                     <View style={styles.allPost}>
                                                         <Image source={newItem.Image} style={styles.post} />
@@ -598,19 +599,59 @@ export default function homepage({ navigation, route }) {
                                                                 }
                                                             }}
                                                         >
-                                                            if(newItem.Likes.includes(auth.currentUser.uid))
-                                                            {
-                                                                <Image source={newItem.LikeImage} style={styles.likeImage} />
-                                                            }
-                                                            else{
-                                                                <Image source={newItem.WhiteLike} style={styles.likeImage} />
-                                                            }
+                                                           <Image source={newItem.LikeImage} style={styles.likeImage} /> 
                                                         </TouchableOpacity>
                                                         {console.log(newItem.DisplayProfile)}
+                                                            
                                                         <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                     </View>
                                                 )
                                             }
+                                            else{
+                                                return (
+                                                    <View style={styles.allPost}>
+                                                        <Image source={newItem.Image} style={styles.post} />
+                                                        <Text style={styles.profileName}>{newItem.User}</Text>
+                                                        <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                        {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                position: 'absolute',
+                                                                width: 0.053 * windowWidth,
+                                                                height: 0.053 * windowHeight,
+                                                                top: 0.52 * windowHeight,
+                                                                left: 0.006 * windowWidth
+                                                            }}
+                                                            onPress={() => {
+                                                                // console.log(likes)
+                                                                if (!newItem.Likes.includes(auth.currentUser.uid)) {
+                                                                    if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
+
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                    console.log('hello')
+                                                                }
+                                                                else {
+                                                                    var ind = likeData.indexOf(auth.currentUser.uid)
+                                                                    likeData.splice(ind, 1)
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                            }}
+                                                        >
+                                                            <Image source={newItem.WhiteLike} style={styles.whiteLikeImage} />   
+                                                        </TouchableOpacity>
+                                                        {console.log(newItem.DisplayProfile)}
+                                                        
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
+                                                    </View>
+                                                )
+                                            }
+                                        }
                                         })
                                     }
                                     )
@@ -658,9 +699,16 @@ export default function homepage({ navigation, route }) {
                                     onPress={
                                         async () => {
                                             try {
-                                                uploadPost();
-                                                alert("Uploaded Successfully");
-                                                setModalVisible(!modalVisible);
+                                                if(!image) alert("Please choose image.");
+                                                if(!selectGameName) alert("Please choose game.");
+                                                if((image) && (selectGameName))
+                                                {
+                                                    uploadPost();
+                                                    alert("Uploaded Successfully");
+                                                    setModalVisible(!modalVisible);
+                                                }
+                                               
+                                                
 
                                             } catch (error) {
                                                 console.log('error');
@@ -1257,6 +1305,18 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: '100%',
         height: '100%'
+    },
+
+    whiteLikeImage:{
+        position: 'absolute',
+        // resizeMode: 'contain',
+        width: 0.045*windowWidth,
+        height: 0.045*windowHeight,
+        left: 0.0001*windowWidth,
+        marginTop: 0.01 * windowHeight,
+        // width: '80%',
+        // height: '80%',
+        // marginBottom: '2px'
     },
 
     profile: {
