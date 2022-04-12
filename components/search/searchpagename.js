@@ -31,9 +31,10 @@ export default function searchpagename ({ navigation, route }){
       var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
           textInputValue =(searchAgain);
-          console.log(textInputValue)
-          navigation.push("SearchName", {textInputValue})
-          console.log("Hi")
+          if(textInputValue.length>0 && textInputValue!=" "){
+            navigation.push("SearchName", {textInputValue})
+          }
+         
       }
     }
       React.useEffect(() => {
@@ -65,8 +66,8 @@ export default function searchpagename ({ navigation, route }){
       if(locInfo){
       return(
       locInfo.map((profile, index) => {
-        if(profile.Location.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
-            printed = true;
+        if(profile.Location.toLowerCase().includes(textInputValue.toLowerCase())){
+            printed=true;
         return (
             <View>
         {/* <Text style={[styles.playersearchText,{top: -250/1024*windowHeight,}]}>Players</Text> */}
@@ -86,7 +87,7 @@ export default function searchpagename ({ navigation, route }){
     if(userInfo){
     return(
     userInfo.map((profile, index) => {
-        if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+        if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase())){
             printed=true;
         return (
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10, left: 0.05 * windowWidth,}}>
@@ -104,7 +105,7 @@ function renderGame(){
     if(searchedGame){
     return(
     searchedGame.map((game, index) => {
-        if(game.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+        if(game.Name.toLowerCase().includes(textInputValue.toLowerCase())){
             printed=true;
         return (
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -50/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 170}}>

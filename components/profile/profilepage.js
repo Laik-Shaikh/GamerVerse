@@ -243,14 +243,14 @@ export default function profilepage({ navigation, route }) {
                     <View style={styles.photoContainer}>
                         <Text style={styles.headTxt}>My Photo</Text>
                         <TouchableOpacity onPress={pickImage} >
-                            <Image source={userInfo[0].DisplayPicture} style={styles.dpicture} />
-                            {image && <Image source={{ uri: image }} style={styles.dpicture} />}
+                            <Image source={userInfo[0].DisplayPicture} style={[styles.dpicture, {left: -0.044 * windowWidth}]} />
+                            {image && <Image source={{ uri: image }} style={[styles.dpicture, {left: -0.044 * windowWidth}]} />}
                         </TouchableOpacity>
                     </View>
 
                     <View style={styles.aboutMeContainer}>
                         <Text style={styles.headTxt}>About Me</Text>
-                        <TextInput style={styles.aboutMeTxt} placeholder='Enter something that describes you'
+                        <TextInput style={[styles.aboutMeTxt, {width: 0.173 * windowWidth}]} placeholder='Enter your description here'
                             onChangeText={(text) => setNewAbout(text)}></TextInput>
                     </View>
 
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
     },
     title: {
         position: "absolute",
-        left: 0.3 * windowWidth,
+        left: 0.35 * windowWidth,
         resizeMode: 'contain',
         height: 0.1 * windowHeight,
         width: 0.35 * windowWidth,

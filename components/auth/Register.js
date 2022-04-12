@@ -57,7 +57,7 @@ export default function Login({ navigation ,route}) {
                   }>
                   <Text style={styles.ButtonText}>Register</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.Button2} onPress={() => {
+                  <TouchableOpacity style={styles.Google} onPress={() => {
                     signInWithPopup(auth, provider)
                     .then((result) => {
                       
@@ -70,7 +70,9 @@ export default function Login({ navigation ,route}) {
                       navigation.navigate("CreateProfile")
                       
                     })
-                  }}><Text style={styles.ButtonText}>Sign Up with google</Text></TouchableOpacity>
+                  }}>
+                  <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FG.png?alt=media&token=57d0bfbb-0d56-4efa-8c43-5d2e4506738f"} style={styles.G}></Image>
+                  <Text style={styles.GoogleText}>Sign Up with google</Text></TouchableOpacity>
                   <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Login")}>
                     <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Have an account already? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14,borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Login</Text></Text>
                   </TouchableOpacity>
@@ -134,8 +136,8 @@ const styles = StyleSheet.create({
   SignUpText:
   {
     position: "absolute",
-    left: 877 / 1440 * windowWidth,
-    top: 428 / 1024 * windowHeight,
+    left: 1022 / 1440 * windowWidth,
+    top: 335 / 1024 * windowHeight,
   },
 
   Button:
@@ -189,8 +191,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     top: 0/1024*windowHeight,
     left: -30/1440*windowWidth,
-    height: 486/1024*windowHeight,
-    width: 615/1440*windowWidth,
+    height: 495/1024*windowHeight,
+    width: 625/1440*windowWidth,
     resizeMode:'contain',
 },
 
@@ -198,7 +200,7 @@ const styles = StyleSheet.create({
   {
     position: "absolute",
     width: 1305 / 1440 * windowWidth,
-    height: 500 / 1024 * windowHeight,
+    height: 460 / 1024 * windowHeight,
     left: 28 / 1440 * windowWidth,
     top: 35 / 1024 * windowHeight,
     justifyContent: 'center',
@@ -207,6 +209,37 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 17,
     borderBottomRightRadius: 17,
     borderBottomLeftRadius: 17
+  },
+
+  G: {
+    "position": "absolute",
+    resizeMode: 'contain',
+    left: -0.022 * windowWidth,
+    top:  -0.002 * windowHeight,
+    height: 0.032 * windowHeight,
+    width: 0.032 * windowWidth,
+  },
+
+  Google: {
+    "position": "absolute",
+    height: 0.03 * windowHeight,
+    width: 0.115 * windowWidth,
+    left: 960 / 1440 * windowWidth,
+    top: 445 / 1024 * windowHeight,
+    // backgroundColor: "#54E0FF",
+    textAlign: 'center'
+  },
+
+  GoogleText:
+  {
+    right: 0.15 * windowWidth,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: "500",
+    fontSize: 17,
+    lineHeight: 23.45,
+    color: "#FFFFFF",
+    textAlign: 'center'
   },
 
     InputStyle1:{

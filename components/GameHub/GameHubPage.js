@@ -84,13 +84,14 @@ export default function GameHubPage({ navigation, route }) {
                 
                 <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
                     style={styles.scrollContainer1} horizontal={true} 
-                    showsHorizontalScrollIndicator={false}>
+                    showsHorizontalScrollIndicator={false}
+                    scrollEventThrottle={16}>
                     {games.map((item, index) => {  
                         let computer;
                         computer = item.Code.charAt(0); 
                         if(computer === "P"){
                             return (
-                                <View key={index} >   
+                                <View key={index} style={{ paddingLeft: 5, paddingRight: 5, }} >   
                                      {console.log(item.Code)}
                                     <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
@@ -112,7 +113,7 @@ export default function GameHubPage({ navigation, route }) {
             
                 <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
                     style={styles.scrollContainer2} horizontal={true} 
-                    showsHorizontalScrollIndicator={true}
+                    showsHorizontalScrollIndicator={false}
                     scrollEventThrottle={16}
                     >
                     {games.map((item, index) => {
@@ -144,7 +145,7 @@ export default function GameHubPage({ navigation, route }) {
                         if(console === "C")
                         {
                             return(
-                                <View>
+                                <View key = {index} style={{ paddingLeft: 5, paddingRight: 5, }}>
                                     <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                         <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
@@ -343,12 +344,11 @@ const styles = StyleSheet.create({
 
     scrollContainer1: {
         position: 'absolute',
-        width: 0.8 * windowWidth,
-        height: 0.28 * windowHeight,
+        width: 0.78 * windowWidth,
+        height: 0.25 * windowHeight,
         left: 0.19 * windowWidth,
         top: 0.17 * windowHeight,
         flexGrow: 0.1,
-        
     },
 
     scrollContainer2: {
@@ -365,8 +365,8 @@ const styles = StyleSheet.create({
 
     scrollContainer3: {
         position: 'absolute',
-        width: 0.8 * windowWidth,
-        height: 0.28 * windowHeight,
+        width: 0.78 * windowWidth,
+        height: 0.25 * windowHeight,
         left: 0.19 * windowWidth,
         top: 0.73 * windowHeight,
         flexGrow: 0.1
