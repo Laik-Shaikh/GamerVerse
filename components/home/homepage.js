@@ -311,7 +311,7 @@ export default function homepage({ navigation, route }) {
 
 
         const likePhoto = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Post%2FLike.png?alt=media&token=bfce5738-8e63-4bb3-8841-212c7fef39d6'
-
+        const white = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FwhiteLike.png?alt=media&token=e0746851-94cf-424a-9541-684544a056ce'
 
         const pickImage = async () => {
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -346,6 +346,7 @@ export default function homepage({ navigation, route }) {
                             GameCode: selectGameCode,
                             Image: url,
                             LikeImage: likePhoto,
+                            WhiteLike: white,
                             Likes: ['XX'],
                             // User: userName,
                             PostNumber: postNumber,
@@ -570,7 +571,8 @@ export default function homepage({ navigation, route }) {
                                                     }
                                                     return true;
                                                 }
-
+                                            if(newItem.Likes.includes(auth.currentUser.uid))
+                                            {
                                                 return (
                                                     <View style={styles.allPost}>
                                                     <TouchableOpacity onPress={() => navigation.push("SearchProfile", newItem.uid)}>
@@ -580,6 +582,7 @@ export default function homepage({ navigation, route }) {
                                                         <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
@@ -606,13 +609,59 @@ export default function homepage({ navigation, route }) {
                                                                 }
                                                             }}
                                                         >
-                                                            <Image source={newItem.LikeImage} style={styles.likeImage} />
+                                                           <Image source={newItem.LikeImage} style={styles.likeImage} /> 
                                                         </TouchableOpacity>
                                                         {console.log(newItem.DisplayProfile)}
+                                                            
                                                         <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                     </View>
                                                 )
                                             }
+                                            else{
+                                                return (
+                                                    <View style={styles.allPost}>
+                                                        <Image source={newItem.Image} style={styles.post} />
+                                                        <Text style={styles.profileName}>{newItem.User}</Text>
+                                                        <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                        {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                position: 'absolute',
+                                                                width: 0.053 * windowWidth,
+                                                                height: 0.053 * windowHeight,
+                                                                top: 0.52 * windowHeight,
+                                                                left: 0.006 * windowWidth
+                                                            }}
+                                                            onPress={() => {
+                                                                // console.log(likes)
+                                                                if (!newItem.Likes.includes(auth.currentUser.uid)) {
+                                                                    if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
+
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                    console.log('hello')
+                                                                }
+                                                                else {
+                                                                    var ind = likeData.indexOf(auth.currentUser.uid)
+                                                                    likeData.splice(ind, 1)
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                            }}
+                                                        >
+                                                            <Image source={newItem.WhiteLike} style={styles.whiteLikeImage} />   
+                                                        </TouchableOpacity>
+                                                        {console.log(newItem.DisplayProfile)}
+                                                        
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
+                                                    </View>
+                                                )
+                                            }
+                                        }
                                         })
                                     }
                                     
@@ -660,9 +709,16 @@ export default function homepage({ navigation, route }) {
                                     onPress={
                                         async () => {
                                             try {
-                                                uploadPost();
-                                                alert("Uploaded Successfully");
-                                                setModalVisible(!modalVisible);
+                                                if(!image) alert("Please choose image.");
+                                                if(!selectGameName) alert("Please choose game.");
+                                                if((image) && (selectGameName))
+                                                {
+                                                    uploadPost();
+                                                    alert("Uploaded Successfully");
+                                                    setModalVisible(!modalVisible);
+                                                }
+                                               
+                                                
 
                                             } catch (error) {
                                                 console.log('error');
@@ -845,6 +901,13 @@ const styles = StyleSheet.create({
         "fontSize": 18,
         "color": "#000000",
     },
+    text2: {
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 18,
+        "color": "white",
+    },
+
     text2: {
         "fontStyle": "normal",
         "fontWeight": "bold",
@@ -1108,7 +1171,7 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        borderRadius: 20,
+        borderRadius: 10,
         padding: 10,
         elevation: 2,
     },
@@ -1157,12 +1220,12 @@ const styles = StyleSheet.create({
     },
 
     textStyle: {
-        marginTop: '10px',
+        // marginTop: '10px',
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 20,
-        marginBottom: '15px'
+        // marginBottom: '10px'
     },
 
     selectedImage: {
@@ -1242,6 +1305,18 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: '100%',
         height: '100%'
+    },
+
+    whiteLikeImage:{
+        position: 'absolute',
+        // resizeMode: 'contain',
+        width: 0.045*windowWidth,
+        height: 0.045*windowHeight,
+        left: 0.0001*windowWidth,
+        marginTop: 0.01 * windowHeight,
+        // width: '80%',
+        // height: '80%',
+        // marginBottom: '2px'
     },
 
     profile: {
