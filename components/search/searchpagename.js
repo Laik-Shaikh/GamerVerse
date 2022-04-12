@@ -14,6 +14,7 @@ import { getAuth } from "firebase/auth";
 
 export default function searchpagename ({ navigation, route }){
     const [searchAgain, setSearchAgain] = React.useState('');
+    var printed= false;
     const [state, setState] = useState({
         search: '',
       })
@@ -36,9 +37,10 @@ export default function searchpagename ({ navigation, route }){
       var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
           textInputValue =(searchAgain);
-          console.log(textInputValue)
-          navigation.push("SearchName", {textInputValue})
-          console.log("Hi")
+          if(textInputValue.length>0 && textInputValue!=" "){
+            navigation.push("SearchName", {textInputValue})
+          }
+         
       }
     }
       React.useEffect(() => {
@@ -116,8 +118,9 @@ function renderSug() {
       return(
       locInfo.map((profile, index) => {
           console.log()
-        if(profile.Location.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == "" ){
+        if(profile.Location.toLowerCase().includes(textInputValue.toLowerCase()) ){
             if(!(profile.uid==auth.currentUser.uid)){
+                printed=true;
         return (
             <View>
         {/* <Text style={[styles.playersearchText,{top: -250/1024*windowHeight,}]}>Players</Text> */}
@@ -137,8 +140,9 @@ function renderSug() {
     if(userInfo){
     return(
     userInfo.map((profile, index) => {
-        if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+        if(profile.Name.toLowerCase().includes(textInputValue.toLowerCase())){
             if(!(profile.uid==auth.currentUser.uid)){
+                printed=true;
         return (
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -250/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 10, left: 0.05 * windowWidth,}}>
                 <TouchableOpacity onPress={() => navigation.push("SearchProfile", profile.uid)}>
@@ -155,7 +159,8 @@ function renderGame(){
     if(searchedGame){
     return(
     searchedGame.map((game, index) => {
-        if(game.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+        if(game.Name.toLowerCase().includes(textInputValue.toLowerCase())){
+            printed=true;
         return (
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -50/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 170}}>
                 <View style={styles.infoContainer}>
@@ -171,77 +176,16 @@ function renderGame(){
         }
     }))}
 }
-
-  console.log(userInfo)
-  console.log(searchedGame)
-  console.log(textInputValue)
-  if(!userInfo && !searchedGame && !locInfo)
-    {
-    return(
-        <View style={styles.container}>
-            <LinearGradient
-                start = {{x:0, y:1}}
-                end = {{x:0, y:-1}}
-                colors={['#013C00', '#000000']}
-                style = {styles.background}
-            />
-            
-            <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fds1.png?alt=media&token=9753aac0-931b-4c66-9f2a-00d65dc99bd6"} 
-                style={styles.spikes1} />
-            <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fds2.png?alt=media&token=1f1f37dd-b12d-43eb-be6e-0e739dc18b41"} 
-                style={styles.spikes2} />
-            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} 
-                style = {styles.GamerVerseTitle} />   
-            <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"}
-                style = {styles.menuBar} />
-
-            {/* NavBar Buttons     */}
-            <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
-                <Text style={styles.highlighttxt}>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
-                <Text style={styles.robototxt}>Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
-                <Text style={styles.robototxt}>My Games</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
-                <Text style={styles.robototxt}>Game Hub</Text>
-            </TouchableOpacity>
-            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
-            <TextInput 
-                    style={styles.InputStyle1} 
-                    placeholder='Search for friends, games or location'
-                    onChangeText={(text) => {
-                        setLocation(undefined)
-                        getLocations(text.toLocaleLowerCase())
-                        setTextInputValue2(text)}}
-                    value={textInputValue2}
-                    onKeyPress={e => handleSearch(e)}
-                    onBlur={()=>{
-                        if(!selectedValue){
-                            setTimeout(()=>
-                                setSelectedValue("x"),300)
-                        }}}
-                    onFocus={() => {
-                        if(selectedValue)
-                            setSelectedValue(undefined)
-                        }}
-                    ></TextInput>
-                    {renderSug()}
-
-            {/*Search Result*/}
-            <Text style={styles.playersearchText} >Search Result:</Text>
-
-            <ScrollView style = {styles.scrollContainer} showsVerticalScrollIndicator={false}>
-                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Ffrown.png?alt=media&token=ad3f609b-ac13-4bef-a646-422b87ed6526"} style = {styles.frown}></Image>
-                <Text style={styles.notfoundText}>Result not found</Text>
-            </ScrollView>
-
-        </View>
-    )
+    function renderEmpty(){
+        if(printed == false){
+             return(
+                 <View>
+                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Ffrown.png?alt=media&token=ad3f609b-ac13-4bef-a646-422b87ed6526"} style = {styles.frown}></Image>
+                    <Text style={styles.notfoundText}>Result not found</Text>
+                 </View>           
+        )
+    }
 }
-
 return(
     <View style={styles.container} showsHorizontalScrollIndicator={false}>
         <LinearGradient
@@ -267,6 +211,7 @@ return(
         {renderGame()}
         {renderUser()}
         {renderLoc()}
+        {renderEmpty()}
         </ScrollView>
         
         {/* NavBar Buttons     */}
@@ -309,6 +254,7 @@ return(
     </View>
 )
 }
+   
 
 const styles = StyleSheet.create({
     container : {
@@ -369,7 +315,7 @@ const styles = StyleSheet.create({
     InputStyle1:{
         "position": "absolute",
         top: 107/1024*windowHeight,
-        right: 85/1440*windowWidth,
+        right: 70/1440*windowWidth,
         height: 42/1024*windowHeight,
         width: 305/1440*windowWidth,
         color: 'white',

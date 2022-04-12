@@ -538,7 +538,7 @@ const styles = StyleSheet.create({
     },
     title:{
         position:"absolute",
-        left:0.3*windowWidth,
+        left:0.35*windowWidth,
         resizeMode:'contain',
         height: 0.1*windowHeight,
         width: 0.35*windowWidth,

@@ -61,7 +61,7 @@ export default function Login({ navigation }) {
             >
               <Text style={styles.ButtonText}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.Button2} onPress={() => {
+            <TouchableOpacity style={styles.Google} onPress={() => {
               signInWithPopup(auth, provider)
                 .then((result) => {
 
@@ -82,30 +82,11 @@ export default function Login({ navigation }) {
 
                 }).catch((error) => { console.log(error) })
             }}>
-              <Text style={styles.ButtonText}>Login</Text>
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FG.png?alt=media&token=57d0bfbb-0d56-4efa-8c43-5d2e4506738f"} style={styles.G}></Image>
+            <Text style={styles.GoogleText}>Sign In with Google</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.Button2} onPress={() => {
-              signInWithPopup(auth, provider)
-                .then((result) => {
-
-                  const credential = GoogleAuthProvider.credentialFromResult(result);
-                  const token = credential.accessToken;
-
-                  const user = result.user;
-                  console.log(user)
-                  console.log(token)
-                  const { isNewUser } = getAdditionalUserInfo(result)
-                  console.log(isNewUser)
-                  if (isNewUser) {
-                    navigation.navigate("CreateProfile")
-                  }
-                  else {
-                    navigation.navigate("Home")
-                  }
-
-                }).catch((error) => { console.log(error) })
-            }}><Text style={styles.ButtonText}>Sign Up with google</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.SignUpText} onPress={() => navigation.navigate("Register")}>
+            
+            <TouchableOpacity style={styles.SignInText} onPress={() => navigation.navigate("Register")}>
               <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, color: "#FFFFFF" }}>Don't have an account? <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "normal", fontSize: 12, lineHeight: 14, borderBottomColor: "#54E0FF", borderBottomWidth: 0.7, color: "rgba(84, 224, 255, 1)" }}>Register</Text></Text>
             </TouchableOpacity>
           </View>
@@ -203,11 +184,11 @@ const styles = StyleSheet.create({
     color: "rgba(255, 84, 84, 1)"
   },
 
-  SignUpText:
+  SignInText:
   {
     position: "absolute",
-    left: 877 / 1440 * windowWidth,
-    top: 385 / 1024 * windowHeight,
+    left: 1022 / 1440 * windowWidth,
+    top: 270 / 1024 * windowHeight,
   },
 
   Button:
@@ -240,6 +221,37 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 5,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+
+  G: {
+    "position": "absolute",
+    resizeMode: 'contain',
+    left: -0.022 * windowWidth,
+    top:  -0.002 * windowHeight,
+    height: 0.032 * windowHeight,
+    width: 0.032 * windowWidth,
+  },
+
+  Google: {
+    "position": "absolute",
+    height: 0.03 * windowHeight,
+    width: 0.115 * windowWidth,
+    left: 960 / 1440 * windowWidth,
+    top: 405 / 1024 * windowHeight,
+    // backgroundColor: "#54E0FF",
+    textAlign: 'center'
+  },
+
+  GoogleText:
+  {
+    right: 0.15 * windowWidth,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: "500",
+    fontSize: 17,
+    lineHeight: 23.45,
+    color: "#FFFFFF",
+    textAlign: 'center'
   },
 
   img1: {
