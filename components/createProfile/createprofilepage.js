@@ -29,12 +29,15 @@ export default function CreateProfile({navigation,route}) {
   
   const parameterAcceptor = route.params;
   console.log(parameterAcceptor)
-  var pArray=Object.values(parameterAcceptor)
-  console.log(pArray)
-  const UName=pArray[1]
-  console.log(UName)
-  const PWord=pArray[0]
-
+  if(parameterAcceptor != "25"){
+    var pArray=Object.values(parameterAcceptor)
+    console.log(pArray)
+    const UName=pArray[1]
+    console.log(UName)
+    const PWord=pArray[0]
+  
+    
+  }
 
 
 
@@ -115,15 +118,6 @@ export default function CreateProfile({navigation,route}) {
               return false
           }
         }
-        // function ImageCheck(uri){
-        //   if(uri) {
-        //     return true
-        //   }
-        //   else {
-        //       alert("Please upload display picture");
-        //       return false
-        //   }
-        // }
 
 async function sendFirebaseData(){
             console.log(image);
@@ -232,6 +226,7 @@ function renderSug() {
                   if(!image) alert("Please enter a profile image.");
                   if(mobileCheck(PNum) && discCheck(Disc) && NameCheck(UserName) && (image)) {
                     console.log("making account")
+                    if(parameterAcceptor != "25")
                     await createUserWithEmailAndPassword(auth,UName,PWord)
                     sendFirebaseData();
                     navigation.navigate('GameHub')

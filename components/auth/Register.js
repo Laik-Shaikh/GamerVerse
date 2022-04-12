@@ -67,7 +67,7 @@ export default function Login({ navigation ,route}) {
                       const user = result.user;
                       console.log(user)
                       console.log(token)
-                      navigation.navigate("CreateProfile")
+                      navigation.push("CreateProfile", "25")
                       
                     })
                   }}>
