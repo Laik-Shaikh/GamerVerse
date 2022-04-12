@@ -40,15 +40,15 @@ export default function GameHubPage({ navigation, route }) {
                 colors={['#013C00', '#000000']}
                 style={styles.background}>
 
-                <ImageBackground source={require('./GameHubAssets/designspikes1.png')}
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fds1.png?alt=media&token=9753aac0-931b-4c66-9f2a-00d65dc99bd6"}
                     style={styles.spikes1} />
-                <ImageBackground source={require('./GameHubAssets/designspikes2.png')}
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fds2.png?alt=media&token=1f1f37dd-b12d-43eb-be6e-0e739dc18b41"}
                     style={styles.spikes2} />
-                <Image source={require('./GameHubAssets/GamerVerseTitle.png')}
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"}
                     style={styles.GamerVerseTitle} />
-                <Image source={require('./GameHubAssets/searchIcon.png')} style={styles.searchIcon} />
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
                 <TextInput style={styles.InputStyle1} placeholder='Search for friends, games or tags'></TextInput>
-                <ImageBackground source={require('./GameHubAssets/MenuBar.png')}
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"}
                     style={styles.menuBar} />
 
                 {/* NavBar Buttons     */}
@@ -65,18 +65,18 @@ export default function GameHubPage({ navigation, route }) {
                 <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.navigate("GameHub")}>
                     <Text style={styles.highlighttxt}>Game Hub</Text>
                 </TouchableOpacity>
-                <Image source={require('./GameHubAssets/VerLine.png')}
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FVerLine.png?alt=media&token=ae718803-7ee5-4337-af84-5cc9ee2e1b11"}
                     style={styles.verLine} />
-                <Image source={require('./GameHubAssets/HoriDivider.png')}
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FHoriDivider.png?alt=media&token=3fb49ba5-7989-4ae2-8065-eb6718e159f9"}
                     style={styles.horiLine} />
-                <Image source={require('./GameHubAssets/HoriDivider2.png')}
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FHoriDivider2.png?alt=media&token=4a3a51b8-4088-443f-9d3f-028d236cbb59"}
                     style={styles.horiLine2} />
 
-                <Image source={require('./GameHubAssets/PCLogo.png')}
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FPCLogo.png?alt=media&token=f6e35b8c-142f-41b2-b1c7-a1befb3ec808"}
                     style={styles.pcLogo} />
-                <Image source={require('./GameHubAssets/MobileLogo.png')}
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMobileLogo.png?alt=media&token=cc0648c0-fe80-4118-ba31-a32f8370b591"}
                     style={styles.mobileLogo} />
-                <Image source={require('./GameHubAssets/ConsoleLogo.png')}
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FConsoleLogo.png?alt=media&token=333f6250-4d2d-46b2-84d0-1201c451dca0"}
                     style={styles.consoleLogo} />
                 
                 

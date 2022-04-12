@@ -7,7 +7,7 @@ import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopu
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
 
-import BG from './authAssets/BG.png'
+
 
 export default function Login({ navigation }) {
   const [UName, setUName] = React.useState();
@@ -17,44 +17,68 @@ export default function Login({ navigation }) {
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
 
-  return (
-    <View style={styles.container}>
-      <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
-        <View style={styles.rectanglebg} />
+    return(
+        <View style={styles.container}>
+        <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FBG.png?alt=media&token=02003518-4b7f-40c9-ba6a-9bf4c095275e"} resizeMode="cover" style={styles.bg}>
+            <View style={styles.rectanglebg} />
 
-        <Image source={require('./authAssets/logo.png')} style={styles.logo} />
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ justifyContent: 'space-around' }} style={{ flexGrow: 0.1, "width": 1400 / 1440 * windowWidth, "height": 685 / 1024 * windowHeight, "left": 40 / 1440 * windowWidth, "top": 70 / 1024 * windowHeight }}>
-          <View style={{ "left": 0 / 1440 * windowWidth, "top": 0 / 1024 * windowHeight }}>
-            <View style={styles.whitebg} />
-            <Image source={require('./authAssets/group1.png')} style={styles.img1} />
-            <Text style={styles.signinText}>Sign In</Text>
-            <TextInput style={styles.InputStyle1} placeholder='Email ID' onChangeText={UName => setUName(UName)} ref={unamekeeper}></TextInput>
-            <TextInput style={styles.InputStyle2} placeholder='Password' onChangeText={PWord => setPWord(PWord)} secureTextEntry={true}></TextInput>
-            <Text style={styles.forgotPasswordText}>{loginError?loginError:""}</Text>
-            <TouchableOpacity style={styles.Button} title='Login'
-              onPress={
-                async () => {
-                  try {
-                    console.log(fire.auth);
-                    console.log(UName + " " + PWord);
-                    await signInWithEmailAndPassword(auth, UName, PWord);
-                    console.log("yes")
-                    setPWord(" ");
-                    setUName(" ");
-                    navigation.push("Home")
-                  } catch (error) {
-                    console.log(error.code);
-                    if (error.code == "auth/user-not-found") {
-                      setLoginError("Email does not exist! Please create an account to login!")
-                    }
-                    if (error.code == "auth/wrong-password") {
-                      setLoginError("Invalid password!")
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.logo} />
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 1400/1440 * windowWidth, "height": 685/1024 * windowHeight, "left": 40/1440 * windowWidth, "top": 70/1024 * windowHeight}}>
+                <View style={{"left": 0/1440 * windowWidth, "top": 0/1024 * windowHeight}}>
+                  <View style={styles.whitebg}/>
+                  <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup1.png?alt=media&token=828d7189-be2d-4d8c-8502-b830fcb8df83"} style={styles.img1} />
+                  <Text style={styles.signinText}>Sign In</Text>
+                  <TextInput style={styles.InputStyle1} placeholder='Email ID'  onChangeText={UName => setUName(UName)} ref={unamekeeper}></TextInput>
+                  <TextInput style={styles.InputStyle2} placeholder='Password' onChangeText={PWord => setPWord(PWord)} secureTextEntry={true}></TextInput>
+                  <Text style={styles.forgotPasswordText}>{loginError ? loginError : ""}</Text>
+                  <TouchableOpacity style={styles.Button} title='Login'
+                 onPress={
+                  async () => {
+                    try {
+                      console.log(fire.auth);
+                      console.log(UName + " " + PWord);
+                      await signInWithEmailAndPassword(auth, UName, PWord);
+                      console.log("yes")
+                      setPWord(" ");
+                      setUName(" ");
+                      navigation.push("Home")
+                    } catch (error) {
+                      console.log(error.code);
+                      if (error.code == "auth/user-not-found") {
+                        setLoginError("Email does not exist! Please create an account to login!")
+                      }
+                      if (error.code == "auth/wrong-password") {
+                        setLoginError("Invalid password!")
+                      }
                     }
 
                   }
                 }
-              }
+              
             >
+              <Text style={styles.ButtonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.Button2} onPress={() => {
+              signInWithPopup(auth, provider)
+                .then((result) => {
+
+                  const credential = GoogleAuthProvider.credentialFromResult(result);
+                  const token = credential.accessToken;
+
+                  const user = result.user;
+                  console.log(user)
+                  console.log(token)
+                  const { isNewUser } = getAdditionalUserInfo(result)
+                  console.log(isNewUser)
+                  if (isNewUser) {
+                    navigation.navigate("CreateProfile")
+                  }
+                  else {
+                    navigation.navigate("Home")
+                  }
+
+                }).catch((error) => { console.log(error) })
+            }}>
               <Text style={styles.ButtonText}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.Button2} onPress={() => {
@@ -84,27 +108,27 @@ export default function Login({ navigation }) {
           </View>
           <View style={{ "left": 0 / 1440 * windowWidth, "top": 560 / 1024 * windowHeight }}>
             <View style={styles.whitebg} />
-            <Image source={require('./authAssets/group2.png')} style={styles.img2} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup2.png?alt=media&token=ba480b96-bcc4-42a3-8a3f-7f1c9002506d"} style={styles.img2} />
             <Text style={styles.title1}>Find friends with similar game sense nearby</Text>
             <Text style={styles.subtext1}>Search for tags related to games to find new friends. Add multiple tags to your profile so other players can find you!</Text>
           </View>
           <View style={{ "left": 0 / 1440 * windowWidth, "top": 1120 / 1024 * windowHeight }}>
             <View style={styles.whitebg} />
-            <Image source={require('./authAssets/group3.png')} style={styles.img1} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup3.png?alt=media&token=1d83027a-da05-4dbf-bd10-28027ae21454"} style={styles.img1} />
             <Text style={styles.title2}>Create your own gamer profile and add all your favourite games</Text>
             <Text style={styles.subtext2}>Add your own profile picture and gaming interests according to your needs to build an entire gaming profile!</Text>
           </View>
           <View style={{ "left": 0 / 1440 * windowWidth, "top": 1680 / 1024 * windowHeight }}>
             <View style={styles.whitebg} />
-            <Image source={require('./authAssets/group4.png')} style={styles.img2} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup4.png?alt=media&token=7d6a8266-153a-4568-9604-2e986c582450"} style={styles.img2} />
             <Text style={styles.title1}>Tags that are inclusive of all gaming platforms</Text>
             <Text style={styles.subtext1}>Need new friends for all different platforms?
               Find all sorts of players over all of platforms with just a few simple steps!</Text>
           </View>
           <View style={{ "left": 0 / 1440 * windowWidth, "top": 2240 / 1024 * windowHeight }}>
             <View style={styles.whitebg} />
-            <Image source={require('./authAssets/group5.png')} style={styles.img1} />
-            <Image source={require('./authAssets/group6.png')} style={styles.img2} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup5.png?alt=media&token=f1b4235e-f7a3-47fb-8bbb-c2aca5caee3d"} style={styles.img1} />
+            <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fgroup6.png?alt=media&token=5c306777-8295-43b2-9cf9-72a592023380"} style={styles.img2} />
             <Text style={styles.title3}>Update your own posts, gameplays and achievements</Text>
             <Text style={styles.subtext3}>Share all of your achievements, badges, gameplays, etc with all of your friends on GamerVerse now!</Text>
           </View>
@@ -166,13 +190,13 @@ const styles = StyleSheet.create({
   forgotPasswordText:
   {
     position: "absolute",
-    left: 877/ 1440 * windowWidth,
+    left: 877 / 1440 * windowWidth,
     top: 270 / 1024 * windowHeight,
-    fontFamily: "Roboto", 
-    fontStyle: "normal", 
-    fontWeight: "normal", 
-    fontSize: 12, 
-    lineHeight: 14, 
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    fontSize: 12,
+    lineHeight: 14,
     color: "rgba(255, 84, 84, 1)"
   },
 
