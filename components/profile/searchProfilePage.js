@@ -101,14 +101,16 @@ export default function searchProfilePage ({ navigation, route }){
     }
   if (!profileInfo  || !gameData) {
     return (
-        <LinearGradient
-                start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
-                colors={['#013C00', '#000000']}
-                style={styles.background} >
-            <ActivityIndicator size="large" color="#00ff00" style={{top: "40%"}} />
-            {/* <View style={styles.loading}>
-            </View> */}
-        </LinearGradient>
+        <View style={styles.container}>
+                <LinearGradient
+                    start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={[styles.background,{width: '100%', height: '100%'}]} >
+                    <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
+                    {/* <View style={styles.loading}>
+                    </View> */}
+                </LinearGradient>
+            </View>
         )
 }
 
@@ -295,47 +297,27 @@ export default function searchProfilePage ({ navigation, route }){
                     
                     <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
                         <Text style={styles.infoHeadTxt}>Location</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Location}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Phone Number</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 {profileInfo.PhoneNumber}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
                         <Text style={styles.infoHeadTxt}>Email</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Email}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Discord Id</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.DiscordId}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
                         <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
-                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
-                            style={styles.scrollContainer2} horizontal={true}
-                            showsHorizontalScrollIndicator={false}>
-                            {
-
-                                gameData.map((game, index) => {
-                                    if (myGames.includes(gameData[index].Code)) {
-                                        return (
-                                            <View key={index}>
-                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
-                                                    <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-                                                    <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        )
-                                    }
-                                })
-
-                            }
-
-                        </ScrollView>
+                        <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={styles.divider2}/>
@@ -407,47 +389,27 @@ export default function searchProfilePage ({ navigation, route }){
                     
                     <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
                         <Text style={styles.infoHeadTxt}>Location</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Location}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Phone Number</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>+91 {profileInfo.PhoneNumber}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
                         <Text style={styles.infoHeadTxt}>Email</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Email}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.25)"}]}>
                         <Text style={styles.infoHeadTxt}>Discord Id</Text>
-                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.DiscordId}</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
                         <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
-                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
-                            style={styles.scrollContainer2} horizontal={true}
-                            showsHorizontalScrollIndicator={false}>
-                            {
-
-                                gameData.map((game, index) => {
-                                    if (myGames.includes(gameData[index].Code)) {
-                                        return (
-                                            <View key={index}>
-                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
-                                                    <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-                                                    <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        )
-                                    }
-                                })
-
-                            }
-
-                        </ScrollView>
+                        <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
                     </View>
                     
                     <View style={styles.divider2}/>

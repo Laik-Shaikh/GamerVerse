@@ -263,14 +263,16 @@ export default function homepage({ navigation, route }) {
 
     if (!users) {
         return (
-            <LinearGradient
-                start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
-                colors={['#013C00', '#000000']}
-                style={styles.background} >
-                <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
-                {/* <View style={styles.loading}>
-                </View> */}
-            </LinearGradient>
+            <View style={styles.container}>
+                <LinearGradient
+                    start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={[styles.background,{width: '100%', height: '100%'}]} >
+                    <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
+                    {/* <View style={styles.loading}>
+                    </View> */}
+                </LinearGradient>
+            </View>
         )
     }
 
@@ -379,14 +381,16 @@ export default function homepage({ navigation, route }) {
         }
         if (!games || !latestPosts) {
             return (
+                <View style={styles.container}>
                 <LinearGradient
                     start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
                     colors={['#013C00', '#000000']}
-                    style={styles.background} >
+                    style={[styles.background,{width: '100%', height: '100%'}]} >
                     <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
                     {/* <View style={styles.loading}>
-                </View> */}
+                    </View> */}
                 </LinearGradient>
+            </View>
             )
     }
     return (
@@ -423,34 +427,39 @@ export default function homepage({ navigation, route }) {
                     ></TextInput>
                     {renderSug()}
                     <View style={styles.notif}>
-                        <Image style={{position:'absolute', 
-                        resizeMode: 'contain',
-                        top:0.01*windowHeight,
-                        left:0.015*windowWidth,
-                        width:0.03*windowWidth,
-                        height:0.03*windowHeight,
-                        transform: [{ rotate: '20deg' }]
-                    }} source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FBell.png?alt=media&token=58552420-503b-45e6-a134-9b3b4f5a35b3"}/>
-                    <Text style ={{  position: 'absolute',
-                    left: 0.045*windowWidth,
-                    top:0.015 *windowHeight,
-                    color: 'white',
-                    fontWeight: 'bold'}}>Notifications</Text>
-                    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
-                    style={styles.notifscroll}>
-                    {requestNames.map((profile,index)=>
-                        {
-                           { console.log("WORKS")
-                        console.log(profile)
-                        console.log(requestImages[index])} 
-                        return(
-                        <View  key={index} style={styles.notifbox}>
-                            {/* <Text style={{
+                        <Image style={{
+                            position: 'absolute',
+                            resizeMode: 'contain',
+                            top: 0.011 * windowHeight,
+                            left: 0.015 * windowWidth,
+                            width: 0.03 * windowWidth,
+                            height: 0.03 * windowHeight,
+                            transform: [{ rotate: '20deg' }]
+                        }} source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FBell.png?alt=media&token=58552420-503b-45e6-a134-9b3b4f5a35b3"} />
+                        <Text style={{
+                            position: 'absolute',
+                            left: 0.045 * windowWidth,
+                            top: 0.016 * windowHeight,
+                            color: 'white',
+                            fontWeight: 'bold'
+                        }}>Friend Requests</Text>
+                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
+                            style={styles.notifscroll}>
+                            {requestNames.map((profile, index) => {
+                                {
+                                    console.log("WORKS")
+                                    console.log(profile)
+                                    console.log(requestImages[index])
+                                }
+                                return (
+                                    <View key={index} style={styles.notifbox}>
+                                        {/* <Text style={{
                                 position: 'relative',
                                 "color": "#FFFFFF",
                                 }}>
                                 Friend Request by:</Text> */}
                                         <View style={{ position: 'relative', flex: 1, flexDirection: 'row' }}>
+                                            <TouchableOpacity onPress={() => navigation.push("SearchProfile", requestUID[index])}>
                                             <Image source={requestImages[index]} style={{
                                                 position: "absolute",
                                                 top: 0 * windowHeight,
@@ -465,6 +474,7 @@ export default function homepage({ navigation, route }) {
                                                 width: 0.07 * windowWidth,
                                                 "color": "#FFFFFF",
                                             }}>{profile} sent a friend request!</Text>
+                                            </TouchableOpacity>
                                         </View>
                                         <View style={styles.notifdecisionbox}>
                                             <TouchableOpacity onPress={() => {
@@ -522,7 +532,7 @@ export default function homepage({ navigation, route }) {
 
 
 
-                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer}>
+                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer} showsVerticalScrollIndicator={false}>
                         {postImage.map((item, index) => {
                             // console.log(postImage);
                             // console.log(item)
@@ -566,9 +576,11 @@ export default function homepage({ navigation, route }) {
                                             {
                                                 return (
                                                     <View style={styles.allPost}>
-                                                        <Image source={newItem.Image} style={styles.post} />
+                                                    <TouchableOpacity onPress={() => navigation.push("SearchProfile", newItem.uid)}>
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                    </TouchableOpacity>
+                                                        <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
                                                     
@@ -588,7 +600,6 @@ export default function homepage({ navigation, route }) {
                                                                     update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
                                                                         Likes: likeData
                                                                     })
-                                                                    console.log('hello')
                                                                 }
                                                                 else {
                                                                     var ind = likeData.indexOf(auth.currentUser.uid)
@@ -654,7 +665,7 @@ export default function homepage({ navigation, route }) {
                                         }
                                         })
                                     }
-                                    )
+                                    
 
                                 </View>
                             )
@@ -680,7 +691,7 @@ export default function homepage({ navigation, route }) {
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 {/* <View> */}
-                                <TextInput placeholder='Enter the Description'
+                                <TextInput placeholder='Caption for your post'
                                     style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
                                 {/* </View> */}
@@ -690,7 +701,7 @@ export default function homepage({ navigation, route }) {
                                         setModalVisible(!modalVisible)
                                     }}
                                 >
-                                    <Text style={styles.textStyle}>Cancel</Text>
+                                    <Text style={styles.text1}>Cancel</Text>
                                 </TouchableOpacity>
 
                                 {/* Upload to FireBase       */}
@@ -717,7 +728,7 @@ export default function homepage({ navigation, route }) {
                                         }
                                     }
                                 >
-                                    <Text style={styles.textStyle}>Upload</Text>
+                                    <Text style={styles.text1}>Upload</Text>
                                 </TouchableOpacity>
 
                                 {/* Choose Image */}
@@ -725,12 +736,12 @@ export default function homepage({ navigation, route }) {
                                 <TouchableOpacity style={[styles.button, styles.chooseButton]}
                                     onPress={pickImage}
                                 >
-                                    <Text style={styles.textStyle}>Choose Image</Text>
+                                    <Text style={styles.text1}>Choose Image</Text>
                                     {image && <Image source={{ uri: image }} style={styles.selectedImage} />}
                                 </TouchableOpacity>
 
                                 <View style={styles.name}>
-                                    <Text style={styles.text2}>This Post is Related to : </Text>
+                                    <Text style={styles.text2}>Select Game : </Text>
                                 </View>
 
                                 <ScrollView style={styles.gameScrollContainer} vertical={true}>
@@ -786,8 +797,8 @@ const styles = StyleSheet.create({
         flexGrow: 0.1,
         width: 275 / 1440 * windowWidth,
         left: 5 / 1440 * windowWidth,
-        height: 592 / 1024 * windowHeight,
-        top: 195 / 1024 * windowHeight,
+        height: 650 / 1024 * windowHeight,
+        top: 200 / 1024 * windowHeight,
         borderRadius: 10,
         // backgroundColor: "rgba(255, 255, 255, 0.7)",
     },
@@ -800,7 +811,7 @@ const styles = StyleSheet.create({
         left: 0.05 * windowWidth,
         height: 0.08 * windowHeight,
         width: 0.015 * windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 1)",
+        // backgroundColor: "rgba(255, 255, 255, 1)",
         transform: "matrix(1, 0, 0, 1, 0, 0)"
     },
 
@@ -884,33 +895,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-
-    friendscroll: {
-        flexGrow: 0.1,
-        width: 275 / 1440 * windowWidth,
-        left: 5 / 1440 * windowWidth,
-        height: 592 / 1024 * windowHeight,
-        top: 195 / 1024 * windowHeight,
-        borderRadius: 10,
-        // backgroundColor: "rgba(255, 255, 255, 0.7)",
-    },
-
-    friendbox: {
-        flex: 1,
-        flexDirection: "column",
-        marginVertical: 30,
-        alignItems: "center",
-        left: 0.05 * windowWidth,
-        height: 0.08 * windowHeight,
-        width: 0.015 * windowWidth,
-        backgroundColor: "rgba(255, 255, 255, 1)",
-        transform: "matrix(1, 0, 0, 1, 0, 0)"
-    },
+    
     text1: {
         "fontStyle": "normal",
         "fontWeight": "bold",
         "fontSize": 18,
         "color": "#000000",
+    },
+    text2: {
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 18,
+        "color": "white",
     },
 
     text2: {
@@ -1009,9 +1005,9 @@ const styles = StyleSheet.create({
     divider: {
         position: "absolute",
         top: 0.2 * windowHeight,
-        left: 0.2 * windowWidth,
+        left: 0.185 * windowWidth,
         resizeMode: 'contain',
-        height: 0.6 * windowHeight,
+        height: 0.7 * windowHeight,
         width: "3px",
     },
 
@@ -1037,7 +1033,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         flex: 1,
         top: 0.2 * windowHeight,
-        left: 0.8 * windowWidth,
+        left: 0.81 * windowWidth,
         height: (695 / 900) * windowHeight,
         width: (227 / 1600) * windowWidth,
         backgroundColor: "rgba(255, 255, 255, 0.25)",
@@ -1135,7 +1131,8 @@ const styles = StyleSheet.create({
         // borderBottomRightRadius:  60,
         borderWidth: '2px',
         borderStyle: 'solid',
-        borderColor: 'white',
+        borderColor: '#006400',
+        backgroundColor: '#FFFFFF',
         alignItems: 'center',
         paddingTop: '5px',
         paddingBottom: '5px'
@@ -1150,7 +1147,8 @@ const styles = StyleSheet.create({
 
     modalView: {
         margin: 20,
-        backgroundColor: '#006400',
+        // backgroundColor: "rgba(255, 255, 255, 0.3)",
+        backgroundColor: "black",
         borderRadius: 20,
         padding: 35,
         width: 0.6 * windowWidth,
@@ -1190,16 +1188,17 @@ const styles = StyleSheet.create({
     },
 
     uploadButton: {
-        backgroundColor: '#32CD32',
+        backgroundColor: 'white',
         height: 0.05 * windowHeight,
         width: 0.15 * windowWidth,
         left: -0.18 * windowWidth,
         top: 0.43 * windowHeight,
+        textAlign: 'center'
 
     },
 
     chooseButton: {
-        backgroundColor: '#0000cd',
+        backgroundColor: 'white',
         height: 0.05 * windowHeight,
         width: 0.15 * windowWidth,
         // left: 0.05*windowWidth,
@@ -1216,7 +1215,9 @@ const styles = StyleSheet.create({
         width: 0.15 * windowWidth,
         left: 0.18 * windowWidth,
         top: 0.48 * windowHeight,
-
+        textAlign: 'center',
+        alignContent: 'center',
+        alignItems: 'center'
     },
 
     textStyle: {
@@ -1262,7 +1263,7 @@ const styles = StyleSheet.create({
         top: 0.19 * windowHeight,
         // flexGrow: 0.1,
         // justifyContent: 'space-between',
-        backgroundColor: 'orange'
+        // backgroundColor: 'white'
     },
 
     postContainer: {
@@ -1270,7 +1271,7 @@ const styles = StyleSheet.create({
         width: 0.58 * windowWidth,
         height: 0.73 * windowHeight,
         top: 0.23 * windowHeight,
-        left: 0.21 * windowWidth,
+        left: 0.216 * windowWidth,
         // backgroundColor: 'red',
         flexGrow: 0.1
     },
@@ -1293,7 +1294,7 @@ const styles = StyleSheet.create({
         width: 0.52 * windowWidth,
         height: 0.52 * windowHeight,
         left: 0.01 * windowWidth,
-        marginTop: 0.06 * windowHeight,
+        marginTop: 0.09 * windowHeight,
         // width: '100%',
         // height: '100%',
         // flex: 1
@@ -1321,10 +1322,10 @@ const styles = StyleSheet.create({
 
     profile: {
         position: 'absolute',
-        resizeMode: 'contain',
+        // resizeMode: 'contain',
         width: 0.05 * windowHeight,
         height: 0.05 * windowHeight,
-        borderRadius: 0.075 * windowHeight,
+        borderRadius: 0.065 * windowHeight,
         top: 0.01 * windowHeight,
         left: 0.01 * windowWidth,
     },
@@ -1335,19 +1336,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 22,
-        left: 0.04 * windowWidth,
-        top: 0.015 * windowHeight
+        left: 0.047 * windowWidth,
+        top: 0.0157 * windowHeight
     },
 
     displayDescription: {
         position: 'absolute',
         color: 'white',
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: 16,
         paddingLeft: '20px',
         // marginTop: '15px',
-        bottom: 0.01 * windowHeight,
+        top: 0.065 * windowHeight,
+        left: 0.01 * windowWidth,
         flexGrow: 0.1
     },
 
@@ -1357,18 +1359,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 26,
-        top: 0.52 * windowHeight,
+        top: 0.525 * windowHeight,
         left: 0.05 * windowWidth
     },
-
-
-
-
-
-
-
-
-
 
 
 
