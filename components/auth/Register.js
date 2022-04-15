@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import fire from '../firebase';
 import 'firebase/auth';
-import { getAuth,createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup } from "firebase/auth";
+import { getAuth,createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,getAdditionalUserInfo } from "firebase/auth";
 import { getDatabase, onValue, ref, set } from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
@@ -87,10 +87,18 @@ export default function Login({ navigation ,route}) {
                       const credential = GoogleAuthProvider.credentialFromResult(result);
                       const token = credential.accessToken;
                       const user = result.user;
+                      const { isNewUser } = getAdditionalUserInfo(result)
                       console.log(user)
                       console.log(token)
-                      createFirebaseData();
-                      navigation.navigate("CreateProfile",{PWord:"google",UName:"google"})
+                      if (isNewUser) {
+                        createFirebaseData();
+                        navigation.push("CreateProfile",{PWord:"google",UName:"google"})
+                      }
+                      else {
+                        alert('Authentication confirmed! Account already exists! Signing in to the account.')
+                        navigation.push("Home")
+                      }
+    
                       
                     })
                   }}>

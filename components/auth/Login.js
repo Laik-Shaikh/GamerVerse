@@ -96,7 +96,7 @@ export default function Login({ navigation }) {
                   console.log(isNewUser)
                   if (isNewUser) {
                     createFirebaseData();
-                    navigation.navigate("CreateProfile",{PWord:"google",UName:"google"})
+                    navigation.push("CreateProfile",{PWord:"google",UName:"google"})
                   }
                   else {
                     navigation.push("Home")
