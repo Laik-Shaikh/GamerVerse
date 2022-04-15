@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity,
 import fire from '../firebase';
 import 'firebase/auth';
 import { getAuth,createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup } from "firebase/auth";
+import { getDatabase, onValue, ref, set } from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height
@@ -17,7 +18,27 @@ export default function Login({ navigation ,route}) {
   const [ConfirmPWord, setConfirmPWord] = React.useState();
   const unamekeeper = React.createRef();
   const auth = getAuth();
+  const db = getDatabase()
   const provider = new GoogleAuthProvider();
+
+  async function createFirebaseData(){
+    const dbRef = ref(db,'users/'+auth.currentUser.uid)
+        set(dbRef,{
+            Email: auth.currentUser.email,
+            PhoneNumber: "0000000000",
+            Location: "Earth, hopefully",
+            LocationLower: "earth, hopefully",
+            Games:['XX'],
+            RequestedProfiles:['XX'],
+            ConfirmedProfiles:['XX'],
+            DiscordId: "None",
+            uid: auth.currentUser.uid,
+            Name: auth.currentUser.email,
+            DisplayPicture: "https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FgamerverseLogo.png?alt=media&token=3d00f4ad-dd05-42e1-bb74-ba166ab2e0aa",
+            aboutMe:"Hey, I am "+auth.currentUser.email,
+            PostCount: 0
+          })
+}
 
     return(
         <View style={styles.container}>
@@ -34,11 +55,13 @@ export default function Login({ navigation ,route}) {
                   <TextInput style={styles.InputStyle2} placeholder='Password' secureTextEntry={true} onChangeText={PWord => setPWord(PWord)}></TextInput>
                   <TextInput style={styles.InputStyle3} placeholder='Confirm Password' onChangeText={ConfirmPWord => setConfirmPWord(ConfirmPWord)} secureTextEntry={true}></TextInput>
                   <TouchableOpacity style={styles.Button} title='Register' secureTextEntry={true}onPress={
-                     () => {
+                    async () => {
                       try {
                         console.log(fire.auth);
                         console.log(UName+" "+PWord+" "+ConfirmPWord);
                         if(PWord==ConfirmPWord){ 
+                          await createUserWithEmailAndPassword(auth,UName,PWord)
+                          createFirebaseData();
                           navigation.navigate("CreateProfile",{PWord,UName})
                         }
                         else
@@ -66,6 +89,7 @@ export default function Login({ navigation ,route}) {
                       const user = result.user;
                       console.log(user)
                       console.log(token)
+                      createFirebaseData();
                       navigation.navigate("CreateProfile",{PWord:"google",UName:"google"})
                       
                     })

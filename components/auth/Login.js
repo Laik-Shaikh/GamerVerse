@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import fire from '../firebase';
 import 'firebase/auth';
+import { getDatabase, onValue, ref, set } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo } from "firebase/auth";
 
 const windowWidth = Dimensions.get('screen').width;
@@ -15,7 +16,27 @@ export default function Login({ navigation }) {
   const [loginError, setLoginError] = React.useState();
   const unamekeeper = React.createRef();
   const auth = getAuth();
+  const db = getDatabase()
   const provider = new GoogleAuthProvider();
+
+  async function createFirebaseData(){
+    const dbRef = ref(db,'users/'+auth.currentUser.uid)
+        set(dbRef,{
+            Email: auth.currentUser.email,
+            PhoneNumber: "0000000000",
+            Location: "Earth, hopefully",
+            LocationLower: "earth, hopefully",
+            Games:['XX'],
+            RequestedProfiles:['XX'],
+            ConfirmedProfiles:['XX'],
+            DiscordId: "None",
+            uid: auth.currentUser.uid,
+            Name: auth.currentUser.email,
+            DisplayPicture: "https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FgamerverseLogo.png?alt=media&token=3d00f4ad-dd05-42e1-bb74-ba166ab2e0aa",
+            aboutMe:"Hey, I am "+auth.currentUser.email,
+            PostCount: 0
+          })
+}
 
     return(
         <View style={styles.container}>
@@ -74,6 +95,7 @@ export default function Login({ navigation }) {
                   const { isNewUser } = getAdditionalUserInfo(result)
                   console.log(isNewUser)
                   if (isNewUser) {
+                    createFirebaseData();
                     navigation.navigate("CreateProfile",{PWord:"google",UName:"google"})
                   }
                   else {

@@ -6,8 +6,7 @@ import uuid from 'uuid';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import {getAuth} from "firebase/auth";
 import { createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup } from "firebase/auth";
-import {getDatabase,ref,set, query,push,get, orderByChild, equalTo} from "firebase/database"
-
+import {getDatabase,ref,update, query,push,get, orderByChild, equalTo} from "firebase/database"
 import * as ImagePicker from 'expo-image-picker';
 
 const windowWidth = Dimensions.get('window').width;
@@ -123,7 +122,7 @@ async function sendFirebaseData(){
             const blob = await response.blob();
             uploadBytes(storageRef, blob, metadata).then((snapshot) => {
               getDownloadURL(storageRef).then((url)=>{
-                set(dbRef,{
+                update(dbRef,{
                     Email: auth.currentUser.email,
                     PhoneNumber: PNum,
                     Location: selectedValue,
@@ -222,7 +221,6 @@ function renderSug() {
                   if(!image) alert("Please enter a profile image.");
                   if(mobileCheck(PNum) && discCheck(Disc) && NameCheck(UserName) && (image)) {
                     console.log("making account")
-                    if(UName != "google" && PWord != "google"){await createUserWithEmailAndPassword(auth,UName,PWord)}
                     sendFirebaseData();
                     navigation.push('GameHub')
                   }
