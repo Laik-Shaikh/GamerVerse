@@ -123,8 +123,6 @@ if(!gameInfo)
                     colors={['#013C00', '#000000']}
                     style={[styles.background,{width: '100%', height: '100%'}]} >
                     <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
-                    {/* <View style={styles.loading}>
-                    </View> */}
                 </LinearGradient>
         </View>
         )
@@ -188,7 +186,7 @@ if(!gameInfo)
                     <Text style={styles.ratingTxt}>Tag</Text>
                 </View>
                 <View style={styles.gameContainer}>
-                    <Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text>
+                <View style={{alignItems: "center", top: 0.02*windowHeight,}}><Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text></View>
                     <Image source={gameInfo.Image} style={styles.dpicture}></Image>
                 <TouchableOpacity style={styles.Button} title='Follow' 
                 onPress={() => 
@@ -295,7 +293,7 @@ else{
                     <Text style={styles.ratingTxt}>Tag</Text>
                 </View>
                 <View style={styles.gameContainer}>
-                    <Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text>
+                    <View style={{alignItems: "center", top: 0.02*windowHeight,}}><Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text></View>
                     <Image source={gameInfo.Image} style={styles.dpicture}></Image>
                 <TouchableOpacity style={styles.Button} title='Unfollow' 
                 onPress={() => 
@@ -470,7 +468,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 136 / 1440 * windowWidth,
     height: 53 / 1024 * windowHeight,
-    left: 400 / 1440 * windowWidth,
+    left: 433 / 1440 * windowWidth,
     top: 330 / 1024 * windowHeight,
     backgroundColor: "#39750A",
     borderTopLeftRadius: 2,
@@ -588,8 +586,8 @@ const styles = StyleSheet.create({
 
       gameTitleTxt:{
         position: "absolute",
-        left: 0.28*windowWidth,
-        top: 0.02*windowHeight,
+        // left: 0.28*windowWidth,
+        // top: 0.02*windowHeight,
         fontFamily: "Roboto",
         fontStyle: "normal",
         fontWeight: "500",
@@ -642,7 +640,7 @@ const styles = StyleSheet.create({
     dpicture:{
         position: "absolute",
         top:0.08*windowHeight,
-        left:0.27*windowWidth,
+        left:0.29*windowWidth,
         width:0.20*windowHeight,
         height:0.20*windowHeight,
         backgroundColor: "rgba(120, 225, 100, 0.2)"

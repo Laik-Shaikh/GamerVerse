@@ -518,20 +518,14 @@ export default function homepage({ navigation, route }) {
                         <View  key={index} style={styles.friendbox}>
                             <TouchableOpacity onPress={() => navigation.push("SearchProfile", friendUid[index])}>
                                 <Image source={friendImages[index]} style={styles.dpview}/>
-                                <Text style={styles.nametxt}>{profile}</Text>
+                                <View style={{position: 'absolute',top: 0.005 * windowHeight,left: 0.007 * windowWidth,}}><Text style={styles.nametxt} numberOfLines={1}>{profile}</Text></View>
                             </TouchableOpacity> 
                         </View>
                         )
                     })
                     }
                     </ScrollView>
-                    {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
-                    {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
-                    {/* <Text style={styles.nametxt}>Danny Devadiga</Text> */}
-                    {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dpview} />
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
+                    
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdivider.png?alt=media&token=458aa29f-e202-4bab-8393-3a7fb6994608"} style={styles.divider} />
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
 
@@ -594,30 +588,29 @@ export default function homepage({ navigation, route }) {
                                                         
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => 
-                    {
-                        var ReportPostRef = query(ref(db,'reported/reportedposts/'+newItem.uid+"'s Post "+newItem.PostNumber))
-                        var reportConfirmation =confirm("Are you sure want to report this post?") 
-                           if(reportConfirmation) {
-                           alert("Report has been considered. Admin will check this post in a short while and take necessary actions")
-                            push(ReportPostRef,{
-                                reporter: auth.currentUser.uid,
-                              });  
-                           }
-                           else{
-                            console.log("Cancel Pressed")
-                            }
-                    }}>
+                                                        {
+                                                            var ReportPostRef = query(ref(db,'reported/reportedposts/'+newItem.uid+"'s Post "+newItem.PostNumber))
+                                                            var reportConfirmation =confirm("Are you sure want to report this post?") 
+                                                            if(reportConfirmation) {
+                                                            alert("Report has been considered. Admin will check this post in a short while and take necessary actions")
+                                                                push(ReportPostRef,{
+                                                                    reporter: auth.currentUser.uid,
+                                                                });  
+                                                            }
+                                                            else{
+                                                                console.log("Cancel Pressed")
+                                                                }
+                                                        }}>
                                                         <Text style={styles.reportstyle}>Report</Text>
                                                     </TouchableOpacity>
-                                                        {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    <Image source={newItem.Image} style={styles.post} />
+                                                    <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                    
                                                         <View style={styles.nameGameContainer}>
                                                             <Text style={styles.nameGame}>{newItem.GameName}</Text>
                                                         </View>
                                                         {/* {console.log(newItem.GameName)} */}
-                                                    <View style={{flex: 0.1}}>
-                                                        <Image source={newItem.Image} style={styles.post} />
-                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
-                                                    </View>
+                                                    
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
@@ -659,7 +652,20 @@ export default function homepage({ navigation, route }) {
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
                                                         </TouchableOpacity>
-                                                        <TouchableOpacity>
+                                                        <TouchableOpacity onPress={() => 
+                                                            {
+                                                                var ReportPostRef = query(ref(db,'reported/reportedposts/'+newItem.uid+"'s Post "+newItem.PostNumber))
+                                                                var reportConfirmation =confirm("Are you sure want to report this post?") 
+                                                                if(reportConfirmation) {
+                                                                alert("Report has been considered. Admin will check this post in a short while and take necessary actions")
+                                                                    push(ReportPostRef,{
+                                                                        reporter: auth.currentUser.uid,
+                                                                    });  
+                                                                }
+                                                                else{
+                                                                    console.log("Cancel Pressed")
+                                                                    }
+                                                            }}>
                                                         <Text style={styles.reportstyle}>Report</Text>
                                                         </TouchableOpacity>
                                                         <Image source={newItem.Image} style={styles.post} />
@@ -911,10 +917,10 @@ const styles = StyleSheet.create({
         "fontWeight": "500",
         "fontSize": 18,
         "color": "#FFFFFF",
-        position: 'absolute',
-        top: 0.005 * windowHeight,
-        left: 0.007 * windowWidth,
-        width: 0.115 * windowWidth,
+        // position: 'absolute',
+        // top: 0.005 * windowHeight,
+        // left: 0.007 * windowWidth,
+        width: 0.113 * windowWidth,
         height: 0.03 * windowHeight,
         lineHeight: 18,
         // backgroundColor: 'rgba(255, 255, 255,0.5)',

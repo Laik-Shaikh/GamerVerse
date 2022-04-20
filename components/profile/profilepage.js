@@ -403,7 +403,7 @@ if (userInfo && !nowEditable && gameData && (userInfo[0].privacyStatus==1)) {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.mypost} onPress={() => navigation.push("MyPost")}>
-                    <Text style={styles.postText}>My Post</Text>
+                    <Text style={styles.postText}>My Posts</Text>
                 </TouchableOpacity>
 
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
@@ -998,7 +998,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: 0.09 * windowWidth,
         height: 0.03 * windowHeight,
-        top: 0.04* windowHeight,
+        top: 0.05* windowHeight,
         left: 0.05 * windowWidth,
         backgroundColor: 'green',
         textAlign: 'center',
