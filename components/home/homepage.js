@@ -203,7 +203,7 @@ export default function homepage({ navigation, route }) {
 
     var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter' && textInputValue.length>0 && textInputValue!=" ") {
-            navigation.push("SearchName", { textInputValue })
+            navigation.push("SearchPage", { textInputValue })
             console.log('search started')
         }
     }
@@ -231,7 +231,7 @@ export default function homepage({ navigation, route }) {
                     return (
                         <TouchableOpacity style={styles.item} onPress={() => {
                             setSelectedValue(suggestion.item.Location)
-                            navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                            navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                         }
 
                         }>

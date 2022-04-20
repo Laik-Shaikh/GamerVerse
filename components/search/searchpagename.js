@@ -38,7 +38,7 @@ export default function searchpagename ({ navigation, route }){
         if (e.nativeEvent.key == 'Enter') {
           textInputValue =(searchAgain);
           if(textInputValue.length>0 && textInputValue!=" "){
-            navigation.push("SearchName", {textInputValue})
+            navigation.push("SearchPage", {textInputValue})
           }
          
       }
@@ -71,7 +71,7 @@ export default function searchpagename ({ navigation, route }){
   var handleSearch = (e) => {
     if (e.nativeEvent.key == 'Enter') {
         textInputValue=(textInputValue2)
-        navigation.push("SearchName", { textInputValue })
+        navigation.push("SearchPage", { textInputValue })
         console.log('search started')
     }
 }
@@ -99,7 +99,7 @@ function renderSug() {
                 return (
                     <TouchableOpacity style={styles.item} onPress={() => {
                         setSelectedValue(suggestion.item.Location)
-                        navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                        navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                     }
 
                     }>

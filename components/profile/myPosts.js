@@ -31,7 +31,9 @@ export default function myPosts({ navigation }) {
     const [selectGameCode, setSelectGameCode] = useState(null);
     const [profileImage, setProfileImage] = React.useState([]);
     var [latestPosts, setLatestPosts] = useState([]);
-
+    const [location, setLocation] = React.useState(null);
+    const [selectedValue, setSelectedValue] = React.useState()
+    const [textInputValue, setTextInputValue] = React.useState('');
 
     const GameRef = query(ref(db, 'games'))
     const UserRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/Games'))
@@ -120,8 +122,48 @@ export default function myPosts({ navigation }) {
         )
     }, [])
 
+    var handleSearch = (e) => {
+        if (e.nativeEvent.key == 'Enter' && textInputValue.length>0 && textInputValue!=" ") {
+            navigation.push("SearchPage", { textInputValue })
+            console.log('search started')
+        }
+    }
+
+    const getLocations = async (loc) => {
+        if (loc) {
+            const UserRef = query(ref(db, 'locations'), orderByChild('LocationLower'), startAt(loc), endAt(loc + "\uf8ff"))
+            onValue(UserRef, (snapshot) => {
+                if (snapshot.val()) {
+                    setLocation(Object.values(snapshot.val()))
+                }
+            })
+        }
+    }
+
+    function renderSug() {
+        if (!selectedValue) {
+            console.log(location)
+            return (<FlatList
+
+                data={location}
+                style={styles.LocSuggestions}
+                keyExtractor={(item) => item.magicKey}
+                renderItem={(suggestion) => {
+                    return (
+                        <TouchableOpacity style={styles.item} onPress={() => {
+                            setSelectedValue(suggestion.item.Location)
+                            navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
+                        }
+
+                        }>
+                            <Text style={styles.itemText}>{suggestion.item.Location}</Text>
+                        </TouchableOpacity>)
+                }}
 
 
+            ></FlatList>)
+        }
+    }
 
     return(
         <View style={styles.container} >
@@ -131,15 +173,13 @@ export default function myPosts({ navigation }) {
                 style={styles.background} >
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
-                <TouchableOpacity style={styles.logout} onPress={() => signOutUser()}>
-                    <Text style={styles.uploadText}>Log Out</Text>
-                </TouchableOpacity>
+                
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
                 <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
-                    <Text style={styles.highlighttxt}>Home</Text>
+                    <Text style={styles.robototxt}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
-                    <Text style={styles.robototxt}>Profile</Text>
+                    <Text style={styles.highlighttxt}>Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.push("MyGames")}>
                     <Text style={styles.robototxt}>My Games</Text>
@@ -149,7 +189,26 @@ export default function myPosts({ navigation }) {
                 </TouchableOpacity>
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
-
+                <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
+                    ></TextInput>
+                    {renderSug()}
 
                 <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                     {postImage.map((item, index) => {
@@ -342,14 +401,14 @@ const styles = StyleSheet.create({
 
     homebtn: {
         position: "absolute",
-        top: 0.107 * windowHeight,
+        top: 0.11 * windowHeight,
         left: 0.05 * windowWidth,
         height: 0.03 * windowHeight,
     },
 
     profilebtn: {
         position: "absolute",
-        top: 0.11 * windowHeight,
+        top: 0.107 * windowHeight,
         left: 0.20 * windowWidth,
         height: 0.03 * windowHeight,
         width: 0.03 * windowWidth
@@ -404,10 +463,30 @@ const styles = StyleSheet.create({
         width: 0.15 * windowWidth,
     },
 
+    LocSuggestions: {
+        position: 'absolute',
+        top: 150 / 1024 * windowHeight,
+        right: 85 / 1440 * windowWidth,
+        flexGrow: 0,
+        width: 305 / 1440 * windowWidth,
+        backgroundColor: 'rgba(255, 255, 255,1)',
+        zIndex: 1,
+    },
+
+    itemText: {
+        fontSize: 15,
+        paddingLeft: 10
+    },
+
+    item: {
+        width: 305 / 1440 * windowWidth,
+        paddingTop: 10
+    },
+
     postContainer: {
         position: 'absolute',
-        width: 0.9 * windowWidth,
-        height: 0.9 * windowHeight,
+        width: 0.8 * windowWidth,
+        height: 0.8 * windowHeight,
         top: 0.18 * windowHeight,
         left: 0.05 * windowWidth,
         // backgroundColor: 'red',
@@ -481,20 +560,19 @@ const styles = StyleSheet.create({
 
     nameGameContainer: {
         position: 'absolute',
-        top: 0.063 * windowHeight,
+        top: 0.055 * windowHeight,
         // paddingLeft: '20px',
-        
-        
-        left: 0.02 * windowWidth,
-        backgroundColor: 'blue'
+        borderWidth:2,
+        borderColor:"blue",
+        left: 0.05 * windowWidth,
     },
 
     nameGame: {
         // position: 'absolute',
-        color: 'grey',
-        fontWeight: 'bold',
+        color: 'white',
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: 15,
+        
 
     },
 
