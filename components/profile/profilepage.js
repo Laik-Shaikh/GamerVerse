@@ -292,7 +292,7 @@ export default function profilepage({ navigation, route }) {
 
                     <View style={styles.aboutMeContainer}>
                         <Text style={styles.headTxt}>About Me</Text>
-                        <TextInput style={[styles.aboutMeTxt, {width: 0.173 * windowWidth}]} placeholder='Enter your description here'
+                        <TextInput style={[styles.aboutMeTxt, {width: 0.173 * windowWidth}]} maxLength={586} placeholder='Enter your description here'
                             onChangeText={(text) => setNewAbout(text)}></TextInput>
                     </View>
 
@@ -309,7 +309,7 @@ export default function profilepage({ navigation, route }) {
                     <View style={styles.divider1} />
                     <View style={[styles.infoContainer, { top: 0.15 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
-                        <TextInput style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}
+                        <TextInput style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]} maxLength={20}
                             placeholder='Enter new name'
                             onChangeText={(text) => setNewName(text)}></TextInput>
                     </View>
@@ -654,10 +654,7 @@ const styles = StyleSheet.create({
         left: 165 / 1440 * windowWidth,
         top: 915 / 1024 * windowHeight,
         backgroundColor: "#39750A",
-        borderTopLeftRadius: 2,
-        borderTopRightRadius: 2,
-        borderBottomRightRadius: 2,
-        borderBottomLeftRadius: 2,
+        borderRadius: 2,
         justifyContent: 'center',
         alignItems: 'center'
     },

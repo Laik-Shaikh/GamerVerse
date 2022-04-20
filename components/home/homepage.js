@@ -567,10 +567,10 @@ export default function homepage({ navigation, route }) {
                                                 var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes'))
                                                 var likeData;
                                                 onValue(LikeRef, (snapshot) => {
-                                                    console.log(LikeRef)
+                                                    // console.log(LikeRef)
                                                     likeData = Object.values(snapshot.val());
 
-                                                    console.log(likeData)
+                                                    // console.log(likeData)
 
                                                 }
                                                 );
@@ -710,7 +710,7 @@ export default function homepage({ navigation, route }) {
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 {/* <View> */}
-                                <TextInput placeholder='Caption for your post'
+                                <TextInput placeholder='Caption for your post' maxLength={200}
                                     style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
                                 {/* </View> */}
@@ -890,10 +890,10 @@ const styles = StyleSheet.create({
         "color": "#FFFFFF",
         position: 'absolute',
         top: 0.005 * windowHeight,
-        left: 0.02 * windowWidth,
-        width: 0.08 * windowWidth,
-        // height: 0.005 * windowHeight,
-        lineHeight: 23,
+        left: 0.007 * windowWidth,
+        width: 0.115 * windowWidth,
+        height: 0.03 * windowHeight,
+        lineHeight: 18,
         // backgroundColor: 'rgba(255, 255, 255,0.5)',
     },
 
@@ -1011,7 +1011,7 @@ const styles = StyleSheet.create({
     dpview: {
         position: "absolute",
         top: -0.005 * windowHeight,
-        left: -0.02 * windowWidth,
+        left: -0.033 * windowWidth,
         width: 0.05 * windowHeight,
         height: 0.05 * windowHeight,
         borderRadius: 0.065 * windowHeight,

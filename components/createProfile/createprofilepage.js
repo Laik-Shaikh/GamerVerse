@@ -182,7 +182,7 @@ function renderSug() {
           <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FCamIcon.png?alt=media&token=f86b3513-20cc-4a25-8e60-26c7f71fb7da"} style={styles.CamIcon} />
           {image && <Image source={{ uri:image }} style={styles.ProfileImage} />}
           </TouchableOpacity>
-          <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={UserName => setUserName(UserName)}></TextInput>
+          <TextInput style={styles.InputStyle1} maxLength={20} placeholder='Name' onChangeText={UserName => setUserName(UserName)}></TextInput>
           <TextInput style={styles.InputStyle2} placeholder='Phone Number' onChangeText={PNum => setPNum(PNum)}></TextInput>
           <TextInput 
           
@@ -384,6 +384,7 @@ const styles = StyleSheet.create({
     width: 305 / 1440 * windowWidth,
     height: 55 / 1024 * windowHeight,
     top: 0.55 * windowHeight,
+    color: "#FFFFFF",
     backgroundColor: "#54E0FF",
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
