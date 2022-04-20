@@ -1389,19 +1389,17 @@ const styles = StyleSheet.create({
     nameGameContainer: {
         position: 'absolute',
         top: 0.063 * windowHeight,
-        // paddingLeft: '20px',
-        
-        
-        left: 0.02 * windowWidth,
-        backgroundColor: 'blue'
+        borderWidth:2,
+        borderColor:"blue",
+        left: 0.05 * windowWidth,
+        // backgroundColor: 'rgba(255, 69, 81,1)',
     },
 
     nameGame: {
         // position: 'absolute',
-        color: 'grey',
-        fontWeight: 'bold',
+        color: 'white',
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: 15,
 
     },
 
@@ -1413,7 +1411,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingLeft: '20px',
         // marginTop: '15px',
-        top: 0.09 * windowHeight,
+        top: 0.1 * windowHeight,
         left: 0.01 * windowWidth,
         flexGrow: 0.1
     },
