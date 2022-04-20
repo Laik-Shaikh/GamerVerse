@@ -127,7 +127,8 @@ async function sendFirebaseData(){
                     Name: UserName,
                     DisplayPicture: url,
                     aboutMe:"Hey, I am "+UserName,
-                    PostCount: 0
+                    PostCount: 0,
+                    privacyStatus:1
                   })
                 let LocUploadRef = query(ref(db,'locations/'),orderByChild('LocationLower'),equalTo(selectedValue.toLowerCase()))
                 get(LocUploadRef).then((snapshot) => {
