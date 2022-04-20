@@ -34,6 +34,7 @@ export default function myPosts({ navigation }) {
     const [location, setLocation] = React.useState(null);
     const [selectedValue, setSelectedValue] = React.useState()
     const [textInputValue, setTextInputValue] = React.useState('');
+    var likes = ["XX"]
 
     const GameRef = query(ref(db, 'games'))
     const UserRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/Games'))
@@ -140,6 +141,9 @@ export default function myPosts({ navigation }) {
         }
     }
 
+    const likePhoto = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Post%2FLike.png?alt=media&token=bfce5738-8e63-4bb3-8841-212c7fef39d6'
+    const white = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FwhiteLike.png?alt=media&token=e0746851-94cf-424a-9541-684544a056ce'
+
     function renderSug() {
         if (!selectedValue) {
             console.log(location)
@@ -228,18 +232,26 @@ export default function myPosts({ navigation }) {
                                                 }
                                                 )
                                             }
-                                            // var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes'))
-                                            // var likeData;
-                                            // onValue(LikeRef, (snapshot) => {
-                                            //     console.log(LikeRef)
-                                            //     likeData = Object.values(snapshot.val());
+                                            var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes'))
+                                            var likeData;
+                                            onValue(LikeRef, (snapshot) => {
+                                                // console.log(LikeRef)
+                                                likeData = Object.values(snapshot.val());
 
-                                            //     console.log(likeData)
+                                                // console.log(likeData)
 
-                                            // }
-                                            // );
+                                            }
+                                            );
 
-                                            if(newItem.uid.includes(auth.currentUser.uid))
+                                            function checkLikes(userid) {
+                                                // console.log(likes.length)
+                                                for (var i = 0; i < likeData.length; i++) {
+                                                    if (userid == likes[i]) return false;
+                                                }
+                                                return true;
+                                            }
+
+                                            if(newItem.uid.includes(auth.currentUser.uid) && newItem.Likes.includes(auth.currentUser.uid))
                                             {
                                                 return(
                                                     <View style={styles.allPost}>
@@ -253,13 +265,91 @@ export default function myPosts({ navigation }) {
                                                             <Text style={styles.nameGame}>{newItem.GameName}</Text>
                                                         </View>
 
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                position: 'absolute',
+                                                                width: 0.053 * windowWidth,
+                                                                height: 0.053 * windowHeight,
+                                                                top: 0.9 * windowHeight,
+                                                                left: 0.006 * windowWidth,
+                                                            }}
+                                                            onPress={() => {
+                                                                // console.log(likes)
+                                                                if (!newItem.Likes.includes(auth.currentUser.uid)) {
+                                                                    if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
+
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    var ind = likeData.indexOf(auth.currentUser.uid)
+                                                                    likeData.splice(ind, 1)
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                            }}
+                                                        >
+                                                           <Image source={newItem.LikeImage} style={styles.likeImage} /> 
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
+                                                        </TouchableOpacity>
+                                                        {console.log(newItem.DisplayProfile)}
+                                                            
 
                                                     </View>
 
                                                 )
                                             }
+                                            
+                                            else if(newItem.uid.includes(auth.currentUser.uid) && !newItem.Likes.includes(auth.currentUser.uid))
+                                            {
+                                                return (
+                                                    <View style={styles.allPost}>
+                                                        <Text style={styles.profileName}>{newItem.User}</Text>
+                                                        <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        <Image source={newItem.Image} style={styles.post} />
+                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                        <View style={styles.nameGameContainer}>
+                                                            <Text style={styles.nameGame}>{newItem.GameName}</Text>
+                                                        </View>
+                                                        {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                position: 'absolute',
+                                                                width: 0.051 * windowWidth,
+                                                                height: 0.053 * windowHeight,
+                                                                top: 0.9 * windowHeight,
+                                                                left: 0.009 * windowWidth,
+                                                            }}
+                                                            onPress={() => {
+                                                                // console.log(likes)
+                                                                if (!newItem.Likes.includes(auth.currentUser.uid)) {
+                                                                    if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
 
-
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                    console.log('hello')
+                                                                }
+                                                                else {
+                                                                    var ind = likeData.indexOf(auth.currentUser.uid)
+                                                                    likeData.splice(ind, 1)
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                            }}
+                                                        >
+                                                            <Image source={newItem.WhiteLike} style={styles.whiteLikeImage} />   
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
+                                                        </TouchableOpacity>
+                                                        {console.log(newItem.DisplayProfile)}
+                                                        
+                                                    </View>
+                                                )
+                                            }
                                         }
                                     }
                                     
@@ -486,7 +576,7 @@ const styles = StyleSheet.create({
     postContainer: {
         position: 'absolute',
         width: 0.8 * windowWidth,
-        height: 0.8 * windowHeight,
+        height: 0.785 * windowHeight,
         top: 0.18 * windowHeight,
         left: 0.05 * windowWidth,
         // backgroundColor: 'red',
@@ -495,10 +585,11 @@ const styles = StyleSheet.create({
 
     allPost: {
         // position: 'absolute',
-        width: 0.87 * windowWidth,
+        width: 0.85 * windowWidth,
         height: 0.85 * windowHeight,
-        top: 0.01 * windowHeight,
+        top: -0.12 * windowHeight,
         left: 0.01 * windowWidth,
+        marginTop: '120px',
         // backgroundColor: 'cyan',
         flexGrow: 0.1
     },
@@ -524,13 +615,23 @@ const styles = StyleSheet.create({
         height: '100%'
     },
 
+    likestext: {
+        position: 'absolute',
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 26,
+        top: 0.005 * windowHeight,
+        left: 0.045 * windowWidth
+    },
+
     whiteLikeImage:{
         position: 'absolute',
         // resizeMode: 'contain',
-        width: 0.045*windowWidth,
-        height: 0.045*windowHeight,
-        left: 0.0001*windowWidth,
-        marginTop: 0.01 * windowHeight,
+        width: 0.042*windowWidth,
+        height: 0.044*windowHeight,
+        left: -0.002*windowWidth,
+        marginTop: 0.007 * windowHeight,
         // width: '80%',
         // height: '80%',
         // marginBottom: '2px'

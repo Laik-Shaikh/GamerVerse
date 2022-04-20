@@ -616,7 +616,7 @@ export default function homepage({ navigation, route }) {
                                                                 position: 'absolute',
                                                                 width: 0.053 * windowWidth,
                                                                 height: 0.053 * windowHeight,
-                                                                top: 0.56 * windowHeight,
+                                                                top: 0.58 * windowHeight,
                                                                 left: 0.006 * windowWidth,
                                                             }}
                                                             onPress={() => {
@@ -638,10 +638,10 @@ export default function homepage({ navigation, route }) {
                                                             }}
                                                         >
                                                            <Image source={newItem.LikeImage} style={styles.likeImage} /> 
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                         </TouchableOpacity>
                                                         {console.log(newItem.DisplayProfile)}
                                                             
-                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                     </View>
                                                 )
                                             }
@@ -680,7 +680,7 @@ export default function homepage({ navigation, route }) {
                                                                 position: 'absolute',
                                                                 width: 0.051 * windowWidth,
                                                                 height: 0.053 * windowHeight,
-                                                                top: 0.56 * windowHeight,
+                                                                top: 0.58 * windowHeight,
                                                                 left: 0.009 * windowWidth,
                                                             }}
                                                             onPress={() => {
@@ -703,10 +703,10 @@ export default function homepage({ navigation, route }) {
                                                             }}
                                                         >
                                                             <Image source={newItem.WhiteLike} style={styles.whiteLikeImage} />   
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                         </TouchableOpacity>
                                                         {console.log(newItem.DisplayProfile)}
                                                         
-                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                     </View>
                                                 )
                                             }
@@ -1430,8 +1430,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 26,
-        top: 0.57 * windowHeight,
-        left: 0.05 * windowWidth
+        top: 0.005 * windowHeight,
+        left: 0.045 * windowWidth
     },
 
 

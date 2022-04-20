@@ -999,7 +999,7 @@ const styles = StyleSheet.create({
         width: 0.09 * windowWidth,
         height: 0.03 * windowHeight,
         top: 0.05* windowHeight,
-        left: 0.05 * windowWidth,
+        left: 0.02 * windowWidth,
         backgroundColor: 'green',
         textAlign: 'center',
         borderRadius: '2px'
