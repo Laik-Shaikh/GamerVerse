@@ -14,6 +14,8 @@ import gamepage from './components/game/gamepage';
 import searchpagename from './components/search/searchpagename';
 import searchprofilepage from './components/profile/searchProfilePage';
 
+import myPosts from './components/profile/myPosts';
+
 
 const Stack = createStackNavigator();
 
@@ -32,6 +34,7 @@ export default function App() {
         <Stack.Screen name='GameHub' component={GameHubPage} options={{ headerShown: false }} />
         <Stack.Screen name='SearchName' component={searchpagename} options={{ headerShown: false }} />
         <Stack.Screen name='SearchProfile' component={searchprofilepage} options={{ headerShown: false }} />
+        <Stack.Screen name='MyPost' component={myPosts} options={{ headerShown: false }} />
       </Stack.Navigator>
       
     </NavigationContainer>
