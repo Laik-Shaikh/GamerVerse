@@ -178,7 +178,7 @@ function renderSug() {
                         var reportConfirmation =confirm("Are you sure want to report this user?") 
                            if(reportConfirmation) {
                            console.log("Report Added")
-                           alert("Report has been considered. Admin will check the account in short while and take necessary actions")
+                           alert("Report has been considered. Admin will check the account in a short while and take necessary actions")
                             push(ReportUserRef,{
                                 reporter: auth.currentUser.uid,
                               });  
@@ -332,7 +332,7 @@ function renderSug() {
                         var reportConfirmation =confirm("Are you sure want to report this user?") 
                         if(reportConfirmation) {
                         console.log("Report Added")
-                        alert("Report has been considered. Admin will check the account in short while and take necessary actions")
+                        alert("Report has been considered. Admin will check the account in a short while and take necessary actions")
                          push(ReportUserRef,{
                              reporter: auth.currentUser.uid,
                            });  
@@ -458,7 +458,7 @@ function renderSug() {
                         var reportConfirmation =confirm("Are you sure want to report this user?") 
                            if(reportConfirmation) {
                            console.log("Report Added")
-                           alert("Report has been considered. Admin will check the account in short while and take necessary actions")
+                           alert("Report has been considered. Admin will check the account in a short while and take necessary actions")
                             push(ReportUserRef,{
                                 reporter: auth.currentUser.uid,
                               });  
