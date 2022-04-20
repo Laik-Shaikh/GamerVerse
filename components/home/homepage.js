@@ -757,7 +757,7 @@ export default function homepage({ navigation, route }) {
                                     <Text style={styles.text2}>Select Game : </Text>
                                 </View>
 
-                                <ScrollView style={styles.gameScrollContainer} vertical={true}>
+                                <ScrollView style={styles.gameScrollContainer} vertical={true} showsHorizontalScrollIndicator={false}>
                                     {games.map((item, index) => {
                                         if (gamesCode.includes(item.Code)) {
 
