@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt } from "firebase/database";
+import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt,push } from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
@@ -84,6 +84,7 @@ export default function homepage({ navigation, route }) {
     const PostCounter3 = query(ref(db, 'users/' + auth.currentUser.uid + '/PostCount'));
     const PostRef = query(ref(db, 'posts'));
     const ProfileRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/DisplayPicture'));
+   
 
     const UserRef = query(ref(db, 'users/' + auth.currentUser.uid + '/RequestedProfiles'))
     const ConfirmedProfilesRef = query(ref(db, 'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
@@ -590,14 +591,31 @@ export default function homepage({ navigation, route }) {
                                                     <TouchableOpacity onPress={() => navigation.push("SearchProfile", newItem.uid)}>
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => 
+                    {
+                        var ReportPostRef = query(ref(db,'reported/reportedposts/'+newItem.uid+"'s Post "+newItem.PostNumber))
+                        var reportConfirmation =confirm("Are you sure want to report this post?") 
+                           if(reportConfirmation) {
+                           alert("Report has been considered. Admin will check this post in a short while and take necessary actions")
+                            push(ReportPostRef,{
+                                reporter: auth.currentUser.uid,
+                              });  
+                           }
+                           else{
+                            console.log("Cancel Pressed")
+                            }
+                    }}>
                                                         <Text style={styles.reportstyle}>Report</Text>
                                                     </TouchableOpacity>
                                                         <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
-                                                    
+                                                        <View style={styles.nameGameContainer}>
+                                                            <Text style={styles.nameGame}>{newItem.GameName}</Text>
+                                                        </View>
+                                                        {/* {console.log(newItem.GameName)} */}
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
@@ -644,6 +662,9 @@ export default function homepage({ navigation, route }) {
                                                         </TouchableOpacity>
                                                         <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                        <View style={styles.nameGameContainer}>
+                                                            <Text style={styles.nameGame}>{newItem.GameName}</Text>
+                                                        </View>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
                                                     
                                                         <TouchableOpacity
@@ -1043,7 +1064,7 @@ const styles = StyleSheet.create({
         width: 0.03 * windowWidth,
         textAlign: "center",
         "color": '#ffffff',
-        backgroundColor: 'rgba(255, 255, 255,0.5)',
+        backgroundColor: 'rgba(255, 69, 81,1)',
     },
 
     searchIcon: {
@@ -1300,10 +1321,12 @@ const styles = StyleSheet.create({
     allPost: {
         // position: 'absolute',
         width: 0.55 * windowWidth,
-        height: 0.62 * windowHeight,
-        marginTop: '10px',
-        //backgroundColor: 'cyan',
+        height: 0.65 * windowHeight,
+        // paddingTop: '50px',
+        marginTop: '20px',
+        // backgroundColor: 'cyan',
         left: 0.01 * windowWidth,
+        top: 0.01 * windowHeight,
         flexGrow: 0.1
         // width: '100%',
         // height: '100%',
@@ -1315,7 +1338,7 @@ const styles = StyleSheet.create({
         width: 0.52 * windowWidth,
         height: 0.52 * windowHeight,
         left: 0.01 * windowWidth,
-        marginTop: 0.09 * windowHeight,
+        marginTop: 0.12 * windowHeight,
         // width: '100%',
         // height: '100%',
         // flex: 1
@@ -1349,6 +1372,7 @@ const styles = StyleSheet.create({
         borderRadius: 0.065 * windowHeight,
         top: 0.01 * windowHeight,
         left: 0.01 * windowWidth,
+        
     },
 
     profileName: {
@@ -1357,8 +1381,26 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 22,
-        left: 0.047 * windowWidth,
-        top: 0.0157 * windowHeight
+        paddingLeft: 0.047 * windowWidth,
+        top: 0.0157 * windowHeight,
+        
+    },
+
+    nameGameContainer: {
+        position: 'absolute',
+        top: 0.063 * windowHeight,
+        borderWidth:2,
+        borderColor:"blue",
+        left: 0.05 * windowWidth,
+        // backgroundColor: 'rgba(255, 69, 81,1)',
+    },
+
+    nameGame: {
+        // position: 'absolute',
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 15,
+
     },
 
     displayDescription: {
@@ -1369,7 +1411,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingLeft: '20px',
         // marginTop: '15px',
-        top: 0.065 * windowHeight,
+        top: 0.1 * windowHeight,
         left: 0.01 * windowWidth,
         flexGrow: 0.1
     },
