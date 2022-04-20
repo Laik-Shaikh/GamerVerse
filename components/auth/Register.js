@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import fire from '../firebase';
 import 'firebase/auth';
-import { getAuth,createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,getAdditionalUserInfo } from "firebase/auth";
+import { getAuth,createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,getAdditionalUserInfo, sendEmailVerification,signOut } from "firebase/auth";
 import { getDatabase, onValue, ref, set } from "firebase/database";
 
 const windowWidth = Dimensions.get('screen').width;
@@ -60,9 +60,15 @@ export default function Login({ navigation ,route}) {
                         console.log(fire.auth);
                         console.log(UName+" "+PWord+" "+ConfirmPWord);
                         if(PWord==ConfirmPWord){ 
-                          await createUserWithEmailAndPassword(auth,UName,PWord)
+                          await createUserWithEmailAndPassword(auth,UName,PWord).then(()=>{
+                            sendEmailVerification(auth.currentUser).then(()=>{
+                              auth.signOut()
+                              navigation.navigate("Login")
+                              alert("Email verification sent! Please login after verifying the email address to continue")
+                            })
+                          })
                           createFirebaseData();
-                          navigation.navigate("CreateProfile",{PWord,UName})
+                          
                         }
                         else
                         {
@@ -92,7 +98,7 @@ export default function Login({ navigation ,route}) {
                       console.log(token)
                       if (isNewUser) {
                         createFirebaseData();
-                        navigation.push("CreateProfile",{PWord:"google",UName:"google"})
+                        navigation.push("CreateProfile")
                       }
                       else {
                         alert('Authentication confirmed! Account already exists! Signing in to the account.')

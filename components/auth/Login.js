@@ -59,13 +59,20 @@ export default function Login({ navigation }) {
                  onPress={
                   async () => {
                     try {
-                      console.log(fire.auth);
+                      
                       console.log(UName + " " + PWord);
-                      await signInWithEmailAndPassword(auth, UName, PWord);
-                      console.log("yes")
-                      setPWord(" ");
-                      setUName(" ");
-                      navigation.push("Home")
+                      await signInWithEmailAndPassword(auth, UName, PWord).then(()=>{
+                        console.log(auth.currentUser);
+                        if(auth.currentUser.emailVerified){
+                          console.log("yes")
+                          setPWord(" ");
+                          setUName(" ");
+                          navigation.push("Home")
+                        }else{
+                          alert("Please verify your email to continue!")
+                        }
+                      })
+
                     } catch (error) {
                       console.log(error.code);
                       if (error.code == "auth/user-not-found") {
@@ -96,7 +103,7 @@ export default function Login({ navigation }) {
                   console.log(isNewUser)
                   if (isNewUser) {
                     createFirebaseData();
-                    navigation.push("CreateProfile",{PWord:"google",UName:"google"})
+                    navigation.push("CreateProfile")
                   }
                   else {
                     navigation.push("Home")

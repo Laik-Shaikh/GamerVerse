@@ -14,7 +14,7 @@ const windowHeight = Dimensions.get('window').height
 
 
 
-export default function CreateProfile({navigation,route}) {
+export default function CreateProfile({navigation}) {
 
   const [image, setImage] = useState(null);
 
@@ -25,14 +25,6 @@ export default function CreateProfile({navigation,route}) {
 
   const auth = getAuth()
   const db = getDatabase()
-  
-  const parameterAcceptor = route.params;
-  console.log(parameterAcceptor)
-    var pArray=Object.values(parameterAcceptor)
-    console.log(pArray)
-    const UName=pArray[1]
-    console.log(UName)
-    const PWord=pArray[0]
 
 
 
