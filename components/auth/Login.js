@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import fire from '../firebase';
 import 'firebase/auth';
-import { getDatabase, onValue, ref, set } from "firebase/database";
+import { getDatabase, get, ref, set } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo } from "firebase/auth";
 
 const windowWidth = Dimensions.get('screen').width;
@@ -39,6 +39,18 @@ export default function Login({ navigation }) {
           })
 }
 
+  function isProfileNew(userID){
+    get(ref(db,'users/'+userID+'/PhoneNumber')).then((snapshot)=>{
+    if(snapshot.val()=='0000000000'){
+      console.log(snapshot.val()=='0000000000')
+      return true
+    }else{
+      console.log(snapshot.val()=='0000000000')
+      return false
+    }
+    })
+  }
+
     return(
         <View style={styles.container}>
         <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FBG.png?alt=media&token=02003518-4b7f-40c9-ba6a-9bf4c095275e"} resizeMode="cover" style={styles.bg}>
@@ -68,15 +80,21 @@ export default function Login({ navigation }) {
                           console.log("yes")
                           setPWord(" ");
                           setUName(" ");
-                          navigation.push("Home")
+                          get(ref(db,'users/'+auth.currentUser.uid+'/PhoneNumber')).then((snapshot)=>{
+                            if(snapshot.val()=='0000000000'){
+                              navigation.push("CreateProfile")
+                            }else{
+                              navigation.push("Home")
+                            }
+                          })
                         }
-                        else{
-                          alert("Please verify your email to continue!")
-                        }
+                         else{
+                           alert("Please verify your email to continue!")
+                         }
                       })
 
                     } catch (error) {
-                      console.log(error.code);
+                      console.log(error);
                       if (error.code == "auth/user-not-found") {
                         setLoginError("Email does not exist! Please create an account to login!")
                       }
