@@ -315,7 +315,7 @@ export default function homepage({ navigation, route }) {
 
         const pickImage = async () => {
             let result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1,
@@ -635,6 +635,7 @@ export default function homepage({ navigation, route }) {
                                                         <TouchableOpacity onPress={() => navigation.push("SearchProfile", newItem.uid)}>
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        <Text style={styles.textgame}>{newItem.GameName}</Text>
                                                         </TouchableOpacity>
                                                         <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
@@ -1345,7 +1346,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 22,
         left: 0.047 * windowWidth,
-        top: 0.0157 * windowHeight
+        top: 0.0157 * windowHeight,
+        flexGrow:0.1
+    },
+
+    textgame:{
+        position: 'absolute',
+        color: 'grey',
+        fontWeight: 'bold',
+        fontSize: 16,
+        left: 0.15 * windowWidth,
+        top: 0.025 * windowHeight
     },
 
     displayDescription: {
@@ -1371,6 +1382,7 @@ const styles = StyleSheet.create({
         left: 0.05 * windowWidth
     },
 
+    
 
 
 });
