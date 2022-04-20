@@ -609,20 +609,22 @@ export default function homepage({ navigation, route }) {
                     }}>
                                                         <Text style={styles.reportstyle}>Report</Text>
                                                     </TouchableOpacity>
-                                                        <Image source={newItem.Image} style={styles.post} />
-                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
                                                         <View style={styles.nameGameContainer}>
                                                             <Text style={styles.nameGame}>{newItem.GameName}</Text>
                                                         </View>
                                                         {/* {console.log(newItem.GameName)} */}
+                                                    <View style={{flex: 0.1}}>
+                                                        <Image source={newItem.Image} style={styles.post} />
+                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                    </View>
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
                                                                 width: 0.053 * windowWidth,
                                                                 height: 0.053 * windowHeight,
-                                                                top: 0.52 * windowHeight,
-                                                                left: 0.006 * windowWidth
+                                                                top: 0.56 * windowHeight,
+                                                                left: 0.006 * windowWidth,
                                                             }}
                                                             onPress={() => {
                                                                 // console.log(likes)
@@ -670,10 +672,10 @@ export default function homepage({ navigation, route }) {
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
-                                                                width: 0.053 * windowWidth,
+                                                                width: 0.051 * windowWidth,
                                                                 height: 0.053 * windowHeight,
-                                                                top: 0.52 * windowHeight,
-                                                                left: 0.006 * windowWidth
+                                                                top: 0.56 * windowHeight,
+                                                                left: 0.009 * windowWidth,
                                                             }}
                                                             onPress={() => {
                                                                 // console.log(likes)
@@ -731,7 +733,7 @@ export default function homepage({ navigation, route }) {
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 {/* <View> */}
-                                <TextInput placeholder='Caption for your post' maxLength={200}
+                                <TextInput placeholder='Caption for your post' maxLength={220}
                                     style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
                                 {/* </View> */}
@@ -781,7 +783,7 @@ export default function homepage({ navigation, route }) {
                                 </TouchableOpacity>
 
                                 <View style={styles.name}>
-                                    <Text style={styles.text2}>Select Game : </Text>
+                                    <Text style={styles.text2}>Select Game: </Text>
                                 </View>
 
                                 <ScrollView style={styles.gameScrollContainer} vertical={true}>
@@ -1338,10 +1340,10 @@ const styles = StyleSheet.create({
         width: 0.52 * windowWidth,
         height: 0.52 * windowHeight,
         left: 0.01 * windowWidth,
-        marginTop: 0.12 * windowHeight,
+        marginTop: 0.137 * windowHeight,
         // width: '100%',
         // height: '100%',
-        // flex: 1
+        // flexGrow: 0.1
 
     },
 
@@ -1355,10 +1357,10 @@ const styles = StyleSheet.create({
     whiteLikeImage:{
         position: 'absolute',
         // resizeMode: 'contain',
-        width: 0.045*windowWidth,
-        height: 0.045*windowHeight,
-        left: 0.0001*windowWidth,
-        marginTop: 0.01 * windowHeight,
+        width: 0.042*windowWidth,
+        height: 0.044*windowHeight,
+        left: -0.002*windowWidth,
+        marginTop: 0.007 * windowHeight,
         // width: '80%',
         // height: '80%',
         // marginBottom: '2px'
@@ -1388,7 +1390,7 @@ const styles = StyleSheet.create({
 
     nameGameContainer: {
         position: 'absolute',
-        top: 0.063 * windowHeight,
+        top: 0.055 * windowHeight,
         borderWidth:2,
         borderColor:"blue",
         left: 0.05 * windowWidth,
@@ -1408,10 +1410,10 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'normal',
         textAlign: 'center',
-        fontSize: 16,
-        paddingLeft: '20px',
+        fontSize: 15,
+        paddingLeft: '5px',
         // marginTop: '15px',
-        top: 0.1 * windowHeight,
+        top: 0.089 * windowHeight,
         left: 0.01 * windowWidth,
         flexGrow: 0.1
     },
@@ -1422,7 +1424,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 26,
-        top: 0.525 * windowHeight,
+        top: 0.57 * windowHeight,
         left: 0.05 * windowWidth
     },
 
