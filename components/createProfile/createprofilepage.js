@@ -86,7 +86,7 @@ export default function CreateProfile({navigation}) {
   function mobileCheck(PNum){
     let numbers = '0123456789';
     for (var i=0; i < PNum.length; i++) {
-        if(numbers.indexOf(PNum[i]) > -1 && PNum.length==10) {
+        if(numbers.indexOf(PNum[i]) > -1 && PNum.length==10 && PNum!=='0000000000') {
           
         }
         else {
