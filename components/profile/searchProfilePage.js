@@ -319,11 +319,11 @@ function renderSug() {
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -430,11 +430,11 @@ function renderSug() {
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     

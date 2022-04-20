@@ -68,9 +68,10 @@ export default function Login({ navigation }) {
                           setPWord(" ");
                           setUName(" ");
                           navigation.push("Home")
-                        }else{
-                          alert("Please verify your email to continue!")
                         }
+                        // else{
+                        //   alert("Please verify your email to continue!")
+                        // }
                       })
 
                     } catch (error) {

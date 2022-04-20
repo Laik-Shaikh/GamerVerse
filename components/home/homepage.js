@@ -455,7 +455,7 @@ export default function homepage({ navigation, route }) {
                             fontWeight: 'bold'
                         }}>Friend Requests</Text>
                         <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
-                            style={styles.notifscroll}>
+                            style={styles.notifscroll} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                             {requestNames.map((profile, index) => {
                                 {
                                     console.log("WORKS")
@@ -510,7 +510,7 @@ export default function homepage({ navigation, route }) {
                     </View>
                     {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
                     <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
-                    style={styles.friendscroll}>
+                    style={styles.friendscroll} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                     {friendNames.map((profile,index)=>
                         {
                         return(
@@ -543,7 +543,7 @@ export default function homepage({ navigation, route }) {
 
 
 
-                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer} showsVerticalScrollIndicator={false}>
+                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                         {postImage.map((item, index) => {
                             // console.log(postImage);
                             // console.log(item)
@@ -591,6 +591,9 @@ export default function homepage({ navigation, route }) {
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
                                                     </TouchableOpacity>
+                                                    <TouchableOpacity>
+                                                        <Text style={styles.reportstyle}>Report</Text>
+                                                    </TouchableOpacity>
                                                         <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
@@ -635,6 +638,9 @@ export default function homepage({ navigation, route }) {
                                                         <TouchableOpacity onPress={() => navigation.push("SearchProfile", newItem.uid)}>
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity>
+                                                        <Text style={styles.reportstyle}>Report</Text>
                                                         </TouchableOpacity>
                                                         <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
@@ -757,7 +763,7 @@ export default function homepage({ navigation, route }) {
                                     <Text style={styles.text2}>Select Game : </Text>
                                 </View>
 
-                                <ScrollView style={styles.gameScrollContainer} vertical={true} showsHorizontalScrollIndicator={false}>
+                                <ScrollView style={styles.gameScrollContainer} vertical={true}>
                                     {games.map((item, index) => {
                                         if (gamesCode.includes(item.Code)) {
 
@@ -807,6 +813,7 @@ const styles = StyleSheet.create({
     },
 
     friendscroll: {
+        position: "absolute",
         flexGrow: 0.1,
         width: 275 / 1440 * windowWidth,
         left: 5 / 1440 * windowWidth,
@@ -882,8 +889,12 @@ const styles = StyleSheet.create({
         "fontSize": 18,
         "color": "#FFFFFF",
         position: 'absolute',
-        top: 0.01 * windowHeight,
-        left: 0.02 * windowWidth
+        top: 0.005 * windowHeight,
+        left: 0.02 * windowWidth,
+        width: 0.08 * windowWidth,
+        // height: 0.005 * windowHeight,
+        lineHeight: 23,
+        // backgroundColor: 'rgba(255, 255, 255,0.5)',
     },
 
     posttxt: {
@@ -999,7 +1010,7 @@ const styles = StyleSheet.create({
 
     dpview: {
         position: "absolute",
-        top: 0 * windowHeight,
+        top: -0.005 * windowHeight,
         left: -0.02 * windowWidth,
         width: 0.05 * windowHeight,
         height: 0.05 * windowHeight,
@@ -1024,14 +1035,16 @@ const styles = StyleSheet.create({
         width: "3px",
     },
 
-    // divider1:{
-    //     position:"absolute",
-    //     top:0.2*windowHeight,
-    //     left:0.02*windowWidth,
-    //     resizeMode:'contain',
-    //     height: 0.3*windowHeight,
-    //     width: 0.01*windowWidth,
-    // },
+    reportstyle: {
+        position: "absolute",
+        top: 0.045 * windowHeight,
+        right: 0.02 * windowWidth,
+        height: 0.024 * windowHeight,
+        width: 0.03 * windowWidth,
+        textAlign: "center",
+        "color": '#ffffff',
+        backgroundColor: 'rgba(255, 255, 255,0.5)',
+    },
 
     searchIcon: {
         position: "absolute",
