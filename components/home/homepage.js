@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt } from "firebase/database";
+import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt,push } from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
@@ -84,6 +84,7 @@ export default function homepage({ navigation, route }) {
     const PostCounter3 = query(ref(db, 'users/' + auth.currentUser.uid + '/PostCount'));
     const PostRef = query(ref(db, 'posts'));
     const ProfileRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/DisplayPicture'));
+   
 
     const UserRef = query(ref(db, 'users/' + auth.currentUser.uid + '/RequestedProfiles'))
     const ConfirmedProfilesRef = query(ref(db, 'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
@@ -592,7 +593,20 @@ export default function homepage({ navigation, route }) {
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
                                                         
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => 
+                    {
+                        var ReportPostRef = query(ref(db,'reported/reportedposts/'+newItem.uid+"'s Post "+newItem.PostNumber))
+                        var reportConfirmation =confirm("Are you sure want to report this post?") 
+                           if(reportConfirmation) {
+                           alert("Report has been considered. Admin will check this post in a short while and take necessary actions")
+                            push(ReportPostRef,{
+                                reporter: auth.currentUser.uid,
+                              });  
+                           }
+                           else{
+                            console.log("Cancel Pressed")
+                            }
+                    }}>
                                                         <Text style={styles.reportstyle}>Report</Text>
                                                     </TouchableOpacity>
                                                         <Image source={newItem.Image} style={styles.post} />
@@ -1050,7 +1064,7 @@ const styles = StyleSheet.create({
         width: 0.03 * windowWidth,
         textAlign: "center",
         "color": '#ffffff',
-        backgroundColor: 'rgba(255, 255, 255,0.5)',
+        backgroundColor: 'rgba(255, 69, 81,1)',
     },
 
     searchIcon: {
@@ -1375,19 +1389,17 @@ const styles = StyleSheet.create({
     nameGameContainer: {
         position: 'absolute',
         top: 0.063 * windowHeight,
-        // paddingLeft: '20px',
-        
-        
-        left: 0.02 * windowWidth,
-        backgroundColor: 'blue'
+        borderWidth:2,
+        borderColor:"blue",
+        left: 0.05 * windowWidth,
+        // backgroundColor: 'rgba(255, 69, 81,1)',
     },
 
     nameGame: {
         // position: 'absolute',
-        color: 'grey',
-        fontWeight: 'bold',
+        color: 'white',
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: 15,
 
     },
 
@@ -1399,7 +1411,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingLeft: '20px',
         // marginTop: '15px',
-        top: 0.09 * windowHeight,
+        top: 0.1 * windowHeight,
         left: 0.01 * windowWidth,
         flexGrow: 0.1
     },

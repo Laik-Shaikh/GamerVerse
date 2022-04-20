@@ -36,7 +36,8 @@ export default function Login({ navigation ,route}) {
             Name: auth.currentUser.email,
             DisplayPicture: "https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FgamerverseLogo.png?alt=media&token=3d00f4ad-dd05-42e1-bb74-ba166ab2e0aa",
             aboutMe:"Hey, I am "+auth.currentUser.email,
-            PostCount: 0
+            PostCount: 0, 
+            privacyStatus:1
           })
 }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, Dimensions, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import fire from '../firebase';
 import 'firebase/auth';
-import { getDatabase, onValue, ref, set } from "firebase/database";
+import { getDatabase, get, ref, set } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, getAdditionalUserInfo } from "firebase/auth";
 
 const windowWidth = Dimensions.get('screen').width;
@@ -34,9 +34,22 @@ export default function Login({ navigation }) {
             Name: auth.currentUser.email,
             DisplayPicture: "https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FgamerverseLogo.png?alt=media&token=3d00f4ad-dd05-42e1-bb74-ba166ab2e0aa",
             aboutMe:"Hey, I am "+auth.currentUser.email,
-            PostCount: 0
+            PostCount: 0, 
+            privacyStatus: 1
           })
 }
+
+  function isProfileNew(userID){
+    get(ref(db,'users/'+userID+'/PhoneNumber')).then((snapshot)=>{
+    if(snapshot.val()=='0000000000'){
+      console.log(snapshot.val()=='0000000000')
+      return true
+    }else{
+      console.log(snapshot.val()=='0000000000')
+      return false
+    }
+    })
+  }
 
     return(
         <View style={styles.container}>
@@ -63,19 +76,25 @@ export default function Login({ navigation }) {
                       console.log(UName + " " + PWord);
                       await signInWithEmailAndPassword(auth, UName, PWord).then(()=>{
                         console.log(auth.currentUser);
-                        if(auth.currentUser.emailVerified){
+                        
                           console.log("yes")
                           setPWord(" ");
                           setUName(" ");
-                          navigation.push("Home")
-                        }
-                        else{
-                          alert("Please verify your email to continue!")
-                        }
+                          get(ref(db,'users/'+auth.currentUser.uid+'/PhoneNumber')).then((snapshot)=>{
+                            if(snapshot.val()=='0000000000'){
+                              navigation.push("CreateProfile")
+                            }else{
+                              navigation.push("Home")
+                            }
+                          })
+                        
+                        //  else{
+                        //    alert("Please verify your email to continue!")
+                        //  }
                       })
 
                     } catch (error) {
-                      console.log(error.code);
+                      console.log(error);
                       if (error.code == "auth/user-not-found") {
                         setLoginError("Email does not exist! Please create an account to login!")
                       }
