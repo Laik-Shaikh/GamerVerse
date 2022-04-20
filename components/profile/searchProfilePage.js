@@ -7,7 +7,7 @@ import fire from '../firebase';
 import 'firebase/database'
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
-import { getDatabase, onValue,ref,query, orderByChild, equalTo, startAt,endAt ,update ,get} from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo, startAt,endAt ,update ,push,get} from "firebase/database";
 
 
 const windowWidth = Dimensions.get('screen').width;
@@ -31,6 +31,7 @@ export default function searchProfilePage ({ navigation, route }){
       var myfriends = [ "YY" ];
       var status=1;
       const UserRef = query(ref(db,'users/'+ profileUid))
+      const ReportUserRef = query(ref(db,'reported/profiles/'+profileUid))
       const UserRef2 = query(ref(db,'users/'+ auth.currentUser.uid))
       const profileRef = query(ref(db,'users'),orderByChild('uid'),equalTo(profileUid))
       const GetUserRef = query(ref(db,'users'),orderByChild('uid'),equalTo( auth.currentUser.uid))
@@ -64,6 +65,7 @@ export default function searchProfilePage ({ navigation, route }){
         console.log('search started')
     }
 }
+
 
 const getLocations = async (loc) => {
     if (loc) {
@@ -171,7 +173,23 @@ function renderSug() {
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
-                    
+                    <TouchableOpacity style={styles.report} onPress={() => 
+                    {
+                        var reportConfirmation =confirm("Are you sure want to report this user?") 
+                           if(reportConfirmation) {
+                           console.log("Report Added")
+                           alert("Report has been considered. Admin will check the account in short while and take necessary actions")
+                            push(ReportUserRef,{
+                                reporter: auth.currentUser.uid,
+                              });  
+                           }
+                           else{
+                            console.log("Cancel Pressed")
+                            }
+                    }
+                    }>
+                    <Text style={styles.uploadText}>Report</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
@@ -310,7 +328,21 @@ function renderSug() {
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
-                    
+                    <TouchableOpacity style={styles.report} onPress={() => {
+                        var reportConfirmation =confirm("Are you sure want to report this user?") 
+                        if(reportConfirmation) {
+                        console.log("Report Added")
+                        alert("Report has been considered. Admin will check the account in short while and take necessary actions")
+                         push(ReportUserRef,{
+                             reporter: auth.currentUser.uid,
+                           });  
+                        }
+                        else{
+                         console.log("Cancel Pressed")
+                         }
+                    }}>
+                    <Text style={styles.uploadText}>Report</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
@@ -319,11 +351,11 @@ function renderSug() {
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -421,7 +453,22 @@ function renderSug() {
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
-                    
+                    <TouchableOpacity style={styles.report} onPress={() => 
+                    {
+                        var reportConfirmation =confirm("Are you sure want to report this user?") 
+                           if(reportConfirmation) {
+                           console.log("Report Added")
+                           alert("Report has been considered. Admin will check the account in short while and take necessary actions")
+                            push(ReportUserRef,{
+                                reporter: auth.currentUser.uid,
+                              });  
+                           }
+                           else{
+                            console.log("Cancel Pressed")
+                            }
+                    }}>
+                    <Text style={styles.uploadText}>Report</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
@@ -430,11 +477,11 @@ function renderSug() {
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -542,6 +589,24 @@ const styles = StyleSheet.create({
         resizeMode:'contain',
         height: 0.1*windowHeight,
         width: 0.35*windowWidth,
+    },
+    report: {
+        position: 'absolute',
+        width: 0.087 * windowWidth,
+        height: 0.03 * windowHeight,
+        top: 0.05 * windowHeight,
+        left: 0.875 * windowWidth,
+        backgroundColor: 'red',
+        textAlign: 'center',
+        borderRadius: '2px'
+    },
+    
+    uploadText: {
+        "fontStyle": 'normal',
+        "fontSize": 15,
+        "fontWeight": 'bold',
+        "color": '#ffffff',
+        paddingTop: "2px"
     },
     menu:{
         position:"absolute",
