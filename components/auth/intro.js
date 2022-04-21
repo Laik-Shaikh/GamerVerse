@@ -34,7 +34,7 @@ return (
                         })
                       }
                        else{
-                         navigation.push("Login")
+                         navigation.push("Home")
                        }
                       }
                       else {

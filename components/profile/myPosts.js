@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt } from "firebase/database";
+import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt, remove } from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
@@ -151,7 +151,8 @@ export default function myPosts({ navigation }) {
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
 
 
-                <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+
+                <ScrollView contentContainerStyle={{ justifyContent: 'space-evenly' }} style={styles.postContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                     {postImage.map((item, index) => {
 
                         return(
@@ -180,6 +181,10 @@ export default function myPosts({ navigation }) {
                                             // }
                                             // );
 
+                                            // function deleteItem () {
+                                            //     db.collection(auth.currentUser.uid).doc(newItem.PostNumber).delete();
+                                            // }
+
                                             if(newItem.uid.includes(auth.currentUser.uid))
                                             {
                                                 return(
@@ -193,6 +198,16 @@ export default function myPosts({ navigation }) {
                                                         <View style={styles.nameGameContainer}>
                                                             <Text style={styles.nameGame}>{newItem.GameName}</Text>
                                                         </View>
+
+                                                        <TouchableOpacity style={styles.deletePost} 
+                                                            onPress={() => {
+                                                                remove(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)) 
+                                                                    
+                                                                )
+                                                            }}
+                                                        >
+                                                            <Text style={styles.nameGame}>Delete Post</Text>
+                                                        </TouchableOpacity>
 
 
                                                     </View>
@@ -407,7 +422,7 @@ const styles = StyleSheet.create({
     postContainer: {
         position: 'absolute',
         width: 0.9 * windowWidth,
-        height: 0.9 * windowHeight,
+        height: 0.85 * windowHeight,
         top: 0.18 * windowHeight,
         left: 0.05 * windowWidth,
         // backgroundColor: 'red',
@@ -417,23 +432,25 @@ const styles = StyleSheet.create({
     allPost: {
         // position: 'absolute',
         width: 0.87 * windowWidth,
-        height: 0.85 * windowHeight,
+        height: 0.75 * windowHeight,
+        
         top: 0.01 * windowHeight,
         left: 0.01 * windowWidth,
         // backgroundColor: 'cyan',
-        flexGrow: 0.1
+        // flexGrow: 0.1,
+        marginTop: '30px',
     },
 
     post: {
-        // position: 'absolute',
+        position: 'absolute',
         resizeMode: 'contain',
-        // width: 0.85 * windowWidth,
+        // width: 0.87 * windowWidth,
         // height: 0.52 * windowHeight,
         left: 0.01 * windowWidth,
         marginTop: 0.12 * windowHeight,
-        // marginTop: '50px',
+        // top: 0.1*windowHeight,
         width: '100%',
-        height: '100%',
+        height: '82%',
         flexGrow: 0.1
 
     },
@@ -482,19 +499,16 @@ const styles = StyleSheet.create({
     nameGameContainer: {
         position: 'absolute',
         top: 0.063 * windowHeight,
-        // paddingLeft: '20px',
-        
-        
-        left: 0.02 * windowWidth,
-        backgroundColor: 'blue'
+        borderWidth:2,
+        borderColor:"blue",
+        left: 0.05 * windowWidth,
     },
 
     nameGame: {
         // position: 'absolute',
-        color: 'grey',
-        fontWeight: 'bold',
+        color: 'white',
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: 15,
 
     },
 
@@ -506,9 +520,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingLeft: '20px',
         // marginTop: '15px',
-        top: 0.09 * windowHeight,
+        top: 0.1 * windowHeight,
         left: 0.01 * windowWidth,
         flexGrow: 0.1
+    },
+
+    deletePost:{
+        position: 'absolute',
+        top: 0.063 * windowHeight,
+        borderWidth:2,
+        backgroundColor: 'red',
+        right: 0.05 * windowWidth,
+
     },
 
 })

@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt,push } from "firebase/database";
+import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt,push, connectDatabaseEmulator } from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
@@ -409,7 +409,10 @@ export default function homepage({ navigation, route }) {
                 <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
                     <Text style={styles.highlighttxt}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
+                <TouchableOpacity style={styles.profilebtn} onPress={() => {
+                    // navigation.pop();
+                    navigation.push("Profile");
+                }}>
                     <Text style={styles.robototxt}>Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.push("MyGames")}>
@@ -569,6 +572,8 @@ export default function homepage({ navigation, route }) {
                                                 var likeData;
                                                 onValue(LikeRef, (snapshot) => {
                                                     console.log(LikeRef)
+                                                    console.log(snapshot)
+                                                    console.log(snapshot.val())
                                                     likeData = Object.values(snapshot.val());
 
                                                     console.log(likeData)
@@ -1061,7 +1066,7 @@ const styles = StyleSheet.create({
         top: 0.045 * windowHeight,
         right: 0.02 * windowWidth,
         height: 0.024 * windowHeight,
-        width: 0.03 * windowWidth,
+        width: 0.035 * windowWidth,
         textAlign: "center",
         "color": '#ffffff',
         backgroundColor: 'rgba(255, 69, 81,1)',

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Image, Dimensions, ImageBackground, Text, TouchableOpacity, FlatList, TextInput, ScrollView ,ActivityIndicator} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
-
+import { StackActions } from '@react-navigation/native';
 import fire from '../firebase';
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
@@ -10,6 +10,8 @@ import 'firebase/database'
 import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, get, push,startAt,endAt } from "firebase/database";
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
+import { NavigationActions } from 'react-navigation';
+import { CommonActions } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -402,7 +404,11 @@ if (userInfo && !nowEditable && gameData && (userInfo[0].privacyStatus==1)) {
                 <Text style={styles.uploadText}>Privacy Protection ON</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.mypost} onPress={() => navigation.push("MyPost")}>
+                <TouchableOpacity style={styles.mypost} onPress={() =>{ 
+                    // navigation.popToTop("MyPost")
+                    // navigation.reset({routes:[{name: "MyPost"}], key:null})
+                    navigation.dispatch(CommonActions.reset({index:0, routes:[{name: "MyPost"}], key:null}))
+                    }}>
                     <Text style={styles.postText}>My Post</Text>
                 </TouchableOpacity>
 
