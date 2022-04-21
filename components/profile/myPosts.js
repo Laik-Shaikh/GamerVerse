@@ -324,10 +324,10 @@ const styles = StyleSheet.create({
 
     profilebtn: {
         position: "absolute",
-        top: 0.11 * windowHeight,
+        top: 0.107 * windowHeight,
         left: 0.20 * windowWidth,
         height: 0.03 * windowHeight,
-        width: 0.034 * windowWidth
+        // width: 0.034 * windowWidth
     },
 
     mygamesbtn: {
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
         width: 0.8 * windowWidth,
         height: 0.785 * windowHeight,
         top: 0.18 * windowHeight,
-        left: 0.05 * windowWidth,
+        left: 0.075 * windowWidth,
         // backgroundColor: 'red',
         flexGrow: 0.1
     },

@@ -592,7 +592,7 @@ export default function homepage({ navigation, route }) {
                                                         <Text style={styles.reportstyle}>Report</Text>
                                                     </TouchableOpacity>
                                                     <Image source={newItem.Image} style={styles.post} />
-                                                    <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                    <Text style={styles.displayDescription} numberOfLines={2}>{newItem.Description}</Text>
                                                     
                                                         <View style={styles.nameGameContainer}>
                                                             <Text style={styles.nameGame}>{newItem.GameName}</Text>
@@ -728,7 +728,7 @@ export default function homepage({ navigation, route }) {
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 {/* <View> */}
-                                <TextInput placeholder='Caption for your post' maxLength={259}
+                                <TextInput placeholder='Caption for your post' maxLength={240}
                                     style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
                                 {/* </View> */}
@@ -1462,13 +1462,15 @@ const styles = StyleSheet.create({
         position: 'absolute',
         color: 'white',
         fontWeight: 'normal',
-        textAlign: 'justified',
+        // textAlign: 'justified',
         fontSize: 15,
         paddingLeft: '5px',
         // marginTop: '15px',
         top: 0.089 * windowHeight,
         left: 0.01 * windowWidth,
-        flexGrow: 0.1
+        flexGrow: 0.1,
+        // backgroundColor: 'white'
+        marginBottom: '5px',
     },
 
     likestext: {
