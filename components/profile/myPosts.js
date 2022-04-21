@@ -20,105 +20,21 @@ export default function myPosts({ navigation }) {
     const db = getDatabase();
 
     const [reset, setReset] = useState(0);
-    const [games, setGames] = React.useState(null);
-    const [selectGameName, setSelectGameName] = useState(null);
-    const [gamesCode, setGamesCode] = React.useState([]);
-    const [description, setDescription] = useState(null)
-    const [userName, setUserName] = useState(null);
-    const [userUid, setUserUid] = useState(null);
-    const [postNumber, setPostNumber] = React.useState([]);
     const [postImage, setPostImage] = React.useState([]);
-    const [selectGameCode, setSelectGameCode] = useState(null);
-    const [profileImage, setProfileImage] = React.useState([]);
-    var [latestPosts, setLatestPosts] = useState([]);
     const [location, setLocation] = React.useState(null);
     const [selectedValue, setSelectedValue] = React.useState()
     const [textInputValue, setTextInputValue] = React.useState('');
-    var likes = ["XX"]
-
-    const GameRef = query(ref(db, 'games'))
-    const UserRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/Games'))
-    const UserName = query(ref(db, 'users/' + auth.currentUser.uid + '/Name'))
-    const UidRef = query(ref(db, 'users/' + auth.currentUser.uid + '/uid'))
-    const PostCounter = query(ref(db, 'users/' + auth.currentUser.uid + '/PostCount'));
-    const PostCounter1 = query(ref(db, 'users/' + auth.currentUser.uid));
-    const PostCounter3 = query(ref(db, 'users/' + auth.currentUser.uid + '/PostCount'));
-    const PostRef = query(ref(db, 'posts'));
-    const ProfileRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/DisplayPicture'));
-    const UserRef = query(ref(db, 'users/' + auth.currentUser.uid + '/RequestedProfiles'))
-    const ConfirmedProfilesRef = query(ref(db, 'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
-    const ThisProfileRef = query(ref(db, 'users/' + auth.currentUser.uid))
-    const ProfileRef = query(ref(db, 'users'))
-
+    const PostRef = query(ref(db, 'posts/'+auth.currentUser.uid));
 
 
     React.useEffect(() => {
-        // onValue(UserRef, (snapshot) => {
-        //     const data = Object.values(snapshot.val());
-        //     setIncomingRequests(data)
-        //     // console.log(data)
-        // }
-        // )
-        // onValue(ProfileRef, (snapshot) => {
-        //     const data1 = Object.values(snapshot.val());
-        //     setUsers(data1)
-        //     // console.log(data1)
-        // }
-        // )
-        // onValue(ConfirmedProfilesRef, (snapshot) => {
-        //     const data2 = Object.values(snapshot.val());
-        //     setFriends(data2)
-        //     // console.log(data1)
-        // }
-        // )
-
-        onValue(GameRef, (snapshot) => {
-            const info = Object.values(snapshot.val());
-            setGames(info)
-            console.log(info)
-        })
-
-        onValue(UserRef1, (snapshot) => {
-            console.log(snapshot.val())
-            if (snapshot.val()) {
-                const data1 = Object.values(snapshot.val());
-                setGamesCode(data1)
-            }
-        }
-        )
-
-        onValue(UserName, (snapshot) => {
-            const info2 = snapshot.val();
-            setUserName(info2)
-            console.log(info2)
-        }
-        )
-
-        onValue(UidRef, (snapshot) => {
-            const id = snapshot.val();
-            setUserUid(id)
-        }
-        )
-
-        onValue(PostCounter3, (snapshot) => {
-            const info4 = snapshot.val();
-            setPostNumber(info4)
-            console.log(info4)
-        }
-        )
 
         onValue(PostRef, (snapshot) => {
-            const info5 = Object.values(snapshot.val());
-            // setPostImage(Object.values(data5[0]))
-            // console.log(Object.values(data5[0]))
-            setPostImage(info5)
-        }
-        )
-
-        onValue(ProfileRef1, (snapshot) => {
-            const info6 = snapshot.val();
-            setProfileImage(info6)
-            console.log(info6)
+            if(snapshot.exists()){  const info5 = Object.values(snapshot.val());
+                setPostImage(info5)}
+                else{ 
+                    setPostImage([])
+                }
         }
         )
     }, [])
@@ -140,9 +56,6 @@ export default function myPosts({ navigation }) {
             })
         }
     }
-
-    const likePhoto = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Post%2FLike.png?alt=media&token=bfce5738-8e63-4bb3-8841-212c7fef39d6'
-    const white = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FwhiteLike.png?alt=media&token=e0746851-94cf-424a-9541-684544a056ce'
 
     function renderSug() {
         if (!selectedValue) {
@@ -216,47 +129,20 @@ export default function myPosts({ navigation }) {
 
 
                 <ScrollView contentContainerStyle={{ justifyContent: 'space-evenly' }} style={styles.postContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-                    {postImage.map((item, index) => {
+                    {postImage.map((newItem, index) => {
 
+                    if ((!(newItem.User))) {
+                        get(query(ref(db, 'users'), orderByChild('uid'), equalTo(newItem.uid))).then((snapshot) => {
+                            var postUserData = Object.values(snapshot.val())
+                            newItem['User'] = postUserData[0].Name
+                            newItem.DisplayProfile = postUserData[0].DisplayPicture
+                            setReset(reset + 0.1)
+                        }
+                        )}
                         return(
                             <View key={index}>
-                                {
-                                    Object.values(item).map((newItem, newIndex) => {
-
-                                        if (gamesCode.includes(newItem.GameCode)) {
-                                            if ((!(newItem.User))) {
-                                                get(query(ref(db, 'users'), orderByChild('uid'), equalTo(newItem.uid))).then((snapshot) => {
-                                                    var postUserData = Object.values(snapshot.val())
-                                                    newItem['User'] = postUserData[0].Name
-                                                    newItem.DisplayProfile = postUserData[0].DisplayPicture
-                                                    setReset(reset + 0.1)
-                                                }
-                                                )
-                                            }
-                                            var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes'))
-                                            var likeData;
-                                            onValue(LikeRef, (snapshot) => {
-                                                // console.log(LikeRef)
-                                                likeData = Object.values(snapshot.val());
-
-                                                // console.log(likeData)
-
-                                            }
-                                            );
-
-                                            function checkLikes(userid) {
-                                                // console.log(likes.length)
-                                                for (var i = 0; i < likeData.length; i++) {
-                                                    if (userid == likes[i]) return false;
-                                                }
-                                                return true;
-                                            }
-
-                                            if(newItem.uid.includes(auth.currentUser.uid) && newItem.Likes.includes(auth.currentUser.uid))
-                                            {
-                                                return(
-                                                    <View style={styles.allPost}>
-                                                        <Text style={styles.profileName}>{newItem.User}</Text>
+                              <View style={styles.allPost}>
+                              <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
 
                                                         <Image source={newItem.Image} style={styles.post} />
@@ -269,103 +155,26 @@ export default function myPosts({ navigation }) {
                                                         <TouchableOpacity style={styles.deletePost} 
                                                             onPress={() => {
                                                                 remove(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)) 
-                                                                    
                                                                 )
+                                                                setReset(reset+0.1)
                                                             }}
                                                         >
                                                             <Text style={styles.nameGame}>Delete Post</Text>
                                                         </TouchableOpacity>
-
-                                                        <TouchableOpacity
-                                                            style={{
+                                                        <TouchableOpacity style={{
                                                                 position: 'absolute',
                                                                 width: 0.053 * windowWidth,
                                                                 height: 0.053 * windowHeight,
                                                                 top: 0.9 * windowHeight,
                                                                 left: 0.006 * windowWidth,
                                                             }}
-                                                            onPress={() => {
-                                                                // console.log(likes)
-                                                                if (!newItem.Likes.includes(auth.currentUser.uid)) {
-                                                                    if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
-
-                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
-                                                                        Likes: likeData
-                                                                    })
-                                                                }
-                                                                else {
-                                                                    var ind = likeData.indexOf(auth.currentUser.uid)
-                                                                    likeData.splice(ind, 1)
-                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
-                                                                        Likes: likeData
-                                                                    })
-                                                                }
-                                                            }}
-                                                        >
-                                                           <Image source={newItem.LikeImage} style={styles.likeImage} /> 
+                                                            >
+                                                                      <Image source={newItem.LikeImage} style={styles.likeImage} /> 
                                                         <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
-                                                        </TouchableOpacity>
-                                                        {console.log(newItem.DisplayProfile)}
-                                                            
+                                                            </TouchableOpacity>
+                                                  
 
-                                                    </View>
-
-                                                )
-                                            }
-                                            
-                                            else if(newItem.uid.includes(auth.currentUser.uid) && !newItem.Likes.includes(auth.currentUser.uid))
-                                            {
-                                                return (
-                                                    <View style={styles.allPost}>
-                                                        <Text style={styles.profileName}>{newItem.User}</Text>
-                                                        <Image source={newItem.DisplayProfile} style={styles.profile} />
-                                                        <Image source={newItem.Image} style={styles.post} />
-                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
-                                                        <View style={styles.nameGameContainer}>
-                                                            <Text style={styles.nameGame}>{newItem.GameName}</Text>
-                                                        </View>
-                                                        {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
-                                                    
-                                                        <TouchableOpacity
-                                                            style={{
-                                                                position: 'absolute',
-                                                                width: 0.051 * windowWidth,
-                                                                height: 0.053 * windowHeight,
-                                                                top: 0.9 * windowHeight,
-                                                                left: 0.009 * windowWidth,
-                                                            }}
-                                                            onPress={() => {
-                                                                // console.log(likes)
-                                                                if (!newItem.Likes.includes(auth.currentUser.uid)) {
-                                                                    if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
-
-                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
-                                                                        Likes: likeData
-                                                                    })
-                                                                    console.log('hello')
-                                                                }
-                                                                else {
-                                                                    var ind = likeData.indexOf(auth.currentUser.uid)
-                                                                    likeData.splice(ind, 1)
-                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
-                                                                        Likes: likeData
-                                                                    })
-                                                                }
-                                                            }}
-                                                        >
-                                                            <Image source={newItem.WhiteLike} style={styles.whiteLikeImage} />   
-                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
-                                                        </TouchableOpacity>
-                                                        {console.log(newItem.DisplayProfile)}
-                                                        
-                                                    </View>
-                                                )
-                                            }
-                                        }
-                                    }
-                                    
-                                    )
-                                }
+                               </View>
                             </View>
                         )
                     }

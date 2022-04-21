@@ -565,13 +565,8 @@ export default function homepage({ navigation, route }) {
                                                 var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes'))
                                                 var likeData;
                                                 onValue(LikeRef, (snapshot) => {
-                                                    console.log(LikeRef)
-                                                    console.log(snapshot)
-                                                    console.log(snapshot.val())
-                                                    likeData = Object.values(snapshot.val());
-
-                                                    // console.log(likeData)
-
+                                                    if(snapshot.exists())
+                                                    {likeData = Object.values(snapshot.val());}
                                                 }
                                                 );
 

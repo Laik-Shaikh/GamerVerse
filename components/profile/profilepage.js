@@ -398,7 +398,6 @@ if (userInfo && !nowEditable && gameData && (userInfo[0].privacyStatus==1)) {
                     update(picUpdateRef,{
                         privacyStatus:0
                     })
-                    navigation.push("Profile")
                 }
                 }>
                 <Text style={styles.uploadText}>Privacy Protection ON</Text>
@@ -548,10 +547,16 @@ if(userInfo && !nowEditable && gameData &&
                     update(picUpdateRef,{
                         privacyStatus:1
                     })
-                    navigation.push("Profile")
                 }
                 }>
                 <Text style={styles.uploadText}>Privacy Protection OFF</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.mypost} onPress={() =>{ 
+                    // navigation.popToTop("MyPost")
+                    // navigation.reset({routes:[{name: "MyPost"}], key:null})
+                    navigation.dispatch(CommonActions.reset({index:0, routes:[{name: "MyPost"}], key:null}))
+                    }}>
+                    <Text style={styles.postText}>My Post</Text>
                 </TouchableOpacity>
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
