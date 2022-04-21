@@ -324,6 +324,15 @@ export default function myPosts({ navigation }) {
                                                         <View style={styles.nameGameContainer}>
                                                             <Text style={styles.nameGame}>{newItem.GameName}</Text>
                                                         </View>
+                                                        <TouchableOpacity style={styles.deletePost} 
+                                                            onPress={() => {
+                                                                remove(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)) 
+                                                                    
+                                                                )
+                                                            }}
+                                                        >
+                                                            <Text style={styles.nameGame}>Delete Post</Text>
+                                                        </TouchableOpacity>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
                                                     
                                                         <TouchableOpacity
