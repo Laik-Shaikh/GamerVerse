@@ -86,11 +86,12 @@ export default function Login({ navigation }) {
                             }else{
                               navigation.push("Home")
                             }
-                          })
-                        }
-                        //  else{
-                        //    alert("Please verify your email to continue!")
-                        //  }
+                          })}
+                          else{
+                            alert("Please verify your email to continue!")
+                          }
+                        
+                         
                       })
 
                     } catch (error) {

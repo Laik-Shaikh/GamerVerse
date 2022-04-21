@@ -39,6 +39,7 @@ export default function homepage({ navigation, route }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [image, setImage] = useState(null);
     const [reset, setReset] = useState(0);
+    const [reset1, setReset1] = useState(0);
     const [games, setGames] = React.useState(null);
     const [selectGameName, setSelectGameName] = useState(null);
     const [gamesCode, setGamesCode] = React.useState([]);
@@ -746,7 +747,10 @@ export default function homepage({ navigation, route }) {
                                 {/* <Image source={require('./homeAssets/divider.png')} style={styles.divider1} /> */}
                                 <TouchableOpacity style={[styles.button, styles.buttonClose]}
                                     onPress={() => {
-                                        setModalVisible(!modalVisible)
+                                        setModalVisible(!modalVisible);
+                                        setImage(null);
+                                        setDescription(null);
+                                        setSelectGameName(null);
                                     }}
                                 >
                                     <Text style={styles.text1}>Cancel</Text>
@@ -765,6 +769,11 @@ export default function homepage({ navigation, route }) {
                                                     uploadPost();
                                                     alert("Uploaded Successfully");
                                                     setModalVisible(!modalVisible);
+                                                    // setReset1(reset + 0.1);
+                                                    setImage(null);
+                                                    setDescription(null);
+                                                    setSelectGameName(null);
+                                                    
                                                 }
                                                
                                                 
@@ -814,6 +823,12 @@ export default function homepage({ navigation, route }) {
 
                                     )}
                                 </ScrollView>
+                                <View style={styles.GC}>
+                                    <Text style={styles.textgame2}>Selected Game</Text>
+                                </View>
+                                <View style={styles.selected}>
+                                    <Text style={styles.textgame}>{selectGameName}</Text>
+                                </View>
 
                             </View>
                         </View>
@@ -965,8 +980,24 @@ const styles = StyleSheet.create({
     text2: {
         "fontStyle": "normal",
         "fontWeight": "bold",
-        "fontSize": 18,
+        "fontSize": 15,
         "color": "white",
+    },
+
+    textgame: {
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 15,
+        "color": "black",
+        textAlign: 'center'
+    },
+
+    textgame2: {
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 15,
+        "color": "white",
+        textAlign: 'center'
     },
 
     homebtn: {
@@ -1291,9 +1322,9 @@ const styles = StyleSheet.create({
     textInput: {
         position: 'absolute',
         width: 0.54 * windowWidth,
-        height: 0.08 * windowHeight,
+        height: 0.06 * windowHeight,
         paddingLeft: '15px',
-        top: '20px',
+        top: '15px',
         backgroundColor: 'white'
     },
 
@@ -1302,7 +1333,26 @@ const styles = StyleSheet.create({
         // width: 0.15*windowWidth,
         // height: 0.*windowHeight,
         left: 0.02 * windowWidth,
-        top: 0.14 * windowHeight
+        top: 0.17 * windowHeight
+    },
+
+    GC: {
+        position: 'absolute',
+        // width: 0.15*windowWidth,
+        // height: 0.*windowHeight,
+        left: 0.02 * windowWidth,
+        top: 0.085 * windowHeight
+    },
+
+    selected:{
+        position: 'absolute',
+        width: 0.15 * windowWidth,
+        height: 0.05 * windowHeight,
+        left: 0.02 * windowWidth,
+        top: 0.116 * windowHeight,
+        borderColor: 'green',
+        backgroundColor: 'white',
+        textAlign: 'center'
     },
 
     gameScrollContainer: {
@@ -1310,7 +1360,7 @@ const styles = StyleSheet.create({
         width: 0.15 * windowWidth,
         height: 0.3 * windowHeight,
         left: 0.02 * windowWidth,
-        top: 0.19 * windowHeight,
+        top: 0.207 * windowHeight,
         // flexGrow: 0.1,
         // justifyContent: 'space-between',
         // backgroundColor: 'white'
