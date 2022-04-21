@@ -154,9 +154,15 @@ export default function myPosts({ navigation }) {
 
                                                         <TouchableOpacity style={styles.deletePost} 
                                                             onPress={() => {
+                                                                var deleteConfirmation =confirm("Are you sure want to delete this post?")
+                                                                if(deleteConfirmation){
                                                                 remove(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)) 
                                                                 )
                                                                 setReset(reset+0.1)
+                                                                }
+                                                                else{
+                                                                    console.log("Cancel Pressed")
+                                                                }
                                                             }}
                                                         >
                                                             <Text style={styles.nameGame}>Delete Post</Text>
@@ -165,7 +171,7 @@ export default function myPosts({ navigation }) {
                                                                 position: 'absolute',
                                                                 width: 0.053 * windowWidth,
                                                                 height: 0.053 * windowHeight,
-                                                                top: 0.9 * windowHeight,
+                                                                top: 0.765 * windowHeight,
                                                                 left: 0.006 * windowWidth,
                                                             }}
                                                             >
@@ -407,7 +413,7 @@ const styles = StyleSheet.create({
         // position: 'absolute',
         width: 0.85 * windowWidth,
         height: 0.85 * windowHeight,
-        top: -0.12 * windowHeight,
+        top: 0 * windowHeight,
         left: 0.01 * windowWidth,
         marginTop: '120px',
         // backgroundColor: 'cyan',
@@ -421,7 +427,7 @@ const styles = StyleSheet.create({
         // width: 0.87 * windowWidth,
         // height: 0.52 * windowHeight,
         left: 0.01 * windowWidth,
-        marginTop: 0.12 * windowHeight,
+        marginTop: 0.15 * windowHeight,
         // top: 0.1*windowHeight,
         width: '100%',
         height: '82%',
@@ -502,9 +508,10 @@ const styles = StyleSheet.create({
         position: 'absolute',
         color: 'white',
         fontWeight: 'normal',
-        textAlign: 'center',
+        // textAlign: 'center',
         fontSize: 16,
         paddingLeft: '20px',
+        width: 0.76 * windowWidth,
         // marginTop: '15px',
         top: 0.1 * windowHeight,
         left: 0.01 * windowWidth,
@@ -514,10 +521,11 @@ const styles = StyleSheet.create({
     deletePost:{
         position: 'absolute',
         top: 0.063 * windowHeight,
-        borderWidth:2,
+        // borderWidth:2,
         backgroundColor: 'red',
-        right: 0.05 * windowWidth,
-
+        right: 0.06 * windowWidth,
+        paddingLeft: "2px",
+        paddingRight: "2px",
     },
 
 })

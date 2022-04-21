@@ -739,7 +739,7 @@ export default function homepage({ navigation, route }) {
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 {/* <View> */}
-                                <TextInput placeholder='Caption for your post' maxLength={220}
+                                <TextInput placeholder='Caption for your post' maxLength={259}
                                     style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
                                 {/* </View> */}
@@ -1415,7 +1415,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         color: 'white',
         fontWeight: 'normal',
-        textAlign: 'center',
+        textAlign: 'justified',
         fontSize: 15,
         paddingLeft: '5px',
         // marginTop: '15px',
