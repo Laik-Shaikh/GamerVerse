@@ -26,8 +26,8 @@ export default function GameHubPage({ navigation, route }) {
 
     var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
-            navigation.push("SearchName", { textInputValue })
-            console.log('search started')
+            navigation.push("SearchPage", { textInputValue })
+            
         }
     }
 
@@ -44,7 +44,7 @@ export default function GameHubPage({ navigation, route }) {
 
     function renderSug() {
         if (!selectedValue) {
-            console.log(location)
+            
             return (<FlatList
 
                 data={location}
@@ -54,7 +54,7 @@ export default function GameHubPage({ navigation, route }) {
                     return (
                         <TouchableOpacity style={styles.item} onPress={() => {
                             setSelectedValue(suggestion.item.Location)
-                            navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                            navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                         }
 
                         }>
@@ -157,7 +157,7 @@ export default function GameHubPage({ navigation, route }) {
                         if(computer === "P"){
                             return (
                                 <View key={index} style={{ paddingLeft: 5, paddingRight: 5, }} >   
-                                     {console.log(item.Code)}
+                                     
                                     <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
@@ -184,11 +184,11 @@ export default function GameHubPage({ navigation, route }) {
                     {games.map((item, index) => {
                         let mobile;
                         mobile = item.Code.charAt(0);
-                        console.log(mobile.Code)
+                        
                         
                         if(mobile === "M"){
                             return(<View key = {index} style={{ paddingLeft: 5, paddingRight: 5, }}>
-                                {console.log(item.Code)}
+                                
                                 <TouchableOpacity style={styles.apexLogo} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                     style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />

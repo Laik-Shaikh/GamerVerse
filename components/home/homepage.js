@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import fire from '../firebase';
 import 'firebase/database'
-import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt } from "firebase/database";
+import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, set, startAt, get, endAt,push, connectDatabaseEmulator } from "firebase/database";
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
@@ -39,6 +39,7 @@ export default function homepage({ navigation, route }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [image, setImage] = useState(null);
     const [reset, setReset] = useState(0);
+    const [reset1, setReset1] = useState(0);
     const [games, setGames] = React.useState(null);
     const [selectGameName, setSelectGameName] = useState(null);
     const [gamesCode, setGamesCode] = React.useState([]);
@@ -55,8 +56,7 @@ export default function homepage({ navigation, route }) {
     const [textInputValue, setTextInputValue] = React.useState('');
     var [friends, setFriends] = React.useState(null);
 
-    console.log(users)
-    console.log(friends)
+    
 
 
 
@@ -84,6 +84,7 @@ export default function homepage({ navigation, route }) {
     const PostCounter3 = query(ref(db, 'users/' + auth.currentUser.uid + '/PostCount'));
     const PostRef = query(ref(db, 'posts'));
     const ProfileRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/DisplayPicture'));
+   
 
     const UserRef = query(ref(db, 'users/' + auth.currentUser.uid + '/RequestedProfiles'))
     const ConfirmedProfilesRef = query(ref(db, 'users/' + auth.currentUser.uid + '/ConfirmedProfiles'))
@@ -96,30 +97,30 @@ export default function homepage({ navigation, route }) {
         onValue(UserRef, (snapshot) => {
             const data = Object.values(snapshot.val());
             setIncomingRequests(data)
-            // console.log(data)
+           
         }
         )
         onValue(ProfileRef, (snapshot) => {
             const data1 = Object.values(snapshot.val());
             setUsers(data1)
-            // console.log(data1)
+           
         }
         )
         onValue(ConfirmedProfilesRef, (snapshot) => {
             const data2 = Object.values(snapshot.val());
             setFriends(data2)
-            // console.log(data1)
+           
         }
         )
 
         onValue(GameRef, (snapshot) => {
             const info = Object.values(snapshot.val());
             setGames(info)
-            console.log(info)
+            
         })
 
         onValue(UserRef1, (snapshot) => {
-            console.log(snapshot.val())
+            
             if (snapshot.val()) {
                 const data1 = Object.values(snapshot.val());
                 setGamesCode(data1)
@@ -130,7 +131,7 @@ export default function homepage({ navigation, route }) {
         onValue(UserName, (snapshot) => {
             const info2 = snapshot.val();
             setUserName(info2)
-            console.log(info2)
+            
         }
         )
 
@@ -143,14 +144,14 @@ export default function homepage({ navigation, route }) {
         onValue(PostCounter3, (snapshot) => {
             const info4 = snapshot.val();
             setPostNumber(info4)
-            console.log(info4)
+            
         }
         )
 
         onValue(PostRef, (snapshot) => {
             const info5 = Object.values(snapshot.val());
             // setPostImage(Object.values(data5[0]))
-            // console.log(Object.values(data5[0]))
+            
             setPostImage(info5)
         }
         )
@@ -158,13 +159,11 @@ export default function homepage({ navigation, route }) {
         onValue(ProfileRef1, (snapshot) => {
             const info6 = snapshot.val();
             setProfileImage(info6)
-            console.log(info6)
+            
         }
         )
     }, [])
-    console.log(IncomingRequests)
-    console.log(users)
-    console.log(friends)
+    
 
     function requestAccepted(requestUID) {
         var y = requestUID;
@@ -179,7 +178,7 @@ export default function homepage({ navigation, route }) {
             get(FriendProfileRef).then((snapshot) => {
                 const data3 = Object.values(snapshot.val());
                 data3.push(auth.currentUser.uid)
-                console.log(data3)
+                
                 update(FriendProfileUpdateRef, {
                     ConfirmedProfiles: data3,
                 });
@@ -193,7 +192,7 @@ export default function homepage({ navigation, route }) {
 
     function requestDenied(requestUID) {
         var toRemove = requestUID;
-        console.log(toRemove)
+        
         var index = IncomingRequests.indexOf(toRemove);
         if (index > -1) {
             IncomingRequests.splice(index, 1);
@@ -202,8 +201,8 @@ export default function homepage({ navigation, route }) {
 
     var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter' && textInputValue.length>0 && textInputValue!=" ") {
-            navigation.push("SearchName", { textInputValue })
-            console.log('search started')
+            navigation.push("SearchPage", { textInputValue })
+        
         }
     }
 
@@ -220,7 +219,7 @@ export default function homepage({ navigation, route }) {
 
     function renderSug() {
         if (!selectedValue) {
-            console.log(location)
+            
             return (<FlatList
 
                 data={location}
@@ -230,7 +229,7 @@ export default function homepage({ navigation, route }) {
                     return (
                         <TouchableOpacity style={styles.item} onPress={() => {
                             setSelectedValue(suggestion.item.Location)
-                            navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                            navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                         }
 
                         }>
@@ -246,7 +245,7 @@ export default function homepage({ navigation, route }) {
     if (users && IncomingRequests) {
         for (var i = 1; i < users.length; i++) {
             var x = users[i].uid;
-            console.log(x);
+            
             if (IncomingRequests.includes(x)) {
                 requestNames.push(users[i].Name);
                 requestImages.push(users[i].DisplayPicture);
@@ -254,9 +253,7 @@ export default function homepage({ navigation, route }) {
 
             }
         }
-        console.log(requestNames)
-        console.log(requestImages)
-        console.log(requestUID)
+        
     }
 
 
@@ -280,15 +277,14 @@ export default function homepage({ navigation, route }) {
         if (friends) {
             for (var i = 0; i < users.length; i++) {
                 var x = users[i].uid;
-                console.log(x);
+                
                 if (friends.includes(x)) {
                     friendNames.push(users[i].Name);
                     friendImages.push(users[i].DisplayPicture);
                     friendUid.push(users[i].uid);
                 }
             }
-            console.log(friendImages)
-            console.log(friendNames)
+            
         }
 
 
@@ -300,11 +296,7 @@ export default function homepage({ navigation, route }) {
         // var userid = ''
         // const dbRef = ref(db,'posts/Post1')
 
-        console.log(UserName)
-        console.log(PostCounter3)
-        console.log(GameRef)
-        console.log(UserRef1)
-        console.log(PostRef)
+        
 
 
 
@@ -321,7 +313,7 @@ export default function homepage({ navigation, route }) {
                 quality: 1,
             });
 
-            console.log(result);
+            
 
             if (!result.cancelled) {
                 setImage(result.uri);
@@ -335,7 +327,7 @@ export default function homepage({ navigation, route }) {
             get(PostCounter).then((snapshot) => {
                 var upl3 = snapshot.val();
                 upl3 = upl3 + 1;
-                console.log(upl3)
+                
                 var storageRef = strRef(storage, 'Post/' + auth.currentUser.uid + '_' + upl3 + '.jpg');
                 const dbRef = ref(db, 'posts/' + auth.currentUser.uid + '/Post' + postNumber)
                 uploadBytes(storageRef, blob, metadata).then((snapshot) => {
@@ -354,9 +346,9 @@ export default function homepage({ navigation, route }) {
                         })
                     })
 
-                    console.log('Uploaded a blob or file!');
+                    
                 });
-                console.log(upl3)
+                
                 update(PostCounter1, {
                     PostCount: upl3,
                 });
@@ -376,7 +368,7 @@ export default function homepage({ navigation, route }) {
 
             } catch (e) {
                 Alert.alert("Could not Logout");
-                console.log(e)
+                
             }
         }
         if (!games || !latestPosts) {
@@ -408,7 +400,10 @@ export default function homepage({ navigation, route }) {
                 <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
                     <Text style={styles.highlighttxt}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
+                <TouchableOpacity style={styles.profilebtn} onPress={() => {
+                    // navigation.pop();
+                    navigation.push("Profile");
+                }}>
                     <Text style={styles.robototxt}>Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.push("MyGames")}>
@@ -455,12 +450,10 @@ export default function homepage({ navigation, route }) {
                             fontWeight: 'bold'
                         }}>Friend Requests</Text>
                         <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
-                            style={styles.notifscroll}>
+                            style={styles.notifscroll} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                             {requestNames.map((profile, index) => {
                                 {
-                                    console.log("WORKS")
-                                    console.log(profile)
-                                    console.log(requestImages[index])
+                                    
                                 }
                                 return (
                                     <View key={index} style={styles.notifbox}>
@@ -510,27 +503,21 @@ export default function homepage({ navigation, route }) {
                     </View>
                     {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
                     <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} 
-                    style={styles.friendscroll}>
+                    style={styles.friendscroll} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                     {friendNames.map((profile,index)=>
                         {
                         return(
                         <View  key={index} style={styles.friendbox}>
                             <TouchableOpacity onPress={() => navigation.push("SearchProfile", friendUid[index])}>
                                 <Image source={friendImages[index]} style={styles.dpview}/>
-                                <Text style={styles.nametxt}>{profile}</Text>
+                                <View style={{position: 'absolute',top: 0.005 * windowHeight,left: 0.007 * windowWidth,}}><Text style={styles.nametxt} numberOfLines={1}>{profile}</Text></View>
                             </TouchableOpacity> 
                         </View>
                         )
                     })
                     }
                     </ScrollView>
-                    {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
-                    {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
-                    {/* <Text style={styles.nametxt}>Danny Devadiga</Text> */}
-                    {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dpview} />
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
+                    
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdivider.png?alt=media&token=458aa29f-e202-4bab-8393-3a7fb6994608"} style={styles.divider} />
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
 
@@ -543,10 +530,9 @@ export default function homepage({ navigation, route }) {
 
 
 
-                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer} showsVerticalScrollIndicator={false}>
+                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }} style={styles.postContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                         {postImage.map((item, index) => {
-                            // console.log(postImage);
-                            // console.log(item)
+                            
 
 
                             return (
@@ -567,17 +553,14 @@ export default function homepage({ navigation, route }) {
                                                 var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes'))
                                                 var likeData;
                                                 onValue(LikeRef, (snapshot) => {
-                                                    console.log(LikeRef)
-                                                    likeData = Object.values(snapshot.val());
-
-                                                    console.log(likeData)
-
+                                                    if(snapshot.exists())
+                                                    {likeData = Object.values(snapshot.val());}
                                                 }
                                                 );
 
 
                                                 function checkLikes(userid) {
-                                                    // console.log(likes.length)
+                                                   
                                                     for (var i = 0; i < likeData.length; i++) {
                                                         if (userid == likes[i]) return false;
                                                     }
@@ -590,21 +573,42 @@ export default function homepage({ navigation, route }) {
                                                     <TouchableOpacity onPress={() => navigation.push("SearchProfile", newItem.uid)}>
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        
                                                     </TouchableOpacity>
-                                                        <Image source={newItem.Image} style={styles.post} />
-                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
-                                                        {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    <TouchableOpacity onPress={() => 
+                                                        {
+                                                            var ReportPostRef = query(ref(db,'reported/reportedposts/'+newItem.uid+"'s Post "+newItem.PostNumber))
+                                                            var reportConfirmation =confirm("Are you sure want to report this post?") 
+                                                            if(reportConfirmation) {
+                                                            alert("Report has been considered. Admin will check this post in a short while and take necessary actions")
+                                                                push(ReportPostRef,{
+                                                                    reporter: auth.currentUser.uid,
+                                                                });  
+                                                            }
+                                                            else{
+                                                                
+                                                                }
+                                                        }}>
+                                                        <Text style={styles.reportstyle}>Report</Text>
+                                                    </TouchableOpacity>
+                                                    <Image source={newItem.Image} style={styles.post} />
+                                                    <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                    
+                                                        <View style={styles.nameGameContainer}>
+                                                            <Text style={styles.nameGame}>{newItem.GameName}</Text>
+                                                        </View>
+                                                        
                                                     
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
                                                                 width: 0.053 * windowWidth,
                                                                 height: 0.053 * windowHeight,
-                                                                top: 0.52 * windowHeight,
-                                                                left: 0.006 * windowWidth
+                                                                top: 0.58 * windowHeight,
+                                                                left: 0.006 * windowWidth,
                                                             }}
                                                             onPress={() => {
-                                                                // console.log(likes)
+                                                                
                                                                 if (!newItem.Likes.includes(auth.currentUser.uid)) {
                                                                     if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
 
@@ -622,10 +626,10 @@ export default function homepage({ navigation, route }) {
                                                             }}
                                                         >
                                                            <Image source={newItem.LikeImage} style={styles.likeImage} /> 
-                                                        </TouchableOpacity>
-                                                        {console.log(newItem.DisplayProfile)}
-                                                            
                                                         <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
+                                                        </TouchableOpacity>
+                                                        
+                                                            
                                                     </View>
                                                 )
                                             }
@@ -635,29 +639,48 @@ export default function homepage({ navigation, route }) {
                                                         <TouchableOpacity onPress={() => navigation.push("SearchProfile", newItem.uid)}>
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
-                                                        <Text style={styles.textgame}>{newItem.GameName}</Text>
+                                                       
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity onPress={() => 
+                                                            {
+                                                                var ReportPostRef = query(ref(db,'reported/reportedposts/'+newItem.uid+"'s Post "+newItem.PostNumber))
+                                                                var reportConfirmation =confirm("Are you sure want to report this post?") 
+                                                                if(reportConfirmation) {
+                                                                alert("Report has been considered. Admin will check this post in a short while and take necessary actions")
+                                                                    push(ReportPostRef,{
+                                                                        reporter: auth.currentUser.uid,
+                                                                    });  
+                                                                }
+                                                                else{
+                                                                    
+                                                                    }
+                                                            }}>
+                                                        <Text style={styles.reportstyle}>Report</Text>
                                                         </TouchableOpacity>
                                                         <Image source={newItem.Image} style={styles.post} />
                                                         <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                        <View style={styles.nameGameContainer}>
+                                                            <Text style={styles.nameGame}>{newItem.GameName}</Text>
+                                                        </View>
                                                         {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
                                                     
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
-                                                                width: 0.053 * windowWidth,
+                                                                width: 0.051 * windowWidth,
                                                                 height: 0.053 * windowHeight,
-                                                                top: 0.52 * windowHeight,
-                                                                left: 0.006 * windowWidth
+                                                                top: 0.58 * windowHeight,
+                                                                left: 0.009 * windowWidth,
                                                             }}
                                                             onPress={() => {
-                                                                // console.log(likes)
+                                                                
                                                                 if (!newItem.Likes.includes(auth.currentUser.uid)) {
                                                                     if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
 
                                                                     update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
                                                                         Likes: likeData
                                                                     })
-                                                                    console.log('hello')
+                                                                    
                                                                 }
                                                                 else {
                                                                     var ind = likeData.indexOf(auth.currentUser.uid)
@@ -669,10 +692,10 @@ export default function homepage({ navigation, route }) {
                                                             }}
                                                         >
                                                             <Image source={newItem.WhiteLike} style={styles.whiteLikeImage} />   
-                                                        </TouchableOpacity>
-                                                        {console.log(newItem.DisplayProfile)}
-                                                        
                                                         <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
+                                                        </TouchableOpacity>
+                                                        
+                                                        
                                                     </View>
                                                 )
                                             }
@@ -705,14 +728,17 @@ export default function homepage({ navigation, route }) {
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 {/* <View> */}
-                                <TextInput placeholder='Caption for your post'
+                                <TextInput placeholder='Caption for your post' maxLength={259}
                                     style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
                                 {/* </View> */}
                                 {/* <Image source={require('./homeAssets/divider.png')} style={styles.divider1} /> */}
                                 <TouchableOpacity style={[styles.button, styles.buttonClose]}
                                     onPress={() => {
-                                        setModalVisible(!modalVisible)
+                                        setModalVisible(!modalVisible);
+                                        setImage(null);
+                                        setDescription(null);
+                                        setSelectGameName(null);
                                     }}
                                 >
                                     <Text style={styles.text1}>Cancel</Text>
@@ -731,12 +757,17 @@ export default function homepage({ navigation, route }) {
                                                     uploadPost();
                                                     alert("Uploaded Successfully");
                                                     setModalVisible(!modalVisible);
+                                                    // setReset1(reset + 0.1);
+                                                    setImage(null);
+                                                    setDescription(null);
+                                                    setSelectGameName(null);
+                                                    
                                                 }
                                                
                                                 
 
                                             } catch (error) {
-                                                console.log('error');
+                                                
                                                 alert('Error')
                                             }
                                         }
@@ -755,7 +786,7 @@ export default function homepage({ navigation, route }) {
                                 </TouchableOpacity>
 
                                 <View style={styles.name}>
-                                    <Text style={styles.text2}>Select Game : </Text>
+                                    <Text style={styles.text2}>Select Game: </Text>
                                 </View>
 
                                 <ScrollView style={styles.gameScrollContainer} vertical={true}>
@@ -768,7 +799,7 @@ export default function homepage({ navigation, route }) {
                                                         onPress={() => {
                                                             setSelectGameName(item.Name)
                                                             setSelectGameCode(item.Code)
-                                                            //    console.log(item.Name)
+                                                            
                                                         }} >
                                                         <Text style={styles.gameText}>{item.Name}</Text>
                                                         {/* {setGameNames(item.Name)} */}
@@ -780,6 +811,12 @@ export default function homepage({ navigation, route }) {
 
                                     )}
                                 </ScrollView>
+                                <View style={styles.GC}>
+                                    <Text style={styles.textgame2}>Selected Game</Text>
+                                </View>
+                                <View style={styles.selected}>
+                                    <Text style={styles.textgame}>{selectGameName}</Text>
+                                </View>
 
                             </View>
                         </View>
@@ -808,6 +845,7 @@ const styles = StyleSheet.create({
     },
 
     friendscroll: {
+        position: "absolute",
         flexGrow: 0.1,
         width: 275 / 1440 * windowWidth,
         left: 5 / 1440 * windowWidth,
@@ -882,9 +920,13 @@ const styles = StyleSheet.create({
         "fontWeight": "500",
         "fontSize": 18,
         "color": "#FFFFFF",
-        position: 'absolute',
-        top: 0.01 * windowHeight,
-        left: 0.02 * windowWidth
+        // position: 'absolute',
+        // top: 0.005 * windowHeight,
+        // left: 0.007 * windowWidth,
+        width: 0.113 * windowWidth,
+        height: 0.03 * windowHeight,
+        lineHeight: 18,
+        // backgroundColor: 'rgba(255, 255, 255,0.5)',
     },
 
     posttxt: {
@@ -926,8 +968,24 @@ const styles = StyleSheet.create({
     text2: {
         "fontStyle": "normal",
         "fontWeight": "bold",
-        "fontSize": 18,
+        "fontSize": 15,
         "color": "white",
+    },
+
+    textgame: {
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 15,
+        "color": "black",
+        textAlign: 'center'
+    },
+
+    textgame2: {
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 15,
+        "color": "white",
+        textAlign: 'center'
     },
 
     homebtn: {
@@ -1000,8 +1058,8 @@ const styles = StyleSheet.create({
 
     dpview: {
         position: "absolute",
-        top: 0 * windowHeight,
-        left: -0.02 * windowWidth,
+        top: -0.005 * windowHeight,
+        left: -0.033 * windowWidth,
         width: 0.05 * windowHeight,
         height: 0.05 * windowHeight,
         borderRadius: 0.065 * windowHeight,
@@ -1025,14 +1083,16 @@ const styles = StyleSheet.create({
         width: "3px",
     },
 
-    // divider1:{
-    //     position:"absolute",
-    //     top:0.2*windowHeight,
-    //     left:0.02*windowWidth,
-    //     resizeMode:'contain',
-    //     height: 0.3*windowHeight,
-    //     width: 0.01*windowWidth,
-    // },
+    reportstyle: {
+        position: "absolute",
+        top: 0.045 * windowHeight,
+        right: 0.02 * windowWidth,
+        height: 0.024 * windowHeight,
+        width: 0.035 * windowWidth,
+        textAlign: "center",
+        "color": '#ffffff',
+        backgroundColor: 'rgba(255, 69, 81,1)',
+    },
 
     searchIcon: {
         position: "absolute",
@@ -1250,9 +1310,9 @@ const styles = StyleSheet.create({
     textInput: {
         position: 'absolute',
         width: 0.54 * windowWidth,
-        height: 0.08 * windowHeight,
+        height: 0.06 * windowHeight,
         paddingLeft: '15px',
-        top: '20px',
+        top: '15px',
         backgroundColor: 'white'
     },
 
@@ -1261,7 +1321,26 @@ const styles = StyleSheet.create({
         // width: 0.15*windowWidth,
         // height: 0.*windowHeight,
         left: 0.02 * windowWidth,
-        top: 0.14 * windowHeight
+        top: 0.17 * windowHeight
+    },
+
+    GC: {
+        position: 'absolute',
+        // width: 0.15*windowWidth,
+        // height: 0.*windowHeight,
+        left: 0.02 * windowWidth,
+        top: 0.085 * windowHeight
+    },
+
+    selected:{
+        position: 'absolute',
+        width: 0.15 * windowWidth,
+        height: 0.05 * windowHeight,
+        left: 0.02 * windowWidth,
+        top: 0.116 * windowHeight,
+        borderColor: 'green',
+        backgroundColor: 'white',
+        textAlign: 'center'
     },
 
     gameScrollContainer: {
@@ -1269,7 +1348,7 @@ const styles = StyleSheet.create({
         width: 0.15 * windowWidth,
         height: 0.3 * windowHeight,
         left: 0.02 * windowWidth,
-        top: 0.19 * windowHeight,
+        top: 0.207 * windowHeight,
         // flexGrow: 0.1,
         // justifyContent: 'space-between',
         // backgroundColor: 'white'
@@ -1288,10 +1367,12 @@ const styles = StyleSheet.create({
     allPost: {
         // position: 'absolute',
         width: 0.55 * windowWidth,
-        height: 0.62 * windowHeight,
-        marginTop: '10px',
-        //backgroundColor: 'cyan',
+        height: 0.65 * windowHeight,
+        // paddingTop: '50px',
+        marginTop: '20px',
+        // backgroundColor: 'cyan',
         left: 0.01 * windowWidth,
+        top: 0.01 * windowHeight,
         flexGrow: 0.1
         // width: '100%',
         // height: '100%',
@@ -1303,10 +1384,10 @@ const styles = StyleSheet.create({
         width: 0.52 * windowWidth,
         height: 0.52 * windowHeight,
         left: 0.01 * windowWidth,
-        marginTop: 0.09 * windowHeight,
+        marginTop: 0.137 * windowHeight,
         // width: '100%',
         // height: '100%',
-        // flex: 1
+        // flexGrow: 0.1
 
     },
 
@@ -1320,10 +1401,10 @@ const styles = StyleSheet.create({
     whiteLikeImage:{
         position: 'absolute',
         // resizeMode: 'contain',
-        width: 0.045*windowWidth,
-        height: 0.045*windowHeight,
-        left: 0.0001*windowWidth,
-        marginTop: 0.01 * windowHeight,
+        width: 0.042*windowWidth,
+        height: 0.044*windowHeight,
+        left: -0.002*windowWidth,
+        marginTop: 0.007 * windowHeight,
         // width: '80%',
         // height: '80%',
         // marginBottom: '2px'
@@ -1337,6 +1418,7 @@ const styles = StyleSheet.create({
         borderRadius: 0.065 * windowHeight,
         top: 0.01 * windowHeight,
         left: 0.01 * windowWidth,
+        
     },
 
     profileName: {
@@ -1351,23 +1433,40 @@ const styles = StyleSheet.create({
     },
 
     textgame:{
+        "fontStyle": "normal",
+        "fontWeight": "bold",
+        "fontSize": 15,
+        "color": "black",
+        textAlign: 'center'
+        
+    },
+
+    nameGameContainer: {
         position: 'absolute',
-        color: 'grey',
-        fontWeight: 'bold',
-        fontSize: 16,
-        left: 0.15 * windowWidth,
-        top: 0.025 * windowHeight
+        top: 0.055 * windowHeight,
+        borderWidth:2,
+        borderColor:"blue",
+        left: 0.05 * windowWidth,
+        // backgroundColor: 'rgba(255, 69, 81,1)',
+    },
+
+    nameGame: {
+        // position: 'absolute',
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 15,
+
     },
 
     displayDescription: {
         position: 'absolute',
         color: 'white',
         fontWeight: 'normal',
-        textAlign: 'center',
-        fontSize: 16,
-        paddingLeft: '20px',
+        textAlign: 'justified',
+        fontSize: 15,
+        paddingLeft: '5px',
         // marginTop: '15px',
-        top: 0.065 * windowHeight,
+        top: 0.089 * windowHeight,
         left: 0.01 * windowWidth,
         flexGrow: 0.1
     },
@@ -1378,8 +1477,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 26,
-        top: 0.525 * windowHeight,
-        left: 0.05 * windowWidth
+        top: 0.005 * windowHeight,
+        left: 0.045 * windowWidth
     },
 
     

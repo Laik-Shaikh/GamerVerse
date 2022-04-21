@@ -36,7 +36,8 @@ export default function Login({ navigation ,route}) {
             Name: auth.currentUser.email,
             DisplayPicture: "https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FgamerverseLogo.png?alt=media&token=3d00f4ad-dd05-42e1-bb74-ba166ab2e0aa",
             aboutMe:"Hey, I am "+auth.currentUser.email,
-            PostCount: 0
+            PostCount: 0, 
+            privacyStatus:1
           })
 }
 
@@ -57,8 +58,7 @@ export default function Login({ navigation ,route}) {
                   <TouchableOpacity style={styles.Button} title='Register' secureTextEntry={true}onPress={
                     async () => {
                       try {
-                        console.log(fire.auth);
-                        console.log(UName+" "+PWord+" "+ConfirmPWord);
+                        
                         if(PWord==ConfirmPWord){ 
                           await createUserWithEmailAndPassword(auth,UName,PWord).then(()=>{
                             sendEmailVerification(auth.currentUser).then(()=>{
@@ -79,7 +79,7 @@ export default function Login({ navigation ,route}) {
                         setUName(" ");
                          
                       } catch (error) {
-                        console.log(error);
+                        
                         alert('Some error has occured');
                       }
                     }
@@ -89,13 +89,12 @@ export default function Login({ navigation ,route}) {
                   <TouchableOpacity style={styles.Google} onPress={() => {
                     signInWithPopup(auth, provider)
                     .then((result) => {
-                      console.log(auth,provider)
+                      
                       const credential = GoogleAuthProvider.credentialFromResult(result);
                       const token = credential.accessToken;
                       const user = result.user;
                       const { isNewUser } = getAdditionalUserInfo(result)
-                      console.log(user)
-                      console.log(token)
+                     
                       if (isNewUser) {
                         createFirebaseData();
                         navigation.push("CreateProfile")

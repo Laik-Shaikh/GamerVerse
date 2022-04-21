@@ -24,41 +24,32 @@ export default function MyGamesPage ({ navigation, route }){
     const GameRef = query(ref(db,'games'))
     // const gameImage = query(ref(db, 'games'),equalTo('P0'))
     const UserRef = query(ref(db,'users/' + auth.currentUser.uid + '/Games'))
-    console.log(UserRef);
-    console.log(GameRef);
-    // console.log(ImageCode);
+  
     
     React.useEffect(() => {
         onValue(GameRef, (snapshot) => {
             const data = Object.values(snapshot.val());
             setGames(data)
-            console.log(data)
+            
         })
 
         onValue(UserRef, (snapshot) => {
             const data1 = Object.values(snapshot.val());
             setDisplayGame(data1)
-            console.log(data1)
+            
             }
         )
         
-        // onValue(gameImage, (snapshot) => {
-        //     const data2 = Object.values(snapshot.val)
-        //     setDisplayGame(data2)
-        //     console.log(data2)
-        // }
-        // )
+        
 
     },[])
 
-    console.log(games)
-    console.log(displayGame);
-    // console.log(displayGame[1].charAt(0))
+    
 
     var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
-            navigation.push("SearchName", { textInputValue })
-            console.log('search started')
+            navigation.push("SearchPage", { textInputValue })
+            
         }
     }
 
@@ -75,7 +66,7 @@ export default function MyGamesPage ({ navigation, route }){
 
     function renderSug() {
         if (!selectedValue) {
-            console.log(location)
+            
             return (<FlatList
 
                 data={location}
@@ -85,7 +76,7 @@ export default function MyGamesPage ({ navigation, route }){
                     return (
                         <TouchableOpacity style={styles.item} onPress={() => {
                             setSelectedValue(suggestion.item.Location)
-                            navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                            navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                         }
 
                         }>
@@ -185,13 +176,13 @@ export default function MyGamesPage ({ navigation, route }){
             <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style = {styles.scrollContainer1} showsVerticalScrollIndicator={false}>
             {games.map((item, index) =>{
                      if(displayGame.includes(item.Code)){   
-                        console.log(item.Code)
+                        
                         var computer = item.Code
 
                         if(computer.charAt(0) === "P"){
                             return (
                                 <View key={index} >   
-                                    {/* {console.log(computer)} */}
+                                    
                                     <TouchableOpacity style={styles.imgContainer} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
@@ -209,13 +200,13 @@ export default function MyGamesPage ({ navigation, route }){
             <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style = {styles.scrollContainer2} showsVerticalScrollIndicator={false}>
             {games.map((item, index) =>{
                      if(displayGame.includes(item.Code)){   
-                        console.log(item.Code)
+                        
                         var mobile= item.Code
 
                         if(mobile.charAt(0) === "M"){
                             return (
                                 <View key={index} >   
-                                    {/* {console.log(computer)} */}
+                                  
                                     <TouchableOpacity style={styles.imgContainer} onPress={() => navigation.push("Game", { GameCode: item.Code })}>
                                     <Image source={item.Image}
                                         style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
@@ -233,13 +224,13 @@ export default function MyGamesPage ({ navigation, route }){
             <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style = {[styles.scrollContainer3]} showsVerticalScrollIndicator={false}>
             {games.map((item, index) =>{
                      if(displayGame.includes(item.Code)){   
-                        console.log(item.Code)
+                        
                         var consoleGame= item.Code
 
                         if(consoleGame.charAt(0) === "C"){
                             return (
                                 <View key={index} >   
-                                    {/* {console.log(computer)} */}
+                                    
                                     <TouchableOpacity style={[styles.imgContainer]} onPress={() => navigation.push("Game", { GameCode: item.Code})}>
                                     <Image source={item.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
                                     </TouchableOpacity>

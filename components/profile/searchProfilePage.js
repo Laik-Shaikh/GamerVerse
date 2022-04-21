@@ -7,7 +7,7 @@ import fire from '../firebase';
 import 'firebase/database'
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
-import { getDatabase, onValue,ref,query, orderByChild, equalTo, startAt,endAt ,update ,get} from "firebase/database";
+import { getDatabase, onValue,ref,query, orderByChild, equalTo, startAt,endAt ,update ,push,get} from "firebase/database";
 
 
 const windowWidth = Dimensions.get('screen').width;
@@ -31,16 +31,17 @@ export default function searchProfilePage ({ navigation, route }){
       var myfriends = [ "YY" ];
       var status=1;
       const UserRef = query(ref(db,'users/'+ profileUid))
+      const ReportUserRef = query(ref(db,'reported/profiles/'+profileUid))
       const UserRef2 = query(ref(db,'users/'+ auth.currentUser.uid))
       const profileRef = query(ref(db,'users'),orderByChild('uid'),equalTo(profileUid))
       const GetUserRef = query(ref(db,'users'),orderByChild('uid'),equalTo( auth.currentUser.uid))
-      console.log(profileRef)
+      
       React.useEffect(() => {
       onValue(profileRef,(snapshot)=>{
         try{
         const data = Object.values(snapshot.val());
         setProfileInfo(data[0])
-        } catch(e) { console.log(e); }
+        } catch(e) {  }
       })
       onValue(GetUserRef,(snapshot)=>{
         const data1 = Object.values(snapshot.val());
@@ -52,7 +53,7 @@ export default function searchProfilePage ({ navigation, route }){
     })
 
     get(query(ref(db, 'games/'))).then((snapshot) => {
-        console.log(Object.values(snapshot.val()))
+        
         setGameData(Object.values(snapshot.val()))
     })
     
@@ -60,10 +61,11 @@ export default function searchProfilePage ({ navigation, route }){
 
   var handleSearch = (e) => {
     if (e.nativeEvent.key == 'Enter') {
-        navigation.push("SearchName", { textInputValue })
-        console.log('search started')
+        navigation.push("SearchPage", { textInputValue })
+        
     }
 }
+
 
 const getLocations = async (loc) => {
     if (loc) {
@@ -78,7 +80,7 @@ const getLocations = async (loc) => {
 
 function renderSug() {
     if (!selectedValue) {
-        console.log(location)
+        
         return (<FlatList
 
             data={location}
@@ -88,7 +90,7 @@ function renderSug() {
                 return (
                     <TouchableOpacity style={styles.item} onPress={() => {
                         setSelectedValue(suggestion.item.Location)
-                        navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                        navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                     }
 
                     }>
@@ -101,9 +103,9 @@ function renderSug() {
     }
 }
 
-  console.log(userInfo)
-  console.log(profileInfo)
+ 
   if(profileInfo && userInfo){
+    var privacy = profileInfo.privacyStatus;
     requests = profileInfo.RequestedProfiles;
     friends = profileInfo.ConfirmedProfiles;
     myfriends = userInfo.ConfirmedProfiles;
@@ -161,7 +163,7 @@ function renderSug() {
         )
 }
 
-  if (profileInfo && status ==3 ){
+  if (profileInfo && status ==3 && privacy==0){
     return (
             <View style={styles.container} >
                 <LinearGradient
@@ -171,7 +173,23 @@ function renderSug() {
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
-                    
+                    <TouchableOpacity style={styles.report} onPress={() => 
+                    {
+                        var reportConfirmation =confirm("Are you sure want to report this user?") 
+                           if(reportConfirmation) {
+                           
+                           alert("Report has been considered. Admin will check the account in a short while and take necessary actions")
+                            push(ReportUserRef,{
+                                reporter: auth.currentUser.uid,
+                              });  
+                           }
+                           else{
+                            
+                            }
+                    }
+                    }>
+                    <Text style={styles.uploadText}>Report</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
@@ -243,7 +261,7 @@ function renderSug() {
                     </TouchableOpacity>
                     
                     <View style={styles.divider1}/>
-                    {console.log(profileInfo.Name)}
+                    
                     <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Name}</Text>
@@ -300,6 +318,161 @@ function renderSug() {
             </View>
     );
   }
+  if (profileInfo && status ==3 && privacy==1){
+    return (
+            <View style={styles.container} >
+                <LinearGradient
+                    start={{ x: 0, y: 1}} end={{ x: 0, y: -1 }}
+                    colors={['#013C00', '#000000']}
+                    style={styles.background} >
+                    <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
+                    <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
+                    <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
+                    <TouchableOpacity style={styles.report} onPress={() => 
+                    {
+                        var reportConfirmation =confirm("Are you sure want to report this user?") 
+                           if(reportConfirmation) {
+                           
+                           alert("Report has been considered. Admin will check the account in a short while and take necessary actions")
+                            push(ReportUserRef,{
+                                reporter: auth.currentUser.uid,
+                              });  
+                           }
+                           else{
+                           
+                            }
+                    }
+                    }>
+                    <Text style={styles.uploadText}>Report</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
+                    <   Text style={styles.robototxt}>Home</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.profilebtn}  onPress={() => navigation.push("Profile")}>
+                        <Text style={styles.highlighttxt}>Profile</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
+                        <Text style={styles.robototxt}>My Games</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
+                        <Text style={styles.robototxt}>Game Hub</Text>
+                    </TouchableOpacity>
+                    
+                    <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
+                    <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
+                    ></TextInput>
+                    {renderSug()}
+                    <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
+
+                    
+                    <View style={styles.photoContainer}>
+                        <Text style={styles.headTxt}>My Photo</Text>
+                        <Image source={profileInfo.DisplayPicture} style = {styles.dpicture}/>
+                    </View>
+                    
+                    <View style={styles.aboutMeContainer}>
+                        <Text style={styles.headTxt}>About Me</Text>
+                        <Text style={styles.aboutMeTxt}>{profileInfo.aboutMe}</Text>
+                    </View>
+                    
+                    <TouchableOpacity style={styles.Button} title='Edit'
+                    onPress={() => 
+                        {
+                            if (!userFollowCheck(auth.currentUser.uid))
+                            {
+                                var friendindex = friendRemover()
+                                delete friends[friendindex];
+                                var friendindex2 = friendRemover2()
+                                delete myfriends[friendindex2];
+                                update(UserRef2, {
+                                    ConfirmedProfiles: myfriends,
+                                  });  
+                                }
+                                update(UserRef, {
+                                    ConfirmedProfiles: friends,
+                                  });  
+                        }}>
+                        <Text style={styles.ButtonText}>Unfollow</Text>
+                    </TouchableOpacity>
+                    
+                    <View style={styles.divider1}/>
+                    
+                    <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
+                        <Text style={styles.infoHeadTxt}>Name</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Name}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.27*windowHeight,}]}>
+                        <Text style={styles.infoHeadTxt}>Location</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>This person has chosen to hide this information.</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.39*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
+                        <Text style={styles.infoHeadTxt}>Phone Number</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>This person has chosen to hide this information</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.51*windowHeight,}]}>
+                        <Text style={styles.infoHeadTxt}>Email</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>This person has chosen to hide this information</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.63*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
+                        <Text style={styles.infoHeadTxt}>Discord Id</Text>
+                        <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.DiscordId}</Text>
+                    </View>
+                    
+                    <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
+                        <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
+                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
+                            style={styles.scrollContainer2} horizontal={true}
+                            showsHorizontalScrollIndicator={false}>
+                            {
+
+                                gameData.map((game, index) => {
+                                    if (myGames.includes(gameData[index].Code)) {
+                                        return (
+                                            <View key={index}>
+                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
+                                                    <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                                    <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    }
+                                })
+
+                            }
+
+                        </ScrollView>
+                    </View>
+                    
+                    <View style={styles.divider2}/>
+                    
+                    </LinearGradient>
+            </View>
+    );
+  }
   if (profileInfo && status ==  2){
     return (
             <View style={styles.container} >
@@ -310,7 +483,21 @@ function renderSug() {
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
-                    
+                    <TouchableOpacity style={styles.report} onPress={() => {
+                        var reportConfirmation =confirm("Are you sure want to report this user?") 
+                        if(reportConfirmation) {
+                        
+                        alert("Report has been considered. Admin will check the account in a short while and take necessary actions")
+                         push(ReportUserRef,{
+                             reporter: auth.currentUser.uid,
+                           });  
+                        }
+                        else{
+                         
+                         }
+                    }}>
+                    <Text style={styles.uploadText}>Report</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
@@ -319,11 +506,11 @@ function renderSug() {
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -374,7 +561,7 @@ function renderSug() {
                     </TouchableOpacity>
                     
                     <View style={styles.divider1}/>
-                    {console.log(profileInfo.Name)}
+                    
                     <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Name}</Text>
@@ -421,7 +608,22 @@ function renderSug() {
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
                     <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
-                    
+                    <TouchableOpacity style={styles.report} onPress={() => 
+                    {
+                        var reportConfirmation =confirm("Are you sure want to report this user?") 
+                           if(reportConfirmation) {
+                           
+                           alert("Report has been considered. Admin will check the account in a short while and take necessary actions")
+                            push(ReportUserRef,{
+                                reporter: auth.currentUser.uid,
+                              });  
+                           }
+                           else{
+                            
+                            }
+                    }}>
+                    <Text style={styles.uploadText}>Report</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.homebtn}  onPress={() => navigation.push("Home")}>
                     <   Text style={styles.robototxt}>Home</Text>
                     </TouchableOpacity>
@@ -430,11 +632,11 @@ function renderSug() {
                         <Text style={styles.highlighttxt}>Profile</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
                         <Text style={styles.robototxt}>My Games</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("")}>
+                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
                         <Text style={styles.robototxt}>Game Hub</Text>
                     </TouchableOpacity>
                     
@@ -476,7 +678,7 @@ function renderSug() {
                     onPress={() => 
                         {
                             if (userFollowCheck(auth.currentUser.uid)) requests.push(auth.currentUser.uid);
-                            console.log(requests);
+                            
                             update(UserRef, {
                                 RequestedProfiles: requests,
                               });   
@@ -485,7 +687,7 @@ function renderSug() {
                     </TouchableOpacity>
                     
                     <View style={styles.divider1}/>
-                    {console.log(profileInfo.Name)}
+                    
                     <View style={[styles.infoContainer,{top: 0.15*windowHeight,backgroundColor: "rgba(255, 255, 255, 0.15)"}]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
                         <Text style={[styles.infoHeadTxt,{left: 0.2*windowWidth}]}>{profileInfo.Name}</Text>
@@ -542,6 +744,24 @@ const styles = StyleSheet.create({
         resizeMode:'contain',
         height: 0.1*windowHeight,
         width: 0.35*windowWidth,
+    },
+    report: {
+        position: 'absolute',
+        width: 0.087 * windowWidth,
+        height: 0.03 * windowHeight,
+        top: 0.05 * windowHeight,
+        left: 0.875 * windowWidth,
+        backgroundColor: 'red',
+        textAlign: 'center',
+        borderRadius: '2px'
+    },
+    
+    uploadText: {
+        "fontStyle": 'normal',
+        "fontSize": 15,
+        "fontWeight": 'bold',
+        "color": '#ffffff',
+        paddingTop: "2px"
     },
     menu:{
         position:"absolute",

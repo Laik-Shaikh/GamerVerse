@@ -15,7 +15,7 @@ const windowHeight = Dimensions.get('screen').height;
 export default function gamepage({ navigation, route }) {
     const auth = getAuth();
     var {GameCode} = route.params
-    console.log(GameCode)
+    
     var [gameInfo,setGameInfo] = React.useState()
     const [userInfo,setUserInfo] = React.useState()
     const [textInputValue, setTextInputValue] = React.useState('');
@@ -30,7 +30,7 @@ export default function gamepage({ navigation, route }) {
     var GameRef = query(ref(db,'games'),orderByChild('Code'),equalTo(GameCode))
     const UserRef = query(ref(db,'users/'+ auth.currentUser.uid))
     var GetUserRef = query(ref(db,'users'),orderByChild('uid'),equalTo( auth.currentUser.uid))
-    console.log(GameRef)
+    
     React.useEffect(() => {
     onValue(GameRef,(snapshot)=>{
         var data = Object.values(snapshot.val());
@@ -41,19 +41,18 @@ export default function gamepage({ navigation, route }) {
         setUserInfo(data1[0])
     })
 },[])
-console.log(gameInfo)
-console.log(userInfo)
+
 // code for displaying tags
 if(gameInfo){
 gameTags = gameInfo.Tags;
-console.log(gameTags);
+
 tagArray = Object.entries(gameTags);
-console.log(tagArray)
+
 }
 var handleSearch = (e) => {
     if (e.nativeEvent.key == 'Enter') {
-        navigation.push("SearchName", { textInputValue })
-        console.log('search started')
+        navigation.push("SearchPage", { textInputValue })
+        
     }
 }
 
@@ -70,7 +69,7 @@ const getLocations = async (loc) => {
 
 function renderSug() {
     if (!selectedValue) {
-        console.log(location)
+        
         return (<FlatList
 
             data={location}
@@ -80,7 +79,7 @@ function renderSug() {
                 return (
                     <TouchableOpacity style={styles.item} onPress={() => {
                         setSelectedValue(suggestion.item.Location)
-                        navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                        navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                     }
 
                     }>
@@ -123,8 +122,6 @@ if(!gameInfo)
                     colors={['#013C00', '#000000']}
                     style={[styles.background,{width: '100%', height: '100%'}]} >
                     <ActivityIndicator size="large" color="#00ff00" style={{ top: "40%" }} />
-                    {/* <View style={styles.loading}>
-                    </View> */}
                 </LinearGradient>
         </View>
         )
@@ -188,7 +185,7 @@ if(!gameInfo)
                     <Text style={styles.ratingTxt}>Tag</Text>
                 </View>
                 <View style={styles.gameContainer}>
-                    <Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text>
+                <View style={{alignItems: "center", top: 0.02*windowHeight,}}><Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text></View>
                     <Image source={gameInfo.Image} style={styles.dpicture}></Image>
                 <TouchableOpacity style={styles.Button} title='Follow' 
                 onPress={() => 
@@ -206,7 +203,7 @@ if(!gameInfo)
                 </View>
                 <View style={styles.tagContainer}>
                     {tagArray.map(([key, value]) => {
-                        console.log(key);
+                        
                         return (
                             <View
                             key={key}
@@ -295,7 +292,7 @@ else{
                     <Text style={styles.ratingTxt}>Tag</Text>
                 </View>
                 <View style={styles.gameContainer}>
-                    <Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text>
+                    <View style={{alignItems: "center", top: 0.02*windowHeight,}}><Text style={styles.gameTitleTxt}>{gameInfo.Name}</Text></View>
                     <Image source={gameInfo.Image} style={styles.dpicture}></Image>
                 <TouchableOpacity style={styles.Button} title='Unfollow' 
                 onPress={() => 
@@ -316,7 +313,7 @@ else{
                 </View>
                 <View style={styles.tagContainer}>
                     {tagArray.map(([key, value]) => {
-                        console.log(key);
+                        
                         return (
                             <View
                             key={key}
@@ -470,7 +467,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 136 / 1440 * windowWidth,
     height: 53 / 1024 * windowHeight,
-    left: 400 / 1440 * windowWidth,
+    left: 433 / 1440 * windowWidth,
     top: 330 / 1024 * windowHeight,
     backgroundColor: "#39750A",
     borderTopLeftRadius: 2,
@@ -588,8 +585,8 @@ const styles = StyleSheet.create({
 
       gameTitleTxt:{
         position: "absolute",
-        left: 0.28*windowWidth,
-        top: 0.02*windowHeight,
+        // left: 0.28*windowWidth,
+        // top: 0.02*windowHeight,
         fontFamily: "Roboto",
         fontStyle: "normal",
         fontWeight: "500",
@@ -642,7 +639,7 @@ const styles = StyleSheet.create({
     dpicture:{
         position: "absolute",
         top:0.08*windowHeight,
-        left:0.27*windowWidth,
+        left:0.29*windowWidth,
         width:0.20*windowHeight,
         height:0.20*windowHeight,
         backgroundColor: "rgba(120, 225, 100, 0.2)"

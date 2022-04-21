@@ -4,6 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import fire from '../firebase';
 import 'firebase/auth';
 import { getAuth} from "firebase/auth";
+import 'firebase/database'
+import {getDatabase,get,ref} from "firebase/database"
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -11,7 +13,8 @@ const windowHeight = Dimensions.get('screen').height;
 
 export default function Intro({ navigation }) {
   const auth = getAuth();
-console.log(auth.currentUser)
+  const db = getDatabase();
+
 
 return (
     <View style={styles.container}>
@@ -21,7 +24,18 @@ return (
                     style={styles.background} >
                         <TouchableOpacity  onPress={() => 
                     {if (auth.currentUser) {
-                        navigation.push("Home")
+                      if(auth.currentUser.emailVerified){
+                        get(ref(db,'users/'+auth.currentUser.uid+'/PhoneNumber')).then((snapshot)=>{
+                          if(snapshot.val()=='0000000000'){
+                            navigation.push("CreateProfile")
+                          }else{
+                            navigation.push("Home")
+                          }
+                        })
+                      }
+                       else{
+                         navigation.push("Home")
+                       }
                       }
                       else {
                           navigation.push("Login")

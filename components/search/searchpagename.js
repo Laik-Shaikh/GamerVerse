@@ -19,7 +19,7 @@ export default function searchpagename ({ navigation, route }){
         search: '',
       })
       var {textInputValue} = route.params
-      console.log(textInputValue)
+      
       var [userInfo,setUserInfo] = React.useState()
       var [searchedGame,setSearchedGame] = React.useState()
       var [locInfo,setLocInfo] = React.useState()
@@ -32,13 +32,12 @@ export default function searchpagename ({ navigation, route }){
       var searchRef = query(ref(db,'users'),orderByChild('Name'))
       var searchGameRef = query(ref(db,'games'),orderByChild('Name'))
       var searchLocRef = query(ref(db,'users'),orderByChild('Location'),equalTo(textInputValue))
-      console.log('searchRef')
-      console.log(searchRef)
+      
       var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
           textInputValue =(searchAgain);
           if(textInputValue.length>0 && textInputValue!=" "){
-            navigation.push("SearchName", {textInputValue})
+            navigation.push("SearchPage", {textInputValue})
           }
          
       }
@@ -48,31 +47,30 @@ export default function searchpagename ({ navigation, route }){
         try{
         const data = Object.values(snapshot.val());
         setUserInfo(data)
-        } catch(e) { console.log(e); }
+        } catch(e) {  }
       })
       onValue(searchGameRef,(snapshot)=>{
         try{
         const data1 = Object.values(snapshot.val());
         setSearchedGame(data1)
-        } catch(e) { console.log(e); }
+        } catch(e) {  }
       })
       onValue(searchLocRef,(snapshot)=>{
         try{
         const data2 = Object.values(snapshot.val());
         setLocInfo(data2)
-        } catch(e) { console.log(e) }
+        } catch(e) {  }
 
       })
   },[])
 
-  console.log(userInfo)
-  console.log(searchedGame)
+  
 
   var handleSearch = (e) => {
     if (e.nativeEvent.key == 'Enter') {
         textInputValue=(textInputValue2)
-        navigation.push("SearchName", { textInputValue })
-        console.log('search started')
+        navigation.push("SearchPage", { textInputValue })
+        
     }
 }
 
@@ -89,7 +87,7 @@ const getLocations = async (loc) => {
 
 function renderSug() {
     if (!selectedValue) {
-        console.log(location)
+        
         return (<FlatList
 
             data={location}
@@ -99,7 +97,7 @@ function renderSug() {
                 return (
                     <TouchableOpacity style={styles.item} onPress={() => {
                         setSelectedValue(suggestion.item.Location)
-                        navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                        navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                     }
 
                     }>
@@ -117,7 +115,7 @@ function renderSug() {
       if(locInfo){
       return(
       locInfo.map((profile, index) => {
-          console.log()
+          
         if(profile.Location.toLowerCase().includes(textInputValue.toLowerCase()) ){
             if(!(profile.uid==auth.currentUser.uid)){
                 printed=true;
@@ -164,7 +162,7 @@ function renderGame(){
         return (
             <View key={index} style={{"left": 0/1440 * windowWidth, "top": -50/1024 * windowHeight, flex: 1, marginVertical:35, paddingBottom: 170}}>
                 <View style={styles.infoContainer}>
-                {console.log(game.Code)}
+                
                 <TouchableOpacity onPress={() => navigation.push("Game",{ GameCode: game.Code })}>
                     <Image source={game.Image} style = {styles.gameLogo}/>
                     <Text style={styles.gameNameTitle}>{game.Name}</Text>

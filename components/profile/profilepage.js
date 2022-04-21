@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Image, Dimensions, ImageBackground, Text, TouchableOpacity, FlatList, TextInput, ScrollView ,ActivityIndicator} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
-
+import { StackActions } from '@react-navigation/native';
 import fire from '../firebase';
 import 'firebase/auth';
 import { getAuth } from "firebase/auth";
@@ -10,6 +10,8 @@ import 'firebase/database'
 import { getDatabase, onValue, ref, query, orderByChild, equalTo, update, get, push,startAt,endAt } from "firebase/database";
 import { getStorage, ref as strRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
+import { NavigationActions } from 'react-navigation';
+import { CommonActions } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -48,7 +50,7 @@ export default function profilepage({ navigation, route }) {
             quality: 1,
         });
 
-        console.log(result);
+        
 
         if (!result.cancelled) {
             setImage(result.uri);
@@ -58,11 +60,11 @@ export default function profilepage({ navigation, route }) {
     const db = getDatabase();
     const profileRef = query(ref(db, 'users'), orderByChild('uid'), equalTo(profileUid))
     const picUpdateRef = query(ref(db, 'users/' + profileUid))
-    console.log(profileRef)
+    
     React.useEffect(() => {
         onValue(profileRef, (snapshot) => {
             const data = Object.values(snapshot.val());
-            console.log(data)
+           
             setUserInfo(data)
         })
 
@@ -71,7 +73,7 @@ export default function profilepage({ navigation, route }) {
         })
 
         get(query(ref(db, 'games/'))).then((snapshot) => {
-            console.log(Object.values(snapshot.val()))
+            
             setGameData(Object.values(snapshot.val()))
         })
 
@@ -84,7 +86,6 @@ export default function profilepage({ navigation, route }) {
         let json = await response.json();
         setLocation(json.suggestions);
       }
-
     function renderSug() {
         if (!selectedValue) {
             return (
@@ -112,8 +113,8 @@ export default function profilepage({ navigation, route }) {
 
     var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
-            navigation.push("SearchName", { textInputValue })
-            console.log('search started')
+            navigation.push("SearchPage", { textInputValue })
+            
         }
     }
 
@@ -130,7 +131,7 @@ export default function profilepage({ navigation, route }) {
 
     function renderSearchSug() {
         if (!searchSelectedValue) {
-            console.log(searchLocation)
+            
             return (<FlatList
 
                 data={searchLocation}
@@ -140,7 +141,7 @@ export default function profilepage({ navigation, route }) {
                     return (
                         <TouchableOpacity style={styles.searchItem} onPress={() => {
                             setSelectedValue(suggestion.item.Location)
-                            navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                            navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                         }
 
                         }>
@@ -191,8 +192,7 @@ export default function profilepage({ navigation, route }) {
 
             let LocUploadRef = query(ref(db,'locations/'),orderByChild('LocationLower'),equalTo(selectedValue.toLowerCase()))
             get(LocUploadRef).then((snapshot) => {
-              console.log("Snapshot exists?: " + snapshot.exists())
-              console.log(snapshot.val())
+              
               if(!snapshot.exists()){
                 push(ref(db,'locations/'),{
                   Location: selectedValue,
@@ -223,8 +223,7 @@ export default function profilepage({ navigation, route }) {
 
                     let LocUploadRef = query(ref(db,'locations/'),orderByChild('LocationLower'),equalTo(selectedValue.toLowerCase()))
                     get(LocUploadRef).then((snapshot) => {
-                      console.log("Snapshot exists?: " + snapshot.exists())
-                      console.log(snapshot.val())
+                      
                       if(!snapshot.exists()){
                         push(ref(db,'locations/'),{
                           Location: selectedValue,
@@ -250,7 +249,7 @@ export default function profilepage({ navigation, route }) {
                     </View> */}
                 </LinearGradient>
             </View>
-            )
+            );
     }
     if (nowEditable) {
         return (
@@ -292,12 +291,12 @@ export default function profilepage({ navigation, route }) {
 
                     <View style={styles.aboutMeContainer}>
                         <Text style={styles.headTxt}>About Me</Text>
-                        <TextInput style={[styles.aboutMeTxt, {width: 0.173 * windowWidth}]} placeholder='Enter your description here'
+                        <TextInput style={[styles.aboutMeTxt, {width: 0.173 * windowWidth}]} maxLength={586} placeholder='Enter your description here'
                             onChangeText={(text) => setNewAbout(text)}></TextInput>
                     </View>
 
                     <TouchableOpacity style={styles.Button} title='Done' onPress={() => {
-                        console.log("Done btn pressed")
+                        
                         sendFirebaseData()
                         nowEditable = false;
                         navigation.push("Profile", nowEditable)
@@ -309,7 +308,7 @@ export default function profilepage({ navigation, route }) {
                     <View style={styles.divider1} />
                     <View style={[styles.infoContainer, { top: 0.15 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
                         <Text style={styles.infoHeadTxt}>Name</Text>
-                        <TextInput style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}
+                        <TextInput style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]} maxLength={20}
                             placeholder='Enter new name'
                             onChangeText={(text) => setNewName(text)}></TextInput>
                     </View>
@@ -382,134 +381,301 @@ export default function profilepage({ navigation, route }) {
             </View>
         );
     }
-    if (userInfo && !nowEditable && gameData) {
-        return (
-            <View style={styles.container} >
-                <LinearGradient
-                    start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
-                    colors={['#013C00', '#000000']}
-                    style={styles.background} >
-                    <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
-                    <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
-                    <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
 
-                    <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
-                        <   Text style={styles.robototxt}>Home</Text>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
-                        <Text style={styles.highlighttxt}>Profile</Text>
-                    </TouchableOpacity>
+if (userInfo && !nowEditable && gameData && (userInfo[0].privacyStatus==1)) {
+    return (
+        <View style={styles.container} >
+            <LinearGradient
+                start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
+                colors={['#013C00', '#000000']}
+                style={styles.background} >
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
+                <TouchableOpacity style={styles.privacy2} onPress={() => 
+                {
+                    update(picUpdateRef,{
+                        privacyStatus:0
+                    })
+                }
+                }>
+                <Text style={styles.uploadText}>Privacy Protection ON</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.mypost} onPress={() =>{ 
+                    // navigation.popToTop("MyPost")
+                    // navigation.reset({routes:[{name: "MyPost"}], key:null})
+                    navigation.dispatch(CommonActions.reset({index:0, routes:[{name: "MyPost"}], key:null}))
+                    }}>
+                    <Text style={styles.postText}>My Post</Text>
+                </TouchableOpacity>
+
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
+
+                <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
+                    <   Text style={styles.robototxt}>Home</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
+                    <Text style={styles.highlighttxt}>Profile</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
+                    <Text style={styles.robototxt}>My Games</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
+                    <Text style={styles.robototxt}>Game Hub</Text>
+                </TouchableOpacity>
+
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
+                <TextInput 
+                style={styles.InputStyle1} 
+                placeholder='Search for friends, games or location'
+                onChangeText={(text) => {
+                    setSearchLocation(undefined)
+                    getLocations(text.toLocaleLowerCase())
+                    setTextInputValue(text)}}
+                value={textInputValue}
+                onKeyPress={e => handleSearch(e)}
+                onBlur={()=>{
+                    if(!selectedValue){
+                        setTimeout(()=>
+                            setSelectedValue("x"),300)
+                    }}}
+                onFocus={() => {
+                    if(searchSelectedValue)
+                        setSearchSelectedValue(undefined)
+                    }}
+                ></TextInput>
+                {renderSearchSug()}
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
+
+
+                <View style={styles.photoContainer}>
+                    <Text style={styles.headTxt}>My Photo</Text>
+                    <Image source={userInfo[0].DisplayPicture} style={styles.dpicture} />
+                </View>
+
+                <View style={styles.aboutMeContainer}>
+                    <Text style={styles.headTxt}>About Me</Text>
+                    <Text style={styles.aboutMeTxt}>{userInfo[0].aboutMe}</Text>
+                </View>
+
+                <TouchableOpacity style={styles.Button} title='Edit' onPress={() => {
                     
-                    <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
-                        <Text style={styles.robototxt}>My Games</Text>
-                    </TouchableOpacity>
+                    nowEditable = true;
+                    navigation.push("Profile", nowEditable)
+                }
+                }>
+                    <Text style={styles.ButtonText}>Edit</Text>
+                </TouchableOpacity>
+
+                <View style={styles.divider1} />
+                
+                <View style={[styles.infoContainer, { top: 0.15 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
+                    <Text style={styles.infoHeadTxt}>Name</Text>
+                    <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Name}</Text>
+                </View>
+
+                <View style={[styles.infoContainer, { top: 0.27 * windowHeight, }]}>
+                    <Text style={styles.infoHeadTxt}>Location</Text>
+                    <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Location}</Text>
+                </View>
+
+                <View style={[styles.infoContainer, { top: 0.39 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
+                    <Text style={styles.infoHeadTxt}>Phone Number</Text>
+                    <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>+91 {userInfo[0].PhoneNumber}</Text>
+                </View>
+
+                <View style={[styles.infoContainer, { top: 0.51 * windowHeight, }]}>
+                    <Text style={styles.infoHeadTxt}>Email</Text>
+                    <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Email}</Text>
+                </View>
+
+                <View style={[styles.infoContainer, { top: 0.63 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
+                    <Text style={styles.infoHeadTxt}>Discord Id</Text>
+                    <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].DiscordId}</Text>
+                </View>
+
+                <View style={[styles.infoContainer, { top: 0.75 * windowHeight, height: 0.248 * windowHeight }]}>
+                    <Text style={[styles.infoHeadTxt, { top: 0.1 * windowHeight, }]}>My Games</Text>
+                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
+                        style={styles.scrollContainer2} horizontal={true}
+                        showsHorizontalScrollIndicator={false}>
+                        {
+
+                            gameData.map((game, index) => {
+                                if (myGames.includes(gameData[index].Code)) {
+                                    return (
+                                        <View key={index}>
+                                            <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
+                                                <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                                <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )
+                                }
+                            })
+
+                        }
+
+                    </ScrollView>
+                </View>
+
+                <View style={styles.divider2} />
+
+            </LinearGradient>
+        </View>
+    );
+}
+
+
+if(userInfo && !nowEditable && gameData && 
+(userInfo[0].privacyStatus==0)){
+    return (
+        <View style={styles.container} >
+            <LinearGradient
+                start={{ x: 0, y: 1 }} end={{ x: 0, y: -1 }}
+                colors={['#013C00', '#000000']}
+                style={styles.background} >
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
+                <TouchableOpacity style={styles.privacy1} onPress={() => 
+                {
+                    update(picUpdateRef,{
+                        privacyStatus:1
+                    })
+                }
+                }>
+                <Text style={styles.uploadText}>Privacy Protection OFF</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.mypost} onPress={() =>{ 
+                    // navigation.popToTop("MyPost")
+                    // navigation.reset({routes:[{name: "MyPost"}], key:null})
+                    navigation.dispatch(CommonActions.reset({index:0, routes:[{name: "MyPost"}], key:null}))
+                    }}>
+                    <Text style={styles.postText}>My Post</Text>
+                </TouchableOpacity>
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
+
+                <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
+                    <   Text style={styles.robototxt}>Home</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
+                    <Text style={styles.highlighttxt}>Profile</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.mygamesbtn}  onPress={() => navigation.push("MyGames")}>
+                    <Text style={styles.robototxt}>My Games</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
+                    <Text style={styles.robototxt}>Game Hub</Text>
+                </TouchableOpacity>
+
+                <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
+                <TextInput 
+                style={styles.InputStyle1} 
+                placeholder='Search for friends, games or location'
+                onChangeText={(text) => {
+                    setSearchLocation(undefined)
+                    getLocations(text.toLocaleLowerCase())
+                    setTextInputValue(text)}}
+                value={textInputValue}
+                onKeyPress={e => handleSearch(e)}
+                onBlur={()=>{
+                    if(!selectedValue){
+                        setTimeout(()=>
+                            setSelectedValue("x"),300)
+                    }}}
+                onFocus={() => {
+                    if(searchSelectedValue)
+                        setSearchSelectedValue(undefined)
+                    }}
+                ></TextInput>
+                {renderSearchSug()}
+                <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
+
+
+                <View style={styles.photoContainer}>
+                    <Text style={styles.headTxt}>My Photo</Text>
+                    <Image source={userInfo[0].DisplayPicture} style={styles.dpicture} />
+                </View>
+
+                <View style={styles.aboutMeContainer}>
+                    <Text style={styles.headTxt}>About Me</Text>
+                    <Text style={styles.aboutMeTxt}>{userInfo[0].aboutMe}</Text>
+                </View>
+
+                <TouchableOpacity style={styles.Button} title='Edit' onPress={() => {
                     
-                    <TouchableOpacity style={styles.gamehubbtn}  onPress={() => navigation.push("GameHub")}>
-                        <Text style={styles.robototxt}>Game Hub</Text>
-                    </TouchableOpacity>
+                    nowEditable = true;
+                    navigation.push("Profile", nowEditable)
+                }
+                }>
+                    <Text style={styles.ButtonText}>Edit</Text>
+                </TouchableOpacity>
 
-                    <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
-                    <TextInput 
-                    style={styles.InputStyle1} 
-                    placeholder='Search for friends, games or location'
-                    onChangeText={(text) => {
-                        setSearchLocation(undefined)
-                        getLocations(text.toLocaleLowerCase())
-                        setTextInputValue(text)}}
-                    value={textInputValue}
-                    onKeyPress={e => handleSearch(e)}
-                    onBlur={()=>{
-                        if(!selectedValue){
-                            setTimeout(()=>
-                                setSelectedValue("x"),300)
-                        }}}
-                    onFocus={() => {
-                        if(searchSelectedValue)
-                            setSearchSelectedValue(undefined)
-                        }}
-                    ></TextInput>
-                    {renderSearchSug()}
-                    <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
+                <View style={styles.divider1} />
+                
+                <View style={[styles.infoContainer, { top: 0.15 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
+                    <Text style={styles.infoHeadTxt}>Name</Text>
+                    <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Name}</Text>
+                </View>
 
+                <View style={[styles.infoContainer, { top: 0.27 * windowHeight, }]}>
+                    <Text style={styles.infoHeadTxt}>Location</Text>
+                    <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Location}</Text>
+                </View>
 
-                    <View style={styles.photoContainer}>
-                        <Text style={styles.headTxt}>My Photo</Text>
-                        <Image source={userInfo[0].DisplayPicture} style={styles.dpicture} />
-                    </View>
+                <View style={[styles.infoContainer, { top: 0.39 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
+                    <Text style={styles.infoHeadTxt}>Phone Number</Text>
+                    <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>+91 {userInfo[0].PhoneNumber}</Text>
+                </View>
 
-                    <View style={styles.aboutMeContainer}>
-                        <Text style={styles.headTxt}>About Me</Text>
-                        <Text style={styles.aboutMeTxt}>{userInfo[0].aboutMe}</Text>
-                    </View>
+                <View style={[styles.infoContainer, { top: 0.51 * windowHeight, }]}>
+                    <Text style={styles.infoHeadTxt}>Email</Text>
+                    <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Email}</Text>
+                </View>
 
-                    <TouchableOpacity style={styles.Button} title='Edit' onPress={() => {
-                        console.log("Edit btn pressed")
-                        nowEditable = true;
-                        navigation.push("Profile", nowEditable)
-                    }
-                    }>
-                        <Text style={styles.ButtonText}>Edit</Text>
-                    </TouchableOpacity>
+                <View style={[styles.infoContainer, { top: 0.63 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
+                    <Text style={styles.infoHeadTxt}>Discord Id</Text>
+                    <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].DiscordId}</Text>
+                </View>
 
-                    <View style={styles.divider1} />
-                    {console.log(userInfo[0].Name)}
-                    <View style={[styles.infoContainer, { top: 0.15 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
-                        <Text style={styles.infoHeadTxt}>Name</Text>
-                        <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Name}</Text>
-                    </View>
+                <View style={[styles.infoContainer, { top: 0.75 * windowHeight, height: 0.248 * windowHeight }]}>
+                    <Text style={[styles.infoHeadTxt, { top: 0.1 * windowHeight, }]}>My Games</Text>
+                    <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
+                        style={styles.scrollContainer2} horizontal={true}
+                        showsHorizontalScrollIndicator={false}>
+                        {
 
-                    <View style={[styles.infoContainer, { top: 0.27 * windowHeight, }]}>
-                        <Text style={styles.infoHeadTxt}>Location</Text>
-                        <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Location}</Text>
-                    </View>
+                            gameData.map((game, index) => {
+                                if (myGames.includes(gameData[index].Code)) {
+                                    return (
+                                        <View key={index}>
+                                            <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
+                                                <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                                <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )
+                                }
+                            })
 
-                    <View style={[styles.infoContainer, { top: 0.39 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
-                        <Text style={styles.infoHeadTxt}>Phone Number</Text>
-                        <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>+91 {userInfo[0].PhoneNumber}</Text>
-                    </View>
+                        }
 
-                    <View style={[styles.infoContainer, { top: 0.51 * windowHeight, }]}>
-                        <Text style={styles.infoHeadTxt}>Email</Text>
-                        <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].Email}</Text>
-                    </View>
+                    </ScrollView>
+                </View>
 
-                    <View style={[styles.infoContainer, { top: 0.63 * windowHeight, backgroundColor: "rgba(255, 255, 255, 0.15)" }]}>
-                        <Text style={styles.infoHeadTxt}>Discord Id</Text>
-                        <Text style={[styles.infoHeadTxt, { left: 0.2 * windowWidth }]}>{userInfo[0].DiscordId}</Text>
-                    </View>
+                <View style={styles.divider2} />
 
-                    <View style={[styles.infoContainer, { top: 0.75 * windowHeight, height: 0.248 * windowHeight }]}>
-                        <Text style={[styles.infoHeadTxt, { top: 0.1 * windowHeight, }]}>My Games</Text>
-                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
-                            style={styles.scrollContainer2} horizontal={true}
-                            showsHorizontalScrollIndicator={false}>
-                            {
-
-                                gameData.map((game, index) => {
-                                    if (myGames.includes(gameData[index].Code)) {
-                                        return (
-                                            <View key={index}>
-                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
-                                                    <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-                                                    <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        )
-                                    }
-                                })
-
-                            }
-
-                        </ScrollView>
-                    </View>
-
-                    <View style={styles.divider2} />
-
-                </LinearGradient>
-            </View>
-        );
-    }
+            </LinearGradient>
+        </View>
+    );
+}
 }
 
 const styles = StyleSheet.create({
@@ -518,6 +684,13 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         overflow: 'hidden',
+    },
+    uploadText: {
+        "fontStyle": 'normal',
+        "fontSize": 15,
+        "fontWeight": 'bold',
+        "color": '#ffffff',
+        paddingTop: "2px"
     },
     background: {
         position: "relative",
@@ -654,10 +827,7 @@ const styles = StyleSheet.create({
         left: 165 / 1440 * windowWidth,
         top: 915 / 1024 * windowHeight,
         backgroundColor: "#39750A",
-        borderTopLeftRadius: 2,
-        borderTopRightRadius: 2,
-        borderBottomRightRadius: 2,
-        borderBottomLeftRadius: 2,
+        borderRadius: 2,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -695,7 +865,29 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "rgba(255, 255, 255, 0.1)",
     },
-
+    privacy1: {
+        position: 'absolute',
+        width: 0.13 * windowWidth,
+        alignItems: 'center',
+        textAlign: 'center',
+        height: 0.03 * windowHeight,
+        top: 0.05 * windowHeight,
+        left: 0.85 * windowWidth,
+        
+        backgroundColor: 'red',
+        textAlign: 'center',
+        borderRadius: '2px'
+    },
+    privacy2: {
+        position: 'absolute',
+        width: 0.13 * windowWidth,
+        height: 0.03 * windowHeight,
+        top: 0.05 * windowHeight,
+        left: 0.85 * windowWidth,
+        backgroundColor: 'green',
+        textAlign: 'center',
+        borderRadius: '2px'
+    },
     spike1: {
         position: "absolute",
         resizeMode: 'contain',
@@ -809,5 +1001,24 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         height: 0.2 * windowHeight,
         width: 0.15 * windowWidth,
-    }
+    },
+
+    mypost: {
+        position: 'absolute',
+        width: 0.09 * windowWidth,
+        height: 0.03 * windowHeight,
+        top: 0.05* windowHeight,
+        left: 0.02 * windowWidth,
+        backgroundColor: 'green',
+        textAlign: 'center',
+        borderRadius: '2px'
+    },
+
+    postText: {
+        "fontStyle": 'normal',
+        "fontSize": 15,
+        "fontWeight": 'bold',
+        "color": '#ffffff',
+        paddingTop: "2px"
+    },
 });
