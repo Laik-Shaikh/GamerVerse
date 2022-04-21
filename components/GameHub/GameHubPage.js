@@ -26,7 +26,7 @@ export default function GameHubPage({ navigation, route }) {
 
     var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter') {
-            navigation.push("SearchName", { textInputValue })
+            navigation.push("SearchPage", { textInputValue })
             console.log('search started')
         }
     }
@@ -54,7 +54,7 @@ export default function GameHubPage({ navigation, route }) {
                     return (
                         <TouchableOpacity style={styles.item} onPress={() => {
                             setSelectedValue(suggestion.item.Location)
-                            navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                            navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                         }
 
                         }>

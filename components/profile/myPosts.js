@@ -31,7 +31,10 @@ export default function myPosts({ navigation }) {
     const [selectGameCode, setSelectGameCode] = useState(null);
     const [profileImage, setProfileImage] = React.useState([]);
     var [latestPosts, setLatestPosts] = useState([]);
-
+    const [location, setLocation] = React.useState(null);
+    const [selectedValue, setSelectedValue] = React.useState()
+    const [textInputValue, setTextInputValue] = React.useState('');
+    var likes = ["XX"]
 
     const GameRef = query(ref(db, 'games'))
     const UserRef1 = query(ref(db, 'users/' + auth.currentUser.uid + '/Games'))
@@ -120,8 +123,51 @@ export default function myPosts({ navigation }) {
         )
     }, [])
 
+    var handleSearch = (e) => {
+        if (e.nativeEvent.key == 'Enter' && textInputValue.length>0 && textInputValue!=" ") {
+            navigation.push("SearchPage", { textInputValue })
+            console.log('search started')
+        }
+    }
+
+    const getLocations = async (loc) => {
+        if (loc) {
+            const UserRef = query(ref(db, 'locations'), orderByChild('LocationLower'), startAt(loc), endAt(loc + "\uf8ff"))
+            onValue(UserRef, (snapshot) => {
+                if (snapshot.val()) {
+                    setLocation(Object.values(snapshot.val()))
+                }
+            })
+        }
+    }
+
+    const likePhoto = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Post%2FLike.png?alt=media&token=bfce5738-8e63-4bb3-8841-212c7fef39d6'
+    const white = 'https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FwhiteLike.png?alt=media&token=e0746851-94cf-424a-9541-684544a056ce'
+
+    function renderSug() {
+        if (!selectedValue) {
+            console.log(location)
+            return (<FlatList
+
+                data={location}
+                style={styles.LocSuggestions}
+                keyExtractor={(item) => item.magicKey}
+                renderItem={(suggestion) => {
+                    return (
+                        <TouchableOpacity style={styles.item} onPress={() => {
+                            setSelectedValue(suggestion.item.Location)
+                            navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
+                        }
+
+                        }>
+                            <Text style={styles.itemText}>{suggestion.item.Location}</Text>
+                        </TouchableOpacity>)
+                }}
 
 
+            ></FlatList>)
+        }
+    }
 
     return(
         <View style={styles.container} >
@@ -131,15 +177,13 @@ export default function myPosts({ navigation }) {
                 style={styles.background} >
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
-                <TouchableOpacity style={styles.logout} onPress={() => signOutUser()}>
-                    <Text style={styles.uploadText}>Log Out</Text>
-                </TouchableOpacity>
+                
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
                 <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
-                    <Text style={styles.highlighttxt}>Home</Text>
+                    <Text style={styles.robototxt}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile")}>
-                    <Text style={styles.robototxt}>Profile</Text>
+                    <Text style={styles.highlighttxt}>Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.push("MyGames")}>
                     <Text style={styles.robototxt}>My Games</Text>
@@ -149,7 +193,26 @@ export default function myPosts({ navigation }) {
                 </TouchableOpacity>
                 <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FsearchIcon.png?alt=media&token=f31e94f7-0772-4713-8472-caf11d49a78d"} style={styles.searchIcon} />
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
-
+                <TextInput 
+                    style={styles.InputStyle1} 
+                    placeholder='Search for friends, games or location'
+                    onChangeText={(text) => {
+                        setLocation(undefined)
+                        getLocations(text.toLocaleLowerCase())
+                        setTextInputValue(text)}}
+                    value={textInputValue}
+                    onKeyPress={e => handleSearch(e)}
+                    onBlur={()=>{
+                        if(!selectedValue){
+                            setTimeout(()=>
+                                setSelectedValue("x"),300)
+                        }}}
+                    onFocus={() => {
+                        if(selectedValue)
+                            setSelectedValue(undefined)
+                        }}
+                    ></TextInput>
+                    {renderSug()}
 
 
                 <ScrollView contentContainerStyle={{ justifyContent: 'space-evenly' }} style={styles.postContainer} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
@@ -170,22 +233,26 @@ export default function myPosts({ navigation }) {
                                                 }
                                                 )
                                             }
-                                            // var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes'))
-                                            // var likeData;
-                                            // onValue(LikeRef, (snapshot) => {
-                                            //     console.log(LikeRef)
-                                            //     likeData = Object.values(snapshot.val());
+                                            var LikeRef = query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber + '/Likes'))
+                                            var likeData;
+                                            onValue(LikeRef, (snapshot) => {
+                                                // console.log(LikeRef)
+                                                likeData = Object.values(snapshot.val());
 
-                                            //     console.log(likeData)
+                                                // console.log(likeData)
 
-                                            // }
-                                            // );
+                                            }
+                                            );
 
-                                            // function deleteItem () {
-                                            //     db.collection(auth.currentUser.uid).doc(newItem.PostNumber).delete();
-                                            // }
+                                            function checkLikes(userid) {
+                                                // console.log(likes.length)
+                                                for (var i = 0; i < likeData.length; i++) {
+                                                    if (userid == likes[i]) return false;
+                                                }
+                                                return true;
+                                            }
 
-                                            if(newItem.uid.includes(auth.currentUser.uid))
+                                            if(newItem.uid.includes(auth.currentUser.uid) && newItem.Likes.includes(auth.currentUser.uid))
                                             {
                                                 return(
                                                     <View style={styles.allPost}>
@@ -209,13 +276,91 @@ export default function myPosts({ navigation }) {
                                                             <Text style={styles.nameGame}>Delete Post</Text>
                                                         </TouchableOpacity>
 
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                position: 'absolute',
+                                                                width: 0.053 * windowWidth,
+                                                                height: 0.053 * windowHeight,
+                                                                top: 0.9 * windowHeight,
+                                                                left: 0.006 * windowWidth,
+                                                            }}
+                                                            onPress={() => {
+                                                                // console.log(likes)
+                                                                if (!newItem.Likes.includes(auth.currentUser.uid)) {
+                                                                    if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
+
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    var ind = likeData.indexOf(auth.currentUser.uid)
+                                                                    likeData.splice(ind, 1)
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                            }}
+                                                        >
+                                                           <Image source={newItem.LikeImage} style={styles.likeImage} /> 
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
+                                                        </TouchableOpacity>
+                                                        {console.log(newItem.DisplayProfile)}
+                                                            
 
                                                     </View>
 
                                                 )
                                             }
+                                            
+                                            else if(newItem.uid.includes(auth.currentUser.uid) && !newItem.Likes.includes(auth.currentUser.uid))
+                                            {
+                                                return (
+                                                    <View style={styles.allPost}>
+                                                        <Text style={styles.profileName}>{newItem.User}</Text>
+                                                        <Image source={newItem.DisplayProfile} style={styles.profile} />
+                                                        <Image source={newItem.Image} style={styles.post} />
+                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                        <View style={styles.nameGameContainer}>
+                                                            <Text style={styles.nameGame}>{newItem.GameName}</Text>
+                                                        </View>
+                                                        {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                position: 'absolute',
+                                                                width: 0.051 * windowWidth,
+                                                                height: 0.053 * windowHeight,
+                                                                top: 0.9 * windowHeight,
+                                                                left: 0.009 * windowWidth,
+                                                            }}
+                                                            onPress={() => {
+                                                                // console.log(likes)
+                                                                if (!newItem.Likes.includes(auth.currentUser.uid)) {
+                                                                    if (checkLikes(auth.currentUser.uid)) likeData.push(auth.currentUser.uid);
 
-
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                    console.log('hello')
+                                                                }
+                                                                else {
+                                                                    var ind = likeData.indexOf(auth.currentUser.uid)
+                                                                    likeData.splice(ind, 1)
+                                                                    update(query(ref(db, 'posts/' + newItem.uid + '/Post' + newItem.PostNumber)), {
+                                                                        Likes: likeData
+                                                                    })
+                                                                }
+                                                            }}
+                                                        >
+                                                            <Image source={newItem.WhiteLike} style={styles.whiteLikeImage} />   
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
+                                                        </TouchableOpacity>
+                                                        {console.log(newItem.DisplayProfile)}
+                                                        
+                                                    </View>
+                                                )
+                                            }
                                         }
                                     }
                                     
@@ -357,14 +502,14 @@ const styles = StyleSheet.create({
 
     homebtn: {
         position: "absolute",
-        top: 0.107 * windowHeight,
+        top: 0.11 * windowHeight,
         left: 0.05 * windowWidth,
         height: 0.03 * windowHeight,
     },
 
     profilebtn: {
         position: "absolute",
-        top: 0.11 * windowHeight,
+        top: 0.107 * windowHeight,
         left: 0.20 * windowWidth,
         height: 0.03 * windowHeight,
         width: 0.03 * windowWidth
@@ -419,10 +564,30 @@ const styles = StyleSheet.create({
         width: 0.15 * windowWidth,
     },
 
+    LocSuggestions: {
+        position: 'absolute',
+        top: 150 / 1024 * windowHeight,
+        right: 85 / 1440 * windowWidth,
+        flexGrow: 0,
+        width: 305 / 1440 * windowWidth,
+        backgroundColor: 'rgba(255, 255, 255,1)',
+        zIndex: 1,
+    },
+
+    itemText: {
+        fontSize: 15,
+        paddingLeft: 10
+    },
+
+    item: {
+        width: 305 / 1440 * windowWidth,
+        paddingTop: 10
+    },
+
     postContainer: {
         position: 'absolute',
-        width: 0.9 * windowWidth,
-        height: 0.85 * windowHeight,
+        width: 0.8 * windowWidth,
+        height: 0.785 * windowHeight,
         top: 0.18 * windowHeight,
         left: 0.05 * windowWidth,
         // backgroundColor: 'red',
@@ -431,11 +596,11 @@ const styles = StyleSheet.create({
 
     allPost: {
         // position: 'absolute',
-        width: 0.87 * windowWidth,
-        height: 0.75 * windowHeight,
-        
-        top: 0.01 * windowHeight,
+        width: 0.85 * windowWidth,
+        height: 0.85 * windowHeight,
+        top: -0.12 * windowHeight,
         left: 0.01 * windowWidth,
+        marginTop: '120px',
         // backgroundColor: 'cyan',
         // flexGrow: 0.1,
         marginTop: '30px',
@@ -462,13 +627,23 @@ const styles = StyleSheet.create({
         height: '100%'
     },
 
+    likestext: {
+        position: 'absolute',
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 26,
+        top: 0.005 * windowHeight,
+        left: 0.045 * windowWidth
+    },
+
     whiteLikeImage:{
         position: 'absolute',
         // resizeMode: 'contain',
-        width: 0.045*windowWidth,
-        height: 0.045*windowHeight,
-        left: 0.0001*windowWidth,
-        marginTop: 0.01 * windowHeight,
+        width: 0.042*windowWidth,
+        height: 0.044*windowHeight,
+        left: -0.002*windowWidth,
+        marginTop: 0.007 * windowHeight,
         // width: '80%',
         // height: '80%',
         // marginBottom: '2px'
@@ -498,7 +673,8 @@ const styles = StyleSheet.create({
 
     nameGameContainer: {
         position: 'absolute',
-        top: 0.063 * windowHeight,
+        top: 0.055 * windowHeight,
+        // paddingLeft: '20px',
         borderWidth:2,
         borderColor:"blue",
         left: 0.05 * windowWidth,
@@ -509,6 +685,7 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         fontSize: 15,
+        
 
     },
 

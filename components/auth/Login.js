@@ -76,7 +76,7 @@ export default function Login({ navigation }) {
                       console.log(UName + " " + PWord);
                       await signInWithEmailAndPassword(auth, UName, PWord).then(()=>{
                         console.log(auth.currentUser);
-                        
+                        if(auth.currentUser.emailVerified){
                           console.log("yes")
                           setPWord(" ");
                           setUName(" ");
@@ -87,7 +87,7 @@ export default function Login({ navigation }) {
                               navigation.push("Home")
                             }
                           })
-                        
+                        }
                         //  else{
                         //    alert("Please verify your email to continue!")
                         //  }

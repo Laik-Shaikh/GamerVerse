@@ -203,7 +203,7 @@ export default function homepage({ navigation, route }) {
 
     var handleSearch = (e) => {
         if (e.nativeEvent.key == 'Enter' && textInputValue.length>0 && textInputValue!=" ") {
-            navigation.push("SearchName", { textInputValue })
+            navigation.push("SearchPage", { textInputValue })
             console.log('search started')
         }
     }
@@ -231,7 +231,7 @@ export default function homepage({ navigation, route }) {
                     return (
                         <TouchableOpacity style={styles.item} onPress={() => {
                             setSelectedValue(suggestion.item.Location)
-                            navigation.push("SearchName", { textInputValue: suggestion.item.Location })
+                            navigation.push("SearchPage", { textInputValue: suggestion.item.Location })
                         }
 
                         }>
@@ -521,20 +521,14 @@ export default function homepage({ navigation, route }) {
                         <View  key={index} style={styles.friendbox}>
                             <TouchableOpacity onPress={() => navigation.push("SearchProfile", friendUid[index])}>
                                 <Image source={friendImages[index]} style={styles.dpview}/>
-                                <Text style={styles.nametxt}>{profile}</Text>
+                                <View style={{position: 'absolute',top: 0.005 * windowHeight,left: 0.007 * windowWidth,}}><Text style={styles.nametxt} numberOfLines={1}>{profile}</Text></View>
                             </TouchableOpacity> 
                         </View>
                         )
                     })
                     }
                     </ScrollView>
-                    {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
-                    {/* <Image source={require('./homeAssets/post2.png')} style={styles.posts} /> */}
-                    {/* <Text style={styles.nametxt}>Danny Devadiga</Text> */}
-                    {/* <Text style={styles.posttxt}>Maddy Sheikh</Text>
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dpview} />
-                    <Image source={require('./homeAssets/dp.png')} style={styles.dppostview} /> */}
+                    
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdivider.png?alt=media&token=458aa29f-e202-4bab-8393-3a7fb6994608"} style={styles.divider} />
                 <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
 
@@ -576,7 +570,7 @@ export default function homepage({ navigation, route }) {
                                                     console.log(snapshot.val())
                                                     likeData = Object.values(snapshot.val());
 
-                                                    console.log(likeData)
+                                                    // console.log(likeData)
 
                                                 }
                                                 );
@@ -599,35 +593,36 @@ export default function homepage({ navigation, route }) {
                                                         
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => 
-                    {
-                        var ReportPostRef = query(ref(db,'reported/reportedposts/'+newItem.uid+"'s Post "+newItem.PostNumber))
-                        var reportConfirmation =confirm("Are you sure want to report this post?") 
-                           if(reportConfirmation) {
-                           alert("Report has been considered. Admin will check this post in a short while and take necessary actions")
-                            push(ReportPostRef,{
-                                reporter: auth.currentUser.uid,
-                              });  
-                           }
-                           else{
-                            console.log("Cancel Pressed")
-                            }
-                    }}>
+                                                        {
+                                                            var ReportPostRef = query(ref(db,'reported/reportedposts/'+newItem.uid+"'s Post "+newItem.PostNumber))
+                                                            var reportConfirmation =confirm("Are you sure want to report this post?") 
+                                                            if(reportConfirmation) {
+                                                            alert("Report has been considered. Admin will check this post in a short while and take necessary actions")
+                                                                push(ReportPostRef,{
+                                                                    reporter: auth.currentUser.uid,
+                                                                });  
+                                                            }
+                                                            else{
+                                                                console.log("Cancel Pressed")
+                                                                }
+                                                        }}>
                                                         <Text style={styles.reportstyle}>Report</Text>
                                                     </TouchableOpacity>
-                                                        <Image source={newItem.Image} style={styles.post} />
-                                                        <Text style={styles.displayDescription}>{newItem.Description}</Text>
-                                                        {/* <Image source={require('./homeAssets/Like.png')} style={styles.likeImage} /> */}
+                                                    <Image source={newItem.Image} style={styles.post} />
+                                                    <Text style={styles.displayDescription}>{newItem.Description}</Text>
+                                                    
                                                         <View style={styles.nameGameContainer}>
                                                             <Text style={styles.nameGame}>{newItem.GameName}</Text>
                                                         </View>
                                                         {/* {console.log(newItem.GameName)} */}
+                                                    
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
                                                                 width: 0.053 * windowWidth,
                                                                 height: 0.053 * windowHeight,
-                                                                top: 0.52 * windowHeight,
-                                                                left: 0.006 * windowWidth
+                                                                top: 0.58 * windowHeight,
+                                                                left: 0.006 * windowWidth,
                                                             }}
                                                             onPress={() => {
                                                                 // console.log(likes)
@@ -648,10 +643,10 @@ export default function homepage({ navigation, route }) {
                                                             }}
                                                         >
                                                            <Image source={newItem.LikeImage} style={styles.likeImage} /> 
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                         </TouchableOpacity>
                                                         {console.log(newItem.DisplayProfile)}
                                                             
-                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                     </View>
                                                 )
                                             }
@@ -662,7 +657,20 @@ export default function homepage({ navigation, route }) {
                                                         <Text style={styles.profileName}>{newItem.User}</Text>
                                                         <Image source={newItem.DisplayProfile} style={styles.profile} />
                                                         </TouchableOpacity>
-                                                        <TouchableOpacity>
+                                                        <TouchableOpacity onPress={() => 
+                                                            {
+                                                                var ReportPostRef = query(ref(db,'reported/reportedposts/'+newItem.uid+"'s Post "+newItem.PostNumber))
+                                                                var reportConfirmation =confirm("Are you sure want to report this post?") 
+                                                                if(reportConfirmation) {
+                                                                alert("Report has been considered. Admin will check this post in a short while and take necessary actions")
+                                                                    push(ReportPostRef,{
+                                                                        reporter: auth.currentUser.uid,
+                                                                    });  
+                                                                }
+                                                                else{
+                                                                    console.log("Cancel Pressed")
+                                                                    }
+                                                            }}>
                                                         <Text style={styles.reportstyle}>Report</Text>
                                                         </TouchableOpacity>
                                                         <Image source={newItem.Image} style={styles.post} />
@@ -675,10 +683,10 @@ export default function homepage({ navigation, route }) {
                                                         <TouchableOpacity
                                                             style={{
                                                                 position: 'absolute',
-                                                                width: 0.053 * windowWidth,
+                                                                width: 0.051 * windowWidth,
                                                                 height: 0.053 * windowHeight,
-                                                                top: 0.52 * windowHeight,
-                                                                left: 0.006 * windowWidth
+                                                                top: 0.58 * windowHeight,
+                                                                left: 0.009 * windowWidth,
                                                             }}
                                                             onPress={() => {
                                                                 // console.log(likes)
@@ -700,10 +708,10 @@ export default function homepage({ navigation, route }) {
                                                             }}
                                                         >
                                                             <Image source={newItem.WhiteLike} style={styles.whiteLikeImage} />   
+                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                         </TouchableOpacity>
                                                         {console.log(newItem.DisplayProfile)}
                                                         
-                                                        <Text style={styles.likestext}>{newItem.Likes.length - 1}</Text>
                                                     </View>
                                                 )
                                             }
@@ -736,7 +744,7 @@ export default function homepage({ navigation, route }) {
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
                                 {/* <View> */}
-                                <TextInput placeholder='Caption for your post'
+                                <TextInput placeholder='Caption for your post' maxLength={220}
                                     style={styles.textInput} onChangeText={description => setDescription(description)}
                                 />
                                 {/* </View> */}
@@ -786,7 +794,7 @@ export default function homepage({ navigation, route }) {
                                 </TouchableOpacity>
 
                                 <View style={styles.name}>
-                                    <Text style={styles.text2}>Select Game : </Text>
+                                    <Text style={styles.text2}>Select Game: </Text>
                                 </View>
 
                                 <ScrollView style={styles.gameScrollContainer} vertical={true}>
@@ -914,12 +922,12 @@ const styles = StyleSheet.create({
         "fontWeight": "500",
         "fontSize": 18,
         "color": "#FFFFFF",
-        position: 'absolute',
-        top: 0.005 * windowHeight,
-        left: 0.02 * windowWidth,
-        width: 0.08 * windowWidth,
-        // height: 0.005 * windowHeight,
-        lineHeight: 23,
+        // position: 'absolute',
+        // top: 0.005 * windowHeight,
+        // left: 0.007 * windowWidth,
+        width: 0.113 * windowWidth,
+        height: 0.03 * windowHeight,
+        lineHeight: 18,
         // backgroundColor: 'rgba(255, 255, 255,0.5)',
     },
 
@@ -1037,7 +1045,7 @@ const styles = StyleSheet.create({
     dpview: {
         position: "absolute",
         top: -0.005 * windowHeight,
-        left: -0.02 * windowWidth,
+        left: -0.033 * windowWidth,
         width: 0.05 * windowHeight,
         height: 0.05 * windowHeight,
         borderRadius: 0.065 * windowHeight,
@@ -1343,10 +1351,10 @@ const styles = StyleSheet.create({
         width: 0.52 * windowWidth,
         height: 0.52 * windowHeight,
         left: 0.01 * windowWidth,
-        marginTop: 0.12 * windowHeight,
+        marginTop: 0.137 * windowHeight,
         // width: '100%',
         // height: '100%',
-        // flex: 1
+        // flexGrow: 0.1
 
     },
 
@@ -1360,10 +1368,10 @@ const styles = StyleSheet.create({
     whiteLikeImage:{
         position: 'absolute',
         // resizeMode: 'contain',
-        width: 0.045*windowWidth,
-        height: 0.045*windowHeight,
-        left: 0.0001*windowWidth,
-        marginTop: 0.01 * windowHeight,
+        width: 0.042*windowWidth,
+        height: 0.044*windowHeight,
+        left: -0.002*windowWidth,
+        marginTop: 0.007 * windowHeight,
         // width: '80%',
         // height: '80%',
         // marginBottom: '2px'
@@ -1393,7 +1401,7 @@ const styles = StyleSheet.create({
 
     nameGameContainer: {
         position: 'absolute',
-        top: 0.063 * windowHeight,
+        top: 0.055 * windowHeight,
         borderWidth:2,
         borderColor:"blue",
         left: 0.05 * windowWidth,
@@ -1413,10 +1421,10 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'normal',
         textAlign: 'center',
-        fontSize: 16,
-        paddingLeft: '20px',
+        fontSize: 15,
+        paddingLeft: '5px',
         // marginTop: '15px',
-        top: 0.1 * windowHeight,
+        top: 0.089 * windowHeight,
         left: 0.01 * windowWidth,
         flexGrow: 0.1
     },
@@ -1427,8 +1435,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 26,
-        top: 0.525 * windowHeight,
-        left: 0.05 * windowWidth
+        top: 0.005 * windowHeight,
+        left: 0.045 * windowWidth
     },
 
 

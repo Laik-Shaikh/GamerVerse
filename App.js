@@ -32,7 +32,7 @@ export default function App() {
         <Stack.Screen name='MyGames' component={MyGamesPage} options={{ headerShown: false }} />
         <Stack.Screen name='Game' component={gamepage} options={{ headerShown: false }} />
         <Stack.Screen name='GameHub' component={GameHubPage} options={{ headerShown: false }} />
-        <Stack.Screen name='SearchName' component={searchpagename} options={{ headerShown: false }} />
+        <Stack.Screen name='SearchPage' component={searchpagename} options={{ headerShown: false }} />
         <Stack.Screen name='SearchProfile' component={searchprofilepage} options={{ headerShown: false }} />
         <Stack.Screen name='MyPost' component={myPosts} options={{ headerShown: false }} />
       </Stack.Navigator>

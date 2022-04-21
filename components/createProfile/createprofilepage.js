@@ -183,8 +183,8 @@ function renderSug() {
           <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FCamIcon.png?alt=media&token=f86b3513-20cc-4a25-8e60-26c7f71fb7da"} style={styles.CamIcon} />
           {image && <Image source={{ uri:image }} style={styles.ProfileImage} />}
           </TouchableOpacity>
-          <TextInput style={styles.InputStyle1} placeholder='Name' onChangeText={UserName => setUserName(UserName)}></TextInput>
-          <TextInput style={styles.InputStyle2} placeholder='Phone Number' onChangeText={PNum => setPNum(PNum)}></TextInput>
+          <TextInput style={styles.InputStyle1} maxLength={20} placeholder='Name' onChangeText={UserName => setUserName(UserName)}></TextInput>
+          <TextInput style={styles.InputStyle2} maxLength={10} placeholder='Phone Number' onChangeText={PNum => setPNum(PNum)}></TextInput>
           <TextInput 
           
           style={styles.InputStyle3} 
@@ -224,7 +224,7 @@ function renderSug() {
                 }
               }
             }>
-              <Text>Continue</Text>
+              <Text style={styles.ButtonText}>Continue</Text>
           </TouchableOpacity>
 
         </View>
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
 
   signinText: {
     position: "absolute",
-    top: 0.001*windowHeight,
+    top: 0.005*windowHeight,
     height: 32/1024*windowHeight,
     width: 305/1440*windowWidth,
     color: 'white',
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     resizeMode:"contain",
     width: 0.12*windowWidth,
     height: 0.12*windowHeight,
-    top: -0.28*windowHeight,
+    top: -0.25*windowHeight,
     left: -0.06*windowWidth
   },
 
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     // resizeMode:"contain",
     width: 0.07*windowWidth,
     height: 0.13*windowHeight,
-    top: -0.28*windowHeight,
+    top: -0.25*windowHeight,
     left: -0.035*windowWidth,
     overflow:'hidden',
     borderRadius: '45%'
@@ -385,6 +385,7 @@ const styles = StyleSheet.create({
     width: 305 / 1440 * windowWidth,
     height: 55 / 1024 * windowHeight,
     top: 0.55 * windowHeight,
+    color: "#FFFFFF",
     backgroundColor: "#54E0FF",
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
@@ -399,6 +400,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "500",
+    color: "#FFFFFF",
     fontSize: 20,
     lineHeight: 23.45,
     display: "flex",
