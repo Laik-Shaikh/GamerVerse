@@ -259,27 +259,9 @@ export default function profilepage({ navigation, route }) {
                     colors={['#013C00', '#000000']}
                     style={styles.background} >
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes1.png?alt=media&token=40fb8f39-0720-4688-917e-c02817598a01"} style={styles.spike1} />
-                    <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
-                    <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2FMenuBar.png?alt=media&token=d9c15cc1-98a6-41b8-a5f9-533a2f5d1f7b"} style={styles.menu} />
-
-                    <TouchableOpacity style={styles.homebtn} onPress={() => navigation.push("Home")}>
-                        <   Text style={styles.robototxt}>Home</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.profilebtn} onPress={() => navigation.push("Profile", false)}>
-                        <Text style={styles.highlighttxt}>Profile</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.mygamesbtn} onPress={() => navigation.push("")}>
-                        <Text style={styles.robototxt}>My Games</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.gamehubbtn} onPress={() => navigation.push("")}>
-                        <Text style={styles.robototxt}>Game Hub</Text>
-                    </TouchableOpacity>
-
+                  
                     <ImageBackground source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Fdesignspikes.png?alt=media&token=a8871878-f2d0-4fa7-b74c-992a8fbe695e"} style={styles.spike2} />
-
+                    <Image source={"https://firebasestorage.googleapis.com/v0/b/rcoegamerverse.appspot.com/o/Assets%2FLoginPage%2Flogo.png?alt=media&token=7468c404-5678-43b2-92eb-310ffa58433c"} style={styles.title} onPress={() => navigation.push("Home")} />
 
                     <View style={styles.photoContainer}>
                         <Text style={styles.headTxt}>My Photo</Text>
