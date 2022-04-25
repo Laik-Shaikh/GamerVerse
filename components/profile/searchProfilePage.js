@@ -30,6 +30,7 @@ export default function searchProfilePage ({ navigation, route }){
       var friends = [ "YY" ];
       var myfriends = [ "YY" ];
       var status=1;
+      var noGames=true;
       const UserRef = query(ref(db,'users/'+ profileUid))
       const ReportUserRef = query(ref(db,'reported/profiles/'+profileUid))
       const UserRef2 = query(ref(db,'users/'+ auth.currentUser.uid))
@@ -58,7 +59,6 @@ export default function searchProfilePage ({ navigation, route }){
     })
     
   },[])
-
   var handleSearch = (e) => {
     if (e.nativeEvent.key == 'Enter') {
         navigation.push("SearchPage", { textInputValue })
@@ -293,7 +293,6 @@ function renderSug() {
                             style={styles.scrollContainer2} horizontal={true}
                             showsHorizontalScrollIndicator={false}>
                             {
-
                                 gameData.map((game, index) => {
                                     if (myGames.includes(gameData[index].Code)) {
                                         return (
@@ -303,6 +302,12 @@ function renderSug() {
                                                     <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
                                                 </TouchableOpacity>
                                             </View>
+                                        )
+                                    }
+                                    if (myGames.length==1 && noGames==true) {
+                                        noGames=false;
+                                        return (
+                                            <Text style={[styles.infoHeadTxt,{position:"relative",top:0.08*windowHeight,left: 0.02*windowWidth}]}>This person has not selected any games.</Text>
                                         )
                                     }
                                 })
@@ -460,6 +465,12 @@ function renderSug() {
                                             </View>
                                         )
                                     }
+                                    if (myGames.length==1 && noGames==true) {
+                                        noGames=false;
+                                        return (
+                                            <Text style={[styles.infoHeadTxt,{position:"relative",top:0.08*windowHeight,left: 0.02*windowWidth}]}>This person has not selected any games.</Text>
+                                        )
+                                    }
                                 })
 
                             }
@@ -589,7 +600,33 @@ function renderSug() {
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
                         <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
-                        <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
+                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
+                            style={styles.scrollContainer2} horizontal={true}
+                            showsHorizontalScrollIndicator={false}>
+                            {
+                                
+                                gameData.map((game, index) => {
+                                    if (myGames.includes(gameData[index].Code)) {
+                                        return (
+                                            <View key={index}>
+                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
+                                                    <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                                    <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    }
+                                    if (myGames.length==1 && noGames==true) {
+                                        noGames=false;
+                                        return (
+                                            <Text style={[styles.infoHeadTxt,{position:"relative",top:0.08*windowHeight,left: 0.02*windowWidth}]}>This person has not selected any games.</Text>
+                                        )
+                                    }
+                                })
+
+                            }
+
+                        </ScrollView>
                     </View>
                     
                     <View style={styles.divider2}/>
@@ -715,7 +752,33 @@ function renderSug() {
                     
                     <View style={[styles.infoContainer,{top: 0.75*windowHeight,height:0.248*windowHeight}]}>
                         <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,}]}>My Games</Text>
-                        <Text style={[styles.infoHeadTxt,{top: 0.1*windowHeight,left: 0.2*windowWidth}]}>You need to be friends to view this information</Text>
+                        <ScrollView contentContainerStyle={{ justifyContent: 'space-around' }}
+                            style={styles.scrollContainer2} horizontal={true}
+                            showsHorizontalScrollIndicator={false}>
+                            {
+
+                                gameData.map((game, index) => {
+                                    if (myGames.includes(gameData[index].Code)) {
+                                        return (
+                                            <View key={index}>
+                                                <TouchableOpacity key={index} style={styles.gameImage} onPress={() => navigation.push("Game", { GameCode: game.Code })}>
+                                                    <Image source={game.Image} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                                                    <Text style={[styles.infoHeadTxt, { top: 0.19 * windowHeight, left: 0.03 * windowWidth, fontSize: "16px", lineHeight: "13px" }]}>{game.Name}</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    }
+                                    if (myGames.length==1 && noGames==true) {
+                                        noGames=false;
+                                        return (
+                                            <Text style={[styles.infoHeadTxt,{position:"relative",top:0.08*windowHeight,left: 0.02*windowWidth}]}>This person has not selected any games.</Text>
+                                        )
+                                    }
+                                })
+
+                            }
+
+                        </ScrollView>
                     </View>
                     
                     <View style={styles.divider2}/>
